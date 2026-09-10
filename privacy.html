@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy policy · Thara</title>
+<meta name="description" content="How Thara handles your data: everything stays on your phone, and optional backups go only to your own Google Drive, encrypted with a passphrase you choose.">
+<meta name="theme-color" content="#00695C">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./">
+      <svg class="mark" viewBox="0 0 96 96" aria-hidden="true"><rect width="96" height="96" rx="24" fill="#0E2B26"/><rect x="24" y="66" width="48" height="4" rx="2" fill="#E7EEE9" opacity=".45"/><circle cx="30" cy="53" r="6.5" fill="#E7EEE9"/><circle cx="48" cy="43" r="7.5" fill="#E7EEE9"/><circle cx="67" cy="31" r="9" fill="#C8A44A"/></svg>
+      Thara <span class="ar" lang="ar">ثراء</span>
+    </a>
+    <nav class="links">
+      <a href="./#features">Features</a>
+      <a href="./#plans">Plans</a>
+      <a href="./#security">Security</a>
+      <a href="./#backup">Backup</a>
+      <a href="./#get">Get the app</a>
+    </nav>
+  </div>
+</header>
+
+<main class="doc">
+  <div class="wrap">
+    <article class="card">
+      <h1>Privacy policy</h1>
+      <p class="updated">Last updated 10 September 2026</p>
+
+      <div class="callout">
+        <p><b>The short version.</b> Thara keeps your financial records in an encrypted database on your phone. The developer runs no server and cannot see your data. If you turn on Google Drive backup, an encrypted copy goes to a private folder in your own Drive, and only you hold the passphrase.</p>
+      </div>
+
+      <h2>What Thara stores</h2>
+      <p>Thara stores the sources, records, types, obligations, plans, gold holdings, exchange rates and settings you enter. All of it lives in a SQLCipher encrypted database on your device. The encryption key is generated on the device and kept in the Android Keystore or iOS Keychain. Nothing is sent to any server operated by the developer, because there is none.</p>
+
+      <h2>Network access</h2>
+      <p>Thara declares internet access for exactly two features, and both are off until you switch them on:</p>
+      <ul>
+        <li><b>Rate updates.</b> Fetches the published dollar rate and world gold price from a public, key-less currency API. The request contains the currency being asked about and nothing else: no balance, no identifier, no account.</li>
+        <li><b>Google Drive backup.</b> Described below.</li>
+      </ul>
+      <p>With both features off, the app makes no network requests at all. Thara contains no advertising, no analytics and no crash reporting.</p>
+
+      <h2>Google Drive backup</h2>
+      <p>If you connect a Google account, Thara asks for a single permission: access to its own application data folder on your Google Drive. This is the <code>drive.appdata</code> scope. That folder is hidden from the regular Drive interface and is readable only by Thara. Thara cannot see, read, list or change any other file on your Drive, and it does not read your Google profile beyond the email address shown in Settings so you can tell which account is connected.</p>
+      <p>Before a backup is uploaded it is encrypted on the device with AES-256-GCM, using a key derived from a passphrase you choose. The passphrase is never stored in the backup, never sent to Google, and never sent to the developer. Without it the backup cannot be read. If you forget it, no one can recover the backup for you.</p>
+      <p>You can disconnect the Google account from the app's Settings at any time. You can also revoke Thara's access from your Google account's third-party access page, and delete the backup from Google Drive under Settings, Manage apps.</p>
+
+      <h2>Google API Services User Data Policy</h2>
+      <p>Thara's use of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements. Data obtained through Google APIs is used only to store and retrieve your own encrypted backups, is never transferred to anyone else, and is never used for advertising.</p>
+
+      <h2>Other backups and exports</h2>
+      <p>You can also save encrypted backups to a folder you choose or share them to another app. Files handed to the system save dialog go wherever you point them; Thara does not learn the destination and keeps no copy. Plain JSON and CSV exports are deliberately unencrypted, so treat them as you would any file containing your finances.</p>
+
+      <h2>Device permissions</h2>
+      <ul>
+        <li><b>Biometrics.</b> Only if you enable fingerprint or face unlock. The app receives a yes or no from the operating system and never sees biometric data.</li>
+        <li><b>Notifications.</b> Only if you enable reminders, and requested at that moment rather than at first launch.</li>
+        <li><b>Storage.</b> Folder backups use the system document picker with a permission on one folder. No general storage permission is requested.</li>
+      </ul>
+
+      <h2>Children</h2>
+      <p>Thara is not directed at children under 13 and does not knowingly collect information from them. Since it collects nothing, there is nothing to collect.</p>
+
+      <h2>Changes</h2>
+      <p>If this policy changes, the date at the top of this page changes with it. Because Thara has no server, the app cannot notify you of policy changes itself.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about this policy can be sent to the developer at the support email shown on the Google sign-in consent screen.</p>
+    </article>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 Thara · <span lang="ar">ثراء</span> means wealth.</div>
+    <nav>
+      <a href="./">Home</a>
+      <a href="privacy.html">Privacy policy</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
