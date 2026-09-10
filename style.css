@@ -209,6 +209,7 @@ tr:last-child td { border-bottom: 0; }
 .get .platforms b { display: block; font-size: 1.15rem; }
 .get .platforms span { color: var(--text-2); font-size: .92rem; flex: 1; }
 .get .platforms .btn { margin-top: .6rem; width: 100%; }
+.get .platforms .meta { display: block; margin-top: .55rem; color: var(--muted); font-size: .82rem; }
 .get p { color: var(--text-2); }
 
 /* footer */

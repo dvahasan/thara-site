@@ -219,6 +219,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
             Download APK
           </a>
+          <small class="meta" data-asset="thara-release.apk">Latest build</small>
         </div>
         <div class="card">
           <b>iOS</b>
@@ -227,12 +228,37 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
             Download IPA
           </a>
+          <small class="meta" data-asset="thara-unsigned.ipa">Latest build</small>
         </div>
       </div>
-      <p>Both files are built automatically from the latest commit and published on the <a href="https://github.com/dvahasan/thara-site/releases/tag/apk-latest">GitHub release page</a>. Both platforms share the same encrypted backup format, so a backup made on one restores on the other.</p>
+      <p>Each link always serves the newest build: every run replaces the files on the same <a href="https://github.com/dvahasan/thara-site/releases/tag/apk-latest">release</a>, so the address never changes and never goes stale. Both platforms share the same encrypted backup format, so a backup made on one restores on the other.</p>
     </div>
   </div>
 </section>
+
+<script>
+// Fills in each download's real size and build date from the release itself,
+// so the page cannot claim a version it is not actually serving. Purely
+// additive: with no network, or if GitHub rate-limits an unauthenticated
+// request, the cards keep saying "Latest build" and the links still work.
+(function () {
+  var API = 'https://api.github.com/repos/dvahasan/thara-site/releases/tags/apk-latest';
+  fetch(API, { headers: { Accept: 'application/vnd.github+json' } })
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function (release) {
+      (release.assets || []).forEach(function (asset) {
+        var el = document.querySelector('[data-asset="' + asset.name + '"]');
+        if (!el) return;
+        var mb = (asset.size / 1048576).toFixed(0);
+        var on = new Date(asset.updated_at).toLocaleDateString(undefined, {
+          day: 'numeric', month: 'short', year: 'numeric'
+        });
+        el.textContent = mb + ' MB \u00b7 built ' + on;
+      });
+    })
+    .catch(function () { /* Keep the static text. */ });
+})();
+</script>
 
 <footer>
   <div class="wrap">
