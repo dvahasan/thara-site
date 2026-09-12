@@ -1,12 +1,12 @@
 {
-  "buildNumber": 70,
+  "buildNumber": 72,
   "version": "1.0.0",
-  "commit": "2dd47c2",
-  "publishedAt": "2026-09-12T08:42:59Z",
+  "commit": "351fa8a",
+  "publishedAt": "2026-09-12T18:36:34Z",
   "notes": {
-    "en": "Merge notifications-and-updates: update checks, the notification list, and the backup freeze fix"
+    "en": "Merge header-and-status-bar: the bell and the eye everywhere, and a visible status bar"
   },
-  "sizeBytes": 84501481,
+  "sizeBytes": 84501593,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
