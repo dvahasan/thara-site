@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thara · Try the app</title>
+<meta name="description" content="A working demo of Thara: every screen of the app, in your browser, with no account and nothing to install.">
+<meta name="theme-color" content="#F6F8F7">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>
+/* A demo of the app and nothing else: no site header, no navigation, no
+   footer. On a phone it fills the screen, because that is what the app does.
+   On a desktop it is the same view at phone width, so what you are looking
+   at is never a stretched version of something that has never existed.
+
+   Colours are the app's own, from lib/core/theme/theme.dart, and they do not
+   follow the viewer's theme: the app is light, and a dark-themed guess at it
+   would be a demo of something else. */
+:root {
+  --bg: #F6F8F7; --card: #FFFFFF; --card2: #EEF3F1;
+  --text: #191C1B; --text2: #3F4946; --muted: #6F7975;
+  --line: rgba(190,201,197,.7); --ink: #0E2B26;
+  --teal: #00695C; --pill: #A6F2E2; --onpill: #00201C;
+  --in: #1B7F5B; --out: #B3403A; --amber: #8A6D10;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; background: #0E2B26; color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Naskh Arabic", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  display: grid; place-items: center;
+}
+@media (max-width: 520px) { body { background: var(--bg); } }
+
+/* The app. Full height of whatever screen is looking at it. */
+.app {
+  width: min(430px, 100vw);
+  height: 100dvh; max-height: 100dvh;
+  background: var(--bg);
+  display: grid; grid-template-rows: auto 1fr auto;
+  position: relative; overflow: hidden;
+  font-size: 15px; line-height: 1.45;
+}
+@media (min-width: 521px) {
+  .app { height: min(880px, 100dvh); border-radius: 26px; box-shadow: 0 30px 80px -30px rgba(0,0,0,.7); }
+}
+
+/* header */
+.top { padding: .85rem 1rem .6rem; display: grid; gap: .45rem; background: var(--bg); }
+.bar { display: flex; align-items: center; gap: .6rem; }
+.bar h1 { margin: 0; font-size: 1.55rem; font-weight: 800; letter-spacing: -.02em; flex: 1; }
+.acts { display: flex; align-items: center; gap: .75rem; color: var(--text2); }
+.acts .i { width: 22px; height: 22px; display: block; }
+.bell { position: relative; display: block; }
+.bell b {
+  position: absolute; top: -4px; inset-inline-end: -6px;
+  min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px;
+  background: var(--out); color: #fff; font-size: 10px; font-weight: 800;
+  display: grid; place-items: center; line-height: 1;
+}
+.nw { border-bottom: 1px solid var(--line); margin: 0 -1rem; padding: 0 1rem .55rem; }
+.nw .l { color: var(--muted); font-size: 12px; }
+.nw .v { font-size: 1.62rem; font-weight: 800; letter-spacing: -.025em; font-variant-numeric: tabular-nums; }
+
+.body { overflow-y: auto; padding: .7rem .9rem 5.5rem; -webkit-overflow-scrolling: touch; }
+.screen { display: none; }
+.screen.on { display: grid; gap: .6rem; align-content: start; }
+
+.c { background: var(--card); border-radius: 18px; padding: .85rem .9rem; }
+.c h2 { margin: 0; font-size: 1.05rem; font-weight: 800; }
+.c .sub { color: var(--muted); font-size: 12px; }
+.see { color: var(--teal); font-size: 13px; font-weight: 700; }
+.head { display: flex; justify-content: space-between; align-items: baseline; }
+.row3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: .4rem; margin-top: .6rem; }
+.k { color: var(--muted); font-size: 12px; }
+.v { font-weight: 800; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.v.in { color: var(--in); } .v.out { color: var(--out); }
+.foot { color: var(--muted); font-size: 12px; margin-top: .55rem; }
+
+.li { display: grid; grid-template-columns: auto 1fr auto; gap: .65rem; align-items: center; padding: .4rem 0; }
+.ic { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; flex: none; }
+.ic .i { width: 18px; height: 18px; }
+.li .t b { display: block; font-size: 14px; font-weight: 700; }
+.li .t span { display: block; color: var(--muted); font-size: 12px; }
+.li .a { font-weight: 800; font-size: 13.5px; font-variant-numeric: tabular-nums; text-align: end; }
+.li .a.in { color: var(--in); } .li .a.out { color: var(--out); }
+.li .chev { color: var(--muted); width: 18px; height: 18px; }
+.day { display: flex; justify-content: space-between; align-items: baseline; margin: .6rem 0 0; }
+.day b { font-size: 13px; font-weight: 700; }
+.day span { font-size: 13px; font-weight: 800; color: var(--out); font-variant-numeric: tabular-nums; }
+
+.step { display: flex; align-items: center; justify-content: center; gap: .9rem; padding: .2rem 0 .4rem; }
+.step b { font-size: 14px; font-weight: 800; }
+.step .i { width: 20px; height: 20px; color: var(--muted); }
+.strip { background: var(--card2); border-radius: 14px; padding: .65rem .8rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: .3rem; }
+
+.seg { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; font-size: 13px; font-weight: 700; }
+.seg span { padding: .4rem 0; text-align: center; color: var(--text2); display: flex; align-items: center; justify-content: center; gap: .35rem; }
+.seg span .i { width: 16px; height: 16px; }
+.seg span.on { background: color-mix(in srgb, var(--pill) 55%, transparent); color: var(--onpill); }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem .7rem; }
+.grid2 .big { font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.delta { margin-top: .65rem; background: var(--card2); border-radius: 11px; padding: .35rem .6rem; color: var(--in); font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: .35rem; }
+.delta .i { width: 16px; height: 16px; }
+
+.plan { position: relative; }
+.badge { position: absolute; top: .85rem; inset-inline-end: .9rem; background: color-mix(in srgb, var(--out) 14%, transparent); color: var(--out); font-size: 11px; font-weight: 800; padding: .18rem .55rem; border-radius: 999px; }
+.track { height: 7px; border-radius: 999px; background: var(--card2); overflow: hidden; flex: 1; }
+.track i { display: block; height: 100%; background: var(--out); }
+.bars { display: flex; align-items: center; gap: .55rem; margin-top: .5rem; }
+.pct { font-size: 12.5px; font-weight: 800; color: var(--text2); font-variant-numeric: tabular-nums; }
+.advice { color: var(--out); font-size: 12px; margin-top: .5rem; display: flex; gap: .35rem; align-items: flex-start; }
+.advice.amber { color: var(--amber); }
+.advice .i { width: 15px; height: 15px; flex: none; margin-top: 1px; }
+
+.empty { display: grid; justify-items: center; text-align: center; gap: .5rem; padding: 3.5rem 1.5rem; }
+.empty .ring { width: 74px; height: 74px; border-radius: 50%; background: var(--card2); display: grid; place-items: center; }
+.empty .ring .i { width: 32px; height: 32px; color: var(--muted); }
+.empty b { font-size: 16px; }
+.empty p { color: var(--muted); font-size: 13px; margin: 0; max-width: 34ch; }
+
+.fab {
+  position: absolute; inset-inline-end: 1rem; bottom: 5rem;
+  background: var(--pill); color: var(--onpill);
+  border-radius: 17px; padding: .7rem 1.05rem;
+  font-size: 14px; font-weight: 800;
+  display: inline-flex; align-items: center; gap: .45rem;
+  box-shadow: 0 6px 16px -6px rgba(14,43,38,.5);
+}
+.fab.round { padding: .85rem; border-radius: 50%; }
+.fab .i { width: 20px; height: 20px; }
+
+.nav {
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  border-top: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 82%, var(--card));
+  padding: .4rem .2rem .55rem;
+  padding-bottom: max(.55rem, env(safe-area-inset-bottom));
+}
+.nav button {
+  appearance: none; background: none; border: 0; cursor: pointer;
+  display: grid; justify-items: center; gap: 2px; padding: .1rem 0;
+  color: var(--muted); font: inherit; font-size: 11px; font-weight: 600;
+}
+.nav button i.pill { display: grid; place-items: center; width: 46px; height: 28px; border-radius: 999px; }
+.nav button .i { width: 22px; height: 22px; }
+.nav button[aria-selected="true"] { color: var(--teal); font-weight: 700; }
+.nav button[aria-selected="true"] i.pill { background: var(--pill); color: var(--onpill); }
+.nav button:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; border-radius: 10px; }
+
+/* One small way out, kept off the app itself. */
+.away { position: fixed; top: 12px; inset-inline-start: 12px; color: #A6F2E2; font-size: 13px; font-weight: 600; text-decoration: none; opacity: .85; }
+.away:hover { opacity: 1; text-decoration: underline; }
+@media (max-width: 520px) { .away { display: none; } }
+</style>
+</head>
+<body>
+
+<!-- One sprite, referenced everywhere. Stroke icons at the same weight the
+     app's own icon set uses, so a row reads the way it does on the phone
+     rather than as a box-drawing character standing in for a picture. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="i-home"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1z"/></g>
+  <g id="i-records"><path d="M6 2h9l4 4v16H6z"/><path d="M9 8h7M9 12h7M9 16h4"/></g>
+  <g id="i-due"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></g>
+  <g id="i-analysis"><circle cx="12" cy="12" r="9"/><path d="M12 3v9h9"/></g>
+  <g id="i-plans"><path d="M5 21V4h10l-1.5 3.5L15 11H5"/></g>
+  <g id="i-more"><path d="M6 12h.01M12 12h.01M18 12h.01" stroke-width="2.6"/></g>
+  <g id="i-bell"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></g>
+  <g id="i-eye"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></g>
+  <g id="i-search"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.2-4.2"/></g>
+  <g id="i-filter"><path d="M4 6h16M7 12h10M10 18h4"/></g>
+  <g id="i-plus"><path d="M12 5v14M5 12h14"/></g>
+  <g id="i-insights"><path d="M4 18l5-6 3 3 4-7 4 4"/></g>
+  <g id="i-left"><path d="M15 18l-6-6 6-6"/></g>
+  <g id="i-right"><path d="M9 18l6-6-6-6"/></g>
+  <g id="i-chev"><path d="M9 18l6-6-6-6"/></g>
+  <g id="i-cart"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.6 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 7H6"/></g>
+  <g id="i-fuel"><path d="M4 21V5a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v16"/><path d="M3 21h11M13 10h3a2 2 0 0 1 2 2v5a1.5 1.5 0 0 0 3 0V9l-3-3"/></g>
+  <g id="i-medical"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V4h6v3M12 11v5M9.5 13.5h5"/></g>
+  <g id="i-gift"><rect x="3" y="8" width="18" height="4"/><path d="M5 12v9h14v-9M12 8v13"/><path d="M12 8S10 3 7.5 4.5 12 8 12 8zM12 8s2-5 4.5-3.5S12 8 12 8z"/></g>
+  <g id="i-water"><path d="M12 3s6 6.4 6 10.2A6 6 0 0 1 6 13.2C6 9.4 12 3 12 3z"/></g>
+  <g id="i-bolt"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></g>
+  <g id="i-swap"><path d="M7 7h12l-3-3M17 17H5l3 3"/></g>
+  <g id="i-rent"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-7h6v7"/></g>
+  <g id="i-subs"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M7 3h10M10 11l5 2.5-5 2.5z"/></g>
+  <g id="i-car"><path d="M5 16h14M6.5 16V9l1.8-3.5h7.4L17.5 9v7"/><circle cx="8" cy="18" r="1.6"/><circle cx="16" cy="18" r="1.6"/></g>
+  <g id="i-cash"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/></g>
+  <g id="i-bank"><path d="M3 10h18M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 21h18M12 3l9 5H3z"/></g>
+  <g id="i-rate"><path d="M4 18l5-6 3 3 4-7 4 4"/><path d="M20 6h-4M20 6v4"/></g>
+  <g id="i-calc"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></g>
+  <g id="i-gold"><circle cx="12" cy="9" r="5"/><path d="M8.5 13.5L7 22l5-2.5L17 22l-1.5-8.5"/></g>
+  <g id="i-label"><path d="M3 8a2 2 0 0 1 2-2h8l8 6-8 6H5a2 2 0 0 1-2-2z"/><circle cx="7.5" cy="12" r="1"/></g>
+  <g id="i-lang"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 3 2.5 15 0 18M12 3c-2.5 3-2.5 15 0 18"/></g>
+  <g id="i-theme"><circle cx="12" cy="12" r="9"/><path d="M12 3v18a9 9 0 0 0 0-18z" fill="currentColor" stroke="none"/></g>
+  <g id="i-shield"><path d="M12 3l8 4v5c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V7z"/></g>
+  <g id="i-flag"><path d="M5 21V4h10l-1.5 3.5L15 11H5"/></g>
+  <g id="i-umbrella"><path d="M12 3a9 9 0 0 0-9 9h18a9 9 0 0 0-9-9z"/><path d="M12 12v7a2.5 2.5 0 0 0 5 0"/></g>
+  <g id="i-down"><path d="M4 7l6 6 3-3 7 7"/><path d="M20 17h-4M20 17v-4"/></g>
+  <g id="i-warn"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></g>
+  <g id="i-info"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></g>
+  <g id="i-check"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></g>
+  <g id="i-wallet"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><circle cx="17" cy="14" r="1.2"/></g>
+</defs></svg>
+
+<a class="away" href="./">&larr; thara-site</a>
+
+<div class="app">
+
+  <div class="top">
+    <div class="bar">
+      <h1 data-title>Thara</h1>
+      <div class="acts" data-acts></div>
+      <div class="acts">
+        <span class="bell"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-bell"/></svg><b>5</b></span>
+        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-eye"/></svg>
+      </div>
+    </div>
+    <div class="nw" data-nw>
+      <div class="l">Net worth</div>
+      <div class="v">E£607,584.62</div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- Home -->
+    <div class="screen on" data-screen="home">
+      <div class="c">
+        <h2>Over the last year</h2>
+        <div class="sub">Everything you own, minus what you owe</div>
+        <svg viewBox="0 0 340 100" style="width:100%;height:96px;margin-top:.5rem;display:block" aria-hidden="true">
+          <path d="M6 78 L60 75 L114 71 L146 68 L178 44 L230 39 L282 33 L332 27 L332 88 L6 88 Z" fill="#00695C" opacity=".10"/>
+          <path d="M6 78 L60 75 L114 71 L146 68 L178 44 L230 39 L282 33 L332 27" fill="none" stroke="#00695C" stroke-width="2.2" stroke-linejoin="round"/>
+          <circle cx="332" cy="27" r="3.6" fill="#fff" stroke="#00695C" stroke-width="2"/>
+          <g fill="#6F7975" font-size="10" font-family="system-ui, sans-serif">
+            <text x="6" y="99">Oct</text><text x="88" y="99">Jan</text><text x="170" y="99">Apr</text><text x="252" y="99">Jul</text><text x="313" y="99">Sep</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="c">
+        <h2>This month</h2>
+        <div class="sub">September 2026</div>
+        <div class="row3">
+          <div><div class="k">Income</div><div class="v in">E£0.00</div></div>
+          <div><div class="k">Spending</div><div class="v out">E£10,579.39</div></div>
+          <div><div class="k">Left over</div><div class="v out">-E£10,579.39</div></div>
+        </div>
+        <div class="foot">On track to spend E£26,448 this month</div>
+      </div>
+
+      <div class="c">
+        <h2>Coming up</h2>
+        <div class="sub">Already late</div>
+        <div class="li"><span class="ic" style="background:#FBE3E1;color:#B3403A"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-rent"/></svg></span><span class="t"><b>Flat rent</b><span>9 days late</span></span><span class="a">E£5,200.00</span></div>
+        <div class="li"><span class="ic" style="background:#FBE3E1;color:#B3403A"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-subs"/></svg></span><span class="t"><b>Internet subscription</b><span>7 days late</span></span><span class="a">E£400.00</span></div>
+        <div class="li"><span class="ic" style="background:#FBE3E1;color:#B3403A"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-bolt"/></svg></span><span class="t"><b>Water bill</b><span>7 days late</span></span><span class="a">E£120.00</span></div>
+      </div>
+
+      <div class="c">
+        <div class="head"><h2>Sources</h2><span class="see">See all</span></div>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#1B7F5B"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-cash"/></svg></span><span class="t"><b>Cash</b><span>Cash</span></span><span class="a">E£0.00</span></div>
+        <div class="li"><span class="ic" style="background:#EDE4F6;color:#5B4B8A"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-cash"/></svg></span><span class="t"><b>Cash</b><span>Cash</span></span><span class="a out">-E£147,104.35</span></div>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#00695C"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-bank"/></svg></span><span class="t"><b>Bank Account</b><span>Bank account</span></span><span class="a">E£0.00</span></div>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#00695C"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-bank"/></svg></span><span class="t"><b>Bank account</b><span>Bank account</span></span><span class="a">E£100,269.27</span></div>
+      </div>
+
+      <div class="c">
+        <div class="head"><h2>Your plans</h2><span class="see">See all</span></div>
+        <div class="li"><span class="ic" style="background:#FBE3E1;color:#B3403A"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-shield"/></svg></span><span class="t"><span class="track" style="display:block"><i style="width:4%"></i></span></span><span class="a">E£116,140</span></div>
+        <div class="li"><span class="ic" style="background:#FBE3E1;color:#B3403A"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-flag"/></svg></span><span class="t"><span class="track" style="display:block"><i style="width:46%"></i></span></span><span class="a">E£114,940</span></div>
+      </div>
+    </div>
+
+    <!-- Records -->
+    <div class="screen" data-screen="records">
+      <div class="step">
+        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg>
+        <b>September 2026</b>
+        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-right"/></svg>
+      </div>
+      <div class="strip">
+        <div><div class="k">Income</div><div class="v in">E£0.00</div></div>
+        <div><div class="k">Spending</div><div class="v out">E£10,579.39</div></div>
+        <div><div class="k">Left over</div><div class="v out">-E£10,579.39</div></div>
+      </div>
+      <div>
+        <div class="day"><b>Today</b><span>-E£733.99</span></div>
+        <div class="li"><span class="ic" style="background:#DDEEF6;color:#1D6E9E"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-water"/></svg></span><span class="t"><b>Water</b><span>Bank account</span></span><span class="a out">-E£132.94</span></div>
+        <div class="li"><span class="ic" style="background:#FDEBD6;color:#8A5A10"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-bolt"/></svg></span><span class="t"><b>Electricity</b><span>Bank account</span></span><span class="a out">-E£601.05</span></div>
+
+        <div class="day"><b>Thu 10 Sep</b><span>-E£1,311.49</span></div>
+        <div class="li"><span class="ic" style="background:#E7EEE9;color:#3F4946"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-swap"/></svg></span><span class="t"><b>Bank account → Car loan</b></span><span class="a" style="color:#00695C">E£2,124.00</span></div>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#1B7F5B"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-cart"/></svg></span><span class="t"><b>Groceries</b><span>Cash</span></span><span class="a out">-E£1,311.49</span></div>
+
+        <div class="day"><b>Tue 8 Sep</b><span>-E£336.01</span></div>
+        <div class="li"><span class="ic" style="background:#FBE0EC;color:#A33A6B"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-gift"/></svg></span><span class="t"><b>Gifts</b><span>Cash</span></span><span class="a out">-E£336.01</span></div>
+
+        <div class="day"><b>Mon 7 Sep</b><span>-E£165.52</span></div>
+        <div class="li"><span class="ic" style="background:#FBE3E1;color:#B3403A"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-medical"/></svg></span><span class="t"><b>Medicine</b><span>Bank account</span></span><span class="a out">-E£165.52</span></div>
+
+        <div class="day"><b>Sun 6 Sep</b><span>-E£1,130.35</span></div>
+        <div class="li"><span class="ic" style="background:#FDEBD6;color:#8A5A10"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-fuel"/></svg></span><span class="t"><b>Fuel</b><span>Cash</span></span><span class="a out">-E£814.86</span></div>
+      </div>
+    </div>
+
+    <!-- What you owe -->
+    <div class="screen" data-screen="due">
+      <div class="c">
+        <div class="grid2">
+          <div><div class="k">Still to pay</div><div class="big">E£45,220.00</div></div>
+          <div><div class="k">Already late</div><div class="big" style="color:#B3403A">E£7,520.00</div></div>
+        </div>
+      </div>
+      <div class="c">
+        <h2>Overdue</h2>
+        <div class="li"><span class="ic" style="background:#FBE3E1;color:#B3403A"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-rent"/></svg></span><span class="t"><b>Flat rent</b><span>3 September 2026 · 9 days late</span></span><span class="a">E£5,200.00</span></div>
+        <div class="li"><span class="ic" style="background:#FBE3E1;color:#B3403A"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-subs"/></svg></span><span class="t"><b>Internet subscription</b><span>5 September 2026 · 7 days late</span></span><span class="a">E£400.00</span></div>
+        <div class="li"><span class="ic" style="background:#FBE3E1;color:#B3403A"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-bolt"/></svg></span><span class="t"><b>Water bill</b><span>5 September 2026 · 7 days late</span></span><span class="a">E£120.00</span></div>
+        <div class="li"><span class="ic" style="background:#FBE3E1;color:#B3403A"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-car"/></svg></span><span class="t"><b>Car instalment</b><span>10 September 2026 · 2 days late</span></span><span class="a">E£1,800.00</span></div>
+      </div>
+      <div class="c">
+        <h2>Coming up</h2>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#00695C"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-rent"/></svg></span><span class="t"><b>Flat rent</b><span>3 October 2026 · In 21 days</span></span><span class="a">E£5,200.00</span></div>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#00695C"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-subs"/></svg></span><span class="t"><b>Internet subscription</b><span>5 October 2026 · In 23 days</span></span><span class="a">E£400.00</span></div>
+      </div>
+    </div>
+
+    <!-- Analysis -->
+    <div class="screen" data-screen="analysis">
+      <div class="seg">
+        <span class="on"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-due"/></svg>Monthly</span>
+        <span><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-due"/></svg>Yearly</span>
+      </div>
+      <div class="step">
+        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-left"/></svg>
+        <b>September 2026</b>
+        <svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-right"/></svg>
+      </div>
+      <div class="c">
+        <div class="grid2">
+          <div><div class="k">Income</div><div class="big" style="color:#1B7F5B">E£0</div></div>
+          <div><div class="k">Spending</div><div class="big" style="color:#B3403A">E£10,579</div></div>
+          <div><div class="k">Left over</div><div class="big" style="color:#B3403A">-E£10,579.39</div></div>
+          <div><div class="k">Transfers</div><div class="big" style="color:#00695C">E£3,894</div></div>
+        </div>
+        <div class="delta"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-down"/></svg>43% less · vs. last month</div>
+      </div>
+      <div class="c">
+        <h2>Day by day</h2>
+        <svg viewBox="0 0 340 96" style="width:100%;height:92px;margin-top:.5rem;display:block" aria-hidden="true">
+          <line x1="6" y1="24" x2="334" y2="24" stroke="#EEF3F1" stroke-width="1"/>
+          <line x1="6" y1="50" x2="334" y2="50" stroke="#EEF3F1" stroke-width="1"/>
+          <line x1="6" y1="76" x2="334" y2="76" stroke="#EEF3F1" stroke-width="1"/>
+          <g fill="#B3403A">
+            <rect x="34" y="10" width="3" height="66"/><rect x="66" y="64" width="3" height="12"/>
+            <rect x="77" y="69" width="3" height="7"/><rect x="88" y="55" width="3" height="21"/>
+            <rect x="99" y="66" width="3" height="10"/><rect x="110" y="70" width="3" height="6"/>
+            <rect x="131" y="50" width="3" height="26"/>
+          </g>
+          <g fill="#6F7975" font-size="10" font-family="system-ui, sans-serif">
+            <text x="6" y="92">1</text><text x="80" y="92">6</text><text x="154" y="92">11</text><text x="228" y="92">16</text><text x="302" y="92">26</text>
+          </g>
+        </svg>
+        <div class="foot" style="text-align:center"><span style="color:#1B7F5B">●</span> Income &nbsp; <span style="color:#B3403A">●</span> Spending</div>
+      </div>
+      <div class="c">
+        <h2>Where it went</h2>
+        <svg viewBox="0 0 130 130" style="width:160px;height:160px;margin:.5rem auto .3rem;display:block" aria-hidden="true">
+          <g fill="none" stroke-width="19" transform="rotate(-90 65 65)">
+            <circle cx="65" cy="65" r="52" stroke="#37474F" stroke-dasharray="176.4 150.3"/>
+            <circle cx="65" cy="65" r="52" stroke="#2E7D32" stroke-dasharray="62.1 264.6" stroke-dashoffset="-176.4"/>
+            <circle cx="65" cy="65" r="52" stroke="#E07B39" stroke-dasharray="29.4 297.3" stroke-dashoffset="-238.5"/>
+            <circle cx="65" cy="65" r="52" stroke="#1565C0" stroke-dasharray="19.6 307.1" stroke-dashoffset="-267.9"/>
+            <circle cx="65" cy="65" r="52" stroke="#8E24AA" stroke-dasharray="9.8 316.9" stroke-dashoffset="-287.5"/>
+            <circle cx="65" cy="65" r="52" stroke="#B3403A" stroke-dasharray="9.8 316.9" stroke-dashoffset="-297.3"/>
+            <circle cx="65" cy="65" r="52" stroke="#00838F" stroke-dasharray="19.6 307.1" stroke-dashoffset="-307.1"/>
+          </g>
+          <text x="65" y="61" text-anchor="middle" fill="#6F7975" font-size="10" font-family="system-ui, sans-serif">Spending</text>
+          <text x="65" y="79" text-anchor="middle" fill="#191C1B" font-size="17" font-weight="800" font-family="system-ui, sans-serif">E£11,313</text>
+        </svg>
+        <div class="li"><span style="width:12px;height:12px;border-radius:3px;background:#37474F"></span><span class="t"><b>Rent / Apartment</b></span><span class="a">E£6,108 · 54%</span></div>
+        <div class="li"><span style="width:12px;height:12px;border-radius:3px;background:#2E7D32"></span><span class="t"><b>Groceries</b></span><span class="a">E£2,186 · 19%</span></div>
+        <div class="li"><span style="width:12px;height:12px;border-radius:3px;background:#E07B39"></span><span class="t"><b>Fuel</b></span><span class="a">E£1,015 · 9%</span></div>
+      </div>
+    </div>
+
+    <!-- Plans -->
+    <div class="screen" data-screen="plans">
+      <div class="c plan">
+        <span class="badge">Needs attention</span>
+        <span class="ic" style="background:#FBE3E1;color:#B3403A"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-shield"/></svg></span>
+        <div class="k" style="margin-top:.6rem">Saved so far</div>
+        <div class="big" style="font-size:19px;font-weight:800">E£116,140</div>
+        <div class="bars"><span class="track"><i style="width:4%"></i></span><span class="pct">4%</span></div>
+        <div class="advice"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-warn"/></svg>Less than one month of cover. This is the most valuable thing you can fix right now.</div>
+      </div>
+      <div class="c plan">
+        <span class="badge">Needs attention</span>
+        <span class="ic" style="background:#FBE3E1;color:#B3403A"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-flag"/></svg></span>
+        <div class="k" style="margin-top:.6rem">Saved so far</div>
+        <div class="big" style="font-size:19px;font-weight:800">E£114,940</div>
+        <div class="bars"><span class="track"><i style="width:46%"></i></span><span class="pct">46%</span></div>
+        <div class="advice amber"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-info"/></svg>Put aside E£5,872 a month for the next 23 months to hit this on time.</div>
+      </div>
+      <div class="c plan">
+        <span class="badge">Needs attention</span>
+        <span class="ic" style="background:#FBE3E1;color:#B3403A"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-umbrella"/></svg></span>
+        <div class="k" style="margin-top:.6rem">Your number</div>
+        <div class="big" style="font-size:19px;font-weight:800">E£130,802,586</div>
+        <div class="bars"><span class="track"><i style="width:1%"></i></span><span class="pct">0%</span></div>
+        <div class="advice"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-warn"/></svg>At the current savings rate this target is not reachable. Increasing what you set aside is the only lever that moves it much.</div>
+      </div>
+      <div class="c plan">
+        <span class="badge">Needs attention</span>
+        <span class="ic" style="background:#FBE3E1;color:#B3403A"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-down"/></svg></span>
+        <div class="k" style="margin-top:.6rem">Total debt</div>
+        <div class="big" style="font-size:19px;font-weight:800">E£102,000</div>
+        <div class="advice"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-warn"/></svg>These payments do not cover the interest, so the balance grows.</div>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="screen" data-screen="more">
+      <div class="c">
+        <h2>Sources and types</h2>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#00695C"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-wallet"/></svg></span><span class="t"><b>Sources</b><span>Where your money sits</span></span><svg class="i chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chev"/></svg></div>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#00695C"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-rate"/></svg></span><span class="t"><b>Dollar and gold</b><span>Measure your wealth against something that does not move</span></span><svg class="i chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chev"/></svg></div>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#00695C"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-calc"/></svg></span><span class="t"><b>Zakat calculator</b><span>Work it out yourself, from figures you enter</span></span><svg class="i chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chev"/></svg></div>
+        <div class="li"><span class="ic" style="background:#FDEBD6;color:#8A5A10"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-gold"/></svg></span><span class="t"><b>Gold you hold</b><span>Held by weight, valued at the price of the day</span></span><svg class="i chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chev"/></svg></div>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#00695C"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-label"/></svg></span><span class="t"><b>Types</b><span>What you spend and earn on</span></span><svg class="i chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chev"/></svg></div>
+      </div>
+      <div class="c">
+        <h2>General</h2>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#00695C"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-cash"/></svg></span><span class="t"><b>Currency</b><span>Egyptian Pound · EGP</span></span><svg class="i chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chev"/></svg></div>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#00695C"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-lang"/></svg></span><span class="t"><b>Language</b><span>Match the phone</span></span><svg class="i chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chev"/></svg></div>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#00695C"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-theme"/></svg></span><span class="t"><b>Appearance</b><span>Light</span></span><svg class="i chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chev"/></svg></div>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#00695C"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-bell"/></svg></span><span class="t"><b>Notifications</b><span>Everything Thara has had to tell you</span></span><svg class="i chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chev"/></svg></div>
+      </div>
+      <div class="c">
+        <h2>Version and updates</h2>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#00695C"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-info"/></svg></span><span class="t"><b>Version</b><span data-build>1.0.0</span></span></div>
+        <div class="li"><span class="ic" style="background:#DDEFEA;color:#1B7F5B"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-check"/></svg></span><span class="t"><b>You are on the newest build</b><span>Last checked today</span></span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <span class="fab" data-fab aria-hidden="true"></span>
+
+  <div class="nav" role="tablist" aria-label="Sections">
+    <button role="tab" aria-selected="true" data-tab="home"><i class="pill"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-home"/></svg></i>Home</button>
+    <button role="tab" aria-selected="false" data-tab="records"><i class="pill"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-records"/></svg></i>Records</button>
+    <button role="tab" aria-selected="false" data-tab="due"><i class="pill"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-due"/></svg></i>Due</button>
+    <button role="tab" aria-selected="false" data-tab="analysis"><i class="pill"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-analysis"/></svg></i>Analysis</button>
+    <button role="tab" aria-selected="false" data-tab="plans"><i class="pill"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-plans"/></svg></i>Plans</button>
+    <button role="tab" aria-selected="false" data-tab="more"><i class="pill"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-more"/></svg></i>More</button>
+  </div>
+
+</div>
+
+<script>
+// Switching tabs changes four things, because that is what the app changes:
+// the title, the actions in the corner, whether the net worth is pinned under
+// it, and the floating button.
+(function () {
+  var app = document.querySelector('.app');
+
+  function icon(id, w) {
+    return '<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' +
+      (w || 1.9) + '" stroke-linecap="round" stroke-linejoin="round"><use href="#' + id + '"/></svg>';
+  }
+
+  var screens = {
+    home:     { title: 'Thara',        nw: true,  acts: [],                            fab: 'Add',               round: false },
+    records:  { title: 'Records',      nw: false, acts: ['i-search', 'i-filter'],      fab: '',                  round: true  },
+    due:      { title: 'What you owe', nw: false, acts: ['i-insights'],                fab: 'Add an obligation', round: false },
+    analysis: { title: 'Analysis',     nw: false, acts: [],                            fab: '',                  round: false },
+    plans:    { title: 'Plans',        nw: false, acts: ['i-plus'],                    fab: '',                  round: false },
+    more:     { title: 'Settings',     nw: false, acts: [],                            fab: '',                  round: false }
+  };
+
+  var title = app.querySelector('[data-title]');
+  var acts = app.querySelector('[data-acts]');
+  var nw = app.querySelector('[data-nw]');
+  var fab = app.querySelector('[data-fab]');
+  var body = app.querySelector('.body');
+  var tabs = [].slice.call(app.querySelectorAll('.nav button'));
+
+  function show(name) {
+    var s = screens[name];
+    if (!s) return;
+
+    title.textContent = s.title;
+    acts.innerHTML = s.acts.map(function (id) { return icon(id, id === 'i-plus' ? 2.1 : 1.9); }).join('');
+    nw.hidden = !s.nw;
+
+    if (s.fab || s.round) {
+      fab.className = 'fab' + (s.round ? ' round' : '');
+      fab.innerHTML = icon('i-plus', 2.2) + (s.fab ? '<span>' + s.fab + '</span>' : '');
+      fab.hidden = false;
+    } else {
+      fab.hidden = true;
+    }
+
+    [].forEach.call(app.querySelectorAll('[data-screen]'), function (el) {
+      el.classList.toggle('on', el.getAttribute('data-screen') === name);
+    });
+    tabs.forEach(function (t) {
+      t.setAttribute('aria-selected', String(t.getAttribute('data-tab') === name));
+    });
+    body.scrollTop = 0;
+  }
+
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () { show(t.getAttribute('data-tab')); });
+  });
+  show('home');
+
+  // The version row reads the same manifest the app does, so a demo left
+  // open for a month does not go on naming a build nobody runs any more.
+  fetch('version.json', { cache: 'no-cache' })
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function (v) {
+      var el = app.querySelector('[data-build]');
+      if (el && v.version) {
+        el.textContent = v.version + (v.buildNumber ? ' (build ' + v.buildNumber + ')' : '');
+      }
+    })
+    .catch(function () { /* Keep the static text. */ });
+})();
+</script>
+</body>
+</html>
