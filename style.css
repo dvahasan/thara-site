@@ -21,6 +21,12 @@
   --leaf: #C8A44A;
   --income: #1B7F5B;
   --expense: #B3403A;
+  /* Readiness tags carry their own text colour. --income and --leaf are
+     chosen to sit on a chart, not to be read at 11px: on the light card they
+     come to 4.4:1 and 3.3:1, under the 4.5:1 a small label needs. These are
+     the same hues taken darker until they clear it. */
+  --tag-ready: #126649;
+  --tag-testing: #7A5B0E;
   --shadow: 0 1px 2px rgba(14, 43, 38, 0.06), 0 12px 32px -16px rgba(14, 43, 38, 0.18);
   color-scheme: light dark;
 }
@@ -42,6 +48,10 @@
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -16px rgba(0, 0, 0, 0.6);
     --income: #7ED7AF;
     --expense: #F0A39E;
+    /* On the dark card the light-mode tones would be unreadable the other
+       way; these already clear 7:1. */
+    --tag-ready: #7ED7AF;
+    --tag-testing: #E0BE68;
   }
 }
 
@@ -215,6 +225,18 @@ tr:last-child td { border-bottom: 0; }
    so it reads as a fact about the download rather than as body copy. */
 .get .build { display: inline-block; margin: .2rem 0 0; padding: .3rem .8rem; border-radius: 999px; background: var(--card-2); color: var(--muted); font-size: .88rem; }
 .get .build b { color: var(--text); font-variant-numeric: tabular-nums; }
+
+/* Platform readiness. Said as a tag on the card rather than only in the
+   paragraph, because the one thing somebody must not miss is whether the
+   build they are about to install is fit to hold their money. */
+.tag { display: inline-block; vertical-align: middle; margin-inline-start: .45rem; padding: .12rem .5rem; border-radius: 999px; font-size: .68rem; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; }
+.tag.ready { background: color-mix(in srgb, var(--income) 18%, transparent); color: var(--tag-ready); }
+.tag.testing { background: color-mix(in srgb, var(--leaf) 22%, transparent); color: var(--tag-testing); }
+/* The download cards colour every span inside them with `--text-2`, which is
+   more specific than `.tag` alone and greyed these out to look like ordinary
+   text. Repeated here so the tag keeps its own colour in that one place. */
+.get .platforms .tag.ready { color: var(--tag-ready); }
+.get .platforms .tag.testing { color: var(--tag-testing); }
 
 /* install guide */
 .install .lede { color: var(--text-2); font-size: 1.05rem; max-width: 70ch; margin: .6rem 0 2rem; }

@@ -215,8 +215,8 @@
       <p class="build">Latest build <b data-version-build>&mdash;</b> <span data-version-date></span></p>
       <div class="platforms">
         <div class="card">
-          <b>Android</b>
-          <span>A signed APK. Tap the link on the phone itself and install it &mdash; nothing else is needed. Android 8 or newer.</span>
+          <b>Android <span class="tag ready">Ready to use</span></b>
+          <span>The build to use day to day. A signed APK: tap the link on the phone itself and install it &mdash; nothing else is needed. Android 8 or newer.</span>
           <a class="btn filled" href="https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk" download>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
             Download APK
@@ -224,8 +224,8 @@
           <small class="meta" data-asset="thara-release.apk">Latest build</small>
         </div>
         <div class="card">
-          <b>iPhone</b>
-          <span>An unsigned IPA, so it cannot be installed from the phone on its own: it has to be signed with your Apple ID on a computer once. <a href="#install">How to install</a>. iOS 15 or newer.</span>
+          <b>iPhone <span class="tag testing">Testing only</span></b>
+          <span>Not ready to keep real money in yet. The app is complete, but the iPhone build has had far less use than the Android one, so treat it as something to try rather than to rely on. An unsigned IPA, so it cannot be installed from the phone on its own: it has to be signed with your Apple ID on a computer once. <a href="#install">How to install</a>. iOS 15 or newer.</span>
           <a class="btn filled" href="https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa" download>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
             Download IPA
@@ -246,7 +246,7 @@
 
     <div class="install-grid">
       <div>
-        <h3>Android &mdash; on the phone</h3>
+        <h3>Android &mdash; on the phone <span class="tag ready">Ready to use</span></h3>
         <ol class="steps">
           <li class="card"><span class="n">1</span><div><b>Open this page on the phone</b><span>Then press <b>Download APK</b> above.</span></div></li>
           <li class="card"><span class="n">2</span><div><b>Allow the install</b><span>Android asks whether your browser may install apps. Say yes; it is asking because the file did not come from the Play Store.</span></div></li>
@@ -255,7 +255,7 @@
       </div>
 
       <div>
-        <h3>iPhone &mdash; a computer once</h3>
+        <h3>iPhone &mdash; a computer once <span class="tag testing">Testing only</span></h3>
         <p class="note">Both routes below sign the app with <b>your own</b> Apple ID. Nothing is sent to the developer, and the signature is what lets your phone trust an app that did not come from the App Store. On a free Apple ID a signature lasts <b>seven days</b>; renewing it does not touch your data.</p>
         <ol class="steps">
           <li class="card"><span class="n">1</span><div><b>SideStore &mdash; the computer is needed once</b><span>Set it up from a Windows PC or a Mac following <a href="https://sidestore.io" rel="noopener">sidestore.io</a>. After that the phone renews the app by itself over Wi-Fi, with no cable and no computer ever again. This is the one to pick if somebody else will be living with it.</span></div></li>
