@@ -253,6 +253,18 @@ tr:last-child td { border-bottom: 0; }
 .install .warn h3 { margin: 0 0 .4rem; }
 .install .warn p { color: var(--text-2); margin: 0; max-width: 80ch; }
 
+/* feedback */
+.feedback { text-align: center; }
+.feedback .card { padding: 2.5rem clamp(1.2rem, 4vw, 3rem); max-width: 720px; margin: 0 auto; }
+.feedback p { color: var(--text-2); max-width: 58ch; margin-inline: auto; }
+.feedback .btn { margin: 1.6rem 0 1.2rem; }
+.feedback .btn svg { width: 18px; height: 18px; }
+/* The Arabic paragraphs restate the English rather than translating the page
+   around them: somebody reading this section in Arabic should not have to
+   read the English first to know what the button does. */
+.feedback .ar { font-size: .95rem; }
+.feedback .small { color: var(--muted); font-size: .88rem; }
+
 /* footer */
 footer { padding: 2.5rem 0 3rem; border-top: 1px solid var(--outline-soft); color: var(--muted); font-size: .92rem; }
 footer .wrap { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; align-items: center; }
