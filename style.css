@@ -211,6 +211,10 @@ tr:last-child td { border-bottom: 0; }
 .get .platforms .btn { margin-top: .6rem; width: 100%; }
 .get .platforms .meta { display: block; margin-top: .55rem; color: var(--muted); font-size: .82rem; }
 .get p { color: var(--text-2); }
+/* The build line sits under the heading and is filled in from version.json,
+   so it reads as a fact about the download rather than as body copy. */
+.get .build { display: inline-block; margin: .2rem 0 0; padding: .3rem .8rem; border-radius: 999px; background: var(--card-2); color: var(--muted); font-size: .88rem; }
+.get .build b { color: var(--text); font-variant-numeric: tabular-nums; }
 
 /* footer */
 footer { padding: 2.5rem 0 3rem; border-top: 1px solid var(--outline-soft); color: var(--muted); font-size: .92rem; }

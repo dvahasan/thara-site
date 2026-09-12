@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="google-site-verification" content="9XWMD6QEMEXP8aq0Bn7HitkUXd0PHs_-tav6fFnA7BY" />
 <title>Thara · Private personal finance</title>
-<meta name="description" content="Thara (ثراء) is a private, offline personal finance app for Android and iOS. Encrypted on your phone, backed up only to your own Google Drive, in Arabic and English.">
+<meta name="description" content="Thara (ثراء) is a private, offline personal finance app for Android and iOS. Encrypted on your phone, backed up to a folder you choose, in Arabic and English.">
 <meta name="theme-color" content="#00695C">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
@@ -183,8 +183,8 @@
         <p>Screenshots, screen recording and the recent-apps thumbnail are blocked. A hide-amounts toggle replaces every figure with dots. Auto-lock is configurable from immediately to never.</p>
       </div>
       <div class="card sec-item">
-        <h3>Two network calls, both optional</h3>
-        <p>Rate updates send only the currency being asked about. Drive backups send only ciphertext you hold the passphrase to. With both switched off, the app makes no requests at all. There is no analytics and no crash reporting.</p>
+        <h3>Two network calls, both switchable</h3>
+        <p>Rate updates send only the currency being asked about. The update check asks this site once a day whether a newer build exists, carries no identifier and sends nothing about your wallet. With both switched off, the app makes no requests at all. There is no analytics and no crash reporting.</p>
       </div>
     </div>
   </div>
@@ -194,13 +194,13 @@
   <div class="wrap split">
     <div>
       <h2>Backups that only you can read</h2>
-      <p style="color:var(--text-2);font-size:1.05rem">Thara can back up to a private application folder in your own Google Drive, to a folder you choose, or to a file you share anywhere. Every backup is encrypted on the phone first with a passphrase you choose. Without it the file cannot be opened, by Google, by the developer, or by anyone who finds it.</p>
-      <p style="color:var(--text-2)">The Drive folder is hidden from the normal Drive interface and readable only by Thara. The app never asks for access to the rest of your Drive.</p>
+      <p style="color:var(--text-2);font-size:1.05rem">Thara backs up into a folder you choose, on a schedule, or to a file you save or share anywhere. Every backup is encrypted on the phone first with a passphrase you choose. Without it the file cannot be opened, by the developer or by anyone who finds it.</p>
+      <p style="color:var(--text-2)">Thara writes the file and nothing else. Whether that folder is on the phone, on an SD card, or inside a cloud app you already have is decided by you and by whatever app owns it — not by Thara, which never talks to any of them. Google Drive backup is not offered at present.</p>
     </div>
     <ol class="steps">
       <li class="card"><span class="n">1</span><div><b>Choose a passphrase</b><span>At least 12 characters. It is never stored in the backup and never leaves the phone.</span></div></li>
       <li class="card"><span class="n">2</span><div><b>Encrypt on the device</b><span>AES-256-GCM with a key derived by PBKDF2 at 600,000 rounds and a fresh salt every time.</span></div></li>
-      <li class="card"><span class="n">3</span><div><b>Upload the ciphertext</b><span>Into Thara's own hidden folder on your Drive, or into a folder on the phone.</span></div></li>
+      <li class="card"><span class="n">3</span><div><b>Write the ciphertext</b><span>Into the folder you picked, on the phone or on an SD card. Older automatic copies are pruned so it never fills up.</span></div></li>
       <li class="card"><span class="n">4</span><div><b>Restore anywhere</b><span>Enter the same passphrase on another phone. Restore runs in one transaction, so an interrupted restore leaves the old wallet intact.</span></div></li>
     </ol>
   </div>
@@ -211,6 +211,7 @@
     <div class="card">
       <h2>Get Thara</h2>
       <p>Thara is a personal project and is not sold or listed on an app store. It is installed directly on the phone.</p>
+      <p class="build">Latest build <b data-version-build>&mdash;</b> <span data-version-date></span></p>
       <div class="platforms">
         <div class="card">
           <b>Android</b>
@@ -232,16 +233,46 @@
         </div>
       </div>
       <p>Each link always serves the newest build: every run replaces the files on the same <a href="https://github.com/dvahasan/thara-site/releases/tag/apk-latest">release</a>, so the address never changes and never goes stale. Both platforms share the same encrypted backup format, so a backup made on one restores on the other.</p>
+      <p><b>You only have to find this page once.</b> Because Thara is not in a store, it keeps track for itself: once a day it reads <a href="version.json">version.json</a> on this site, and when a newer build appears it tells you &mdash; in the app's own notification list, as a notification from the phone, and as a prompt that shows up once and then leaves you alone for several days. The check carries no identifier and sends nothing about your wallet, and it can be switched off under Settings, About.</p>
     </div>
   </div>
 </section>
 
 <script>
-// Fills in each download's real size and build date from the release itself,
-// so the page cannot claim a version it is not actually serving. Purely
-// additive: with no network, or if GitHub rate-limits an unauthenticated
-// request, the cards keep saying "Latest build" and the links still work.
+// Fills in the build number, the build date and the download sizes, so the
+// page cannot claim a version it is not actually serving.
+//
+// Two sources, in order. version.json is published by the same build that
+// produces the downloads, is served from this site, and is the file the app
+// itself reads to decide whether an update exists -- so the page and the app
+// can never disagree about what is current. The GitHub API is asked only for
+// the file sizes, which the manifest does not carry per platform; it is rate
+// limited per IP for anonymous callers, so nothing important depends on it.
+//
+// Purely additive: with no network at all the cards keep their static text
+// and every link still works.
 (function () {
+  function fill(selector, value) {
+    Array.prototype.forEach.call(
+      document.querySelectorAll(selector),
+      function (el) { el.textContent = value; }
+    );
+  }
+
+  function on(date) {
+    return new Date(date).toLocaleDateString(undefined, {
+      day: 'numeric', month: 'short', year: 'numeric'
+    });
+  }
+
+  fetch('version.json', { cache: 'no-cache' })
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function (v) {
+      if (v.buildNumber) fill('[data-version-build]', v.buildNumber);
+      if (v.publishedAt) fill('[data-version-date]', '\u00b7 built ' + on(v.publishedAt));
+    })
+    .catch(function () { /* Keep the static text. */ });
+
   var API = 'https://api.github.com/repos/dvahasan/thara-site/releases/tags/apk-latest';
   fetch(API, { headers: { Accept: 'application/vnd.github+json' } })
     .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
@@ -249,11 +280,7 @@
       (release.assets || []).forEach(function (asset) {
         var el = document.querySelector('[data-asset="' + asset.name + '"]');
         if (!el) return;
-        var mb = (asset.size / 1048576).toFixed(0);
-        var on = new Date(asset.updated_at).toLocaleDateString(undefined, {
-          day: 'numeric', month: 'short', year: 'numeric'
-        });
-        el.textContent = mb + ' MB \u00b7 built ' + on;
+        el.textContent = (asset.size / 1048576).toFixed(0) + ' MB \u00b7 built ' + on(asset.updated_at);
       });
     })
     .catch(function () { /* Keep the static text. */ });

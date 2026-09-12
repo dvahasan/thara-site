@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy policy · Thara</title>
-<meta name="description" content="How Thara handles your data: everything stays on your phone, and optional backups go only to your own Google Drive, encrypted with a passphrase you choose.">
+<meta name="description" content="How Thara handles your data: everything stays on your phone, and backups go only where you put them, encrypted with a passphrase you choose.">
 <meta name="theme-color" content="#00695C">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
@@ -34,21 +34,22 @@
       <p class="updated">Last updated 10 September 2026</p>
 
       <div class="callout">
-        <p><b>The short version.</b> Thara keeps your financial records in an encrypted database on your phone. The developer runs no server and cannot see your data. If you turn on Google Drive backup, an encrypted copy goes to a private folder in your own Drive, and only you hold the passphrase.</p>
+        <p><b>The short version.</b> Thara keeps your financial records in an encrypted database on your phone. The developer runs no server and cannot see your data. Backups are encrypted on the phone and written only where you point them, and only you hold the passphrase.</p>
       </div>
 
       <h2>What Thara stores</h2>
       <p>Thara stores the sources, records, types, obligations, plans, gold holdings, exchange rates and settings you enter. All of it lives in a SQLCipher encrypted database on your device. The encryption key is generated on the device and kept in the Android Keystore or iOS Keychain. Nothing is sent to any server operated by the developer, because there is none.</p>
 
       <h2>Network access</h2>
-      <p>Thara declares internet access for exactly two features, and both are off until you switch them on:</p>
+      <p>Thara declares internet access for exactly two features, and both can be switched off:</p>
       <ul>
-        <li><b>Rate updates.</b> Fetches the published dollar rate and world gold price from a public, key-less currency API. The request contains the currency being asked about and nothing else: no balance, no identifier, no account.</li>
-        <li><b>Google Drive backup.</b> Described below.</li>
+        <li><b>Rate updates.</b> Off until you switch them on. Fetches the published dollar rate and world gold price from a public, key-less currency API. The request contains the currency being asked about and nothing else: no balance, no identifier, no account.</li>
+        <li><b>The update check.</b> On by default, because Thara is installed as a file rather than from a store and nothing else would ever tell you that a fix has shipped. Once a day the app fetches <code>version.json</code> from this website and compares the build number in it with its own. The request is a plain GET for a public file: it carries no identifier, no account and nothing about your wallet, and the reply is the same bytes for everyone. You can switch it off under Settings, About.</li>
       </ul>
       <p>With both features off, the app makes no network requests at all. Thara contains no advertising, no analytics and no crash reporting.</p>
 
       <h2>Google Drive backup</h2>
+      <p><b>Not currently offered.</b> Drive backup is switched off in the app: there is no card to connect an account, no sign-in is attempted, and no upload runs. The section below describes how it behaves if it is offered again, and applies to nothing while it is off. Automatic backups into a folder you choose cover the same ground and involve no account anywhere.</p>
       <p>If you connect a Google account, Thara asks for a single permission: access to its own application data folder on your Google Drive. This is the <code>drive.appdata</code> scope. That folder is hidden from the regular Drive interface and is readable only by Thara. Thara cannot see, read, list or change any other file on your Drive, and it does not read your Google profile beyond the email address shown in Settings so you can tell which account is connected.</p>
       <p>Before a backup is uploaded it is encrypted on the device with AES-256-GCM, using a key derived from a passphrase you choose. The passphrase is never stored in the backup, never sent to Google, and never sent to the developer. Without it the backup cannot be read. If you forget it, no one can recover the backup for you.</p>
       <p>You can disconnect the Google account from the app's Settings at any time. You can also revoke Thara's access from your Google account's third-party access page, and delete the backup from Google Drive under Settings, Manage apps.</p>
