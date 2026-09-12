@@ -31,22 +31,26 @@
   <div class="wrap">
     <article class="card">
       <h1>Privacy policy</h1>
-      <p class="updated">Last updated 10 September 2026</p>
+      <p class="updated">Last updated 12 September 2026</p>
 
       <div class="callout">
-        <p><b>The short version.</b> Thara keeps your financial records in an encrypted database on your phone. The developer runs no server and cannot see your data. Backups are encrypted on the phone and written only where you point them, and only you hold the passphrase.</p>
+        <p><b>The short version.</b> Thara keeps your financial records in an encrypted database on your phone. The developer runs no server and cannot see your data. Backups are encrypted on the phone and written only where you point them, and only you hold the passphrase. The one thing that leaves your control is anything you choose to type into the feedback form, which is a Google Form and is described below.</p>
       </div>
 
       <h2>What Thara stores</h2>
       <p>Thara stores the sources, records, types, obligations, plans, gold holdings, exchange rates and settings you enter. All of it lives in a SQLCipher encrypted database on your device. The encryption key is generated on the device and kept in the Android Keystore or iOS Keychain. Nothing is sent to any server operated by the developer, because there is none.</p>
 
-      <h2>Network access</h2>
+      <h2 id="network-access">Network access</h2>
       <p>Thara declares internet access for exactly two features, and both can be switched off:</p>
       <ul>
         <li><b>Rate updates.</b> Off until you switch them on. Fetches the published dollar rate and world gold price from a public, key-less currency API. The request contains the currency being asked about and nothing else: no balance, no identifier, no account.</li>
         <li><b>The update check.</b> On by default, because Thara is installed as a file rather than from a store and nothing else would ever tell you that a fix has shipped. Once a day the app fetches <code>version.json</code> from this website and compares the build number in it with its own. The request is a plain GET for a public file: it carries no identifier, no account and nothing about your wallet, and the reply is the same bytes for everyone. You can switch it off under Settings, About.</li>
       </ul>
       <p>With both features off, the app makes no network requests at all. Thara contains no advertising, no analytics and no crash reporting.</p>
+
+      <h2>Links the app can open</h2>
+      <p>Settings carries a few links: the feedback form, the download page, and this policy. These are not a third network feature. Tapping one hands the address to whatever your phone uses for links and that is the end of Thara's part in it &mdash; the app fetches nothing, sends nothing, and attaches nothing about your wallet to the address.</p>
+      <p>What happens after that is between you and the site you opened. The feedback form is a <b>Google Form</b>, so anything you type into it is held by Google and by the developer in a Google spreadsheet, under <a href="https://policies.google.com/privacy">Google's privacy policy</a> rather than this one. It asks for no account and no name, and the only required question is what went wrong. Please leave real amounts, balances and account numbers out of it: knowing what happened is enough, and nothing you write there has the protection that the data on your phone has.</p>
 
       <h2>Google Drive backup</h2>
       <p><b>Not currently offered.</b> Drive backup is switched off in the app: there is no card to connect an account, no sign-in is attempted, and no upload runs. The section below describes how it behaves if it is offered again, and applies to nothing while it is off. Automatic backups into a folder you choose cover the same ground and involve no account anywhere.</p>

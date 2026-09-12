@@ -255,15 +255,64 @@ tr:last-child td { border-bottom: 0; }
 
 /* feedback */
 .feedback { text-align: center; }
-.feedback .card { padding: 2.5rem clamp(1.2rem, 4vw, 3rem); max-width: 720px; margin: 0 auto; }
-.feedback p { color: var(--text-2); max-width: 58ch; margin-inline: auto; }
-.feedback .btn { margin: 1.6rem 0 1.2rem; }
-.feedback .btn svg { width: 18px; height: 18px; }
-/* The Arabic paragraphs restate the English rather than translating the page
-   around them: somebody reading this section in Arabic should not have to
-   read the English first to know what the button does. */
-.feedback .ar { font-size: .95rem; }
-.feedback .small { color: var(--muted); font-size: .88rem; }
+.feedback .card {
+  padding: clamp(2rem, 5vw, 3.2rem) clamp(1.2rem, 4vw, 3rem);
+  max-width: 780px; margin: 0 auto; position: relative; overflow: hidden;
+}
+/* A wash of the brand colour behind the card rather than a flat panel: this
+   is the one section asking the reader for something, so it should look
+   unlike the sections that are telling them things. */
+.feedback .card::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(120% 80% at 50% 0%,
+    color-mix(in srgb, var(--primary) 12%, transparent) 0%, transparent 62%);
+}
+.feedback .card > * { position: relative; }
+
+.feedback .mark {
+  width: 58px; height: 58px; margin: 0 auto 1rem; border-radius: 18px;
+  display: grid; place-items: center;
+  background: var(--primary-container); color: var(--on-primary-container);
+}
+.feedback .mark svg { width: 28px; height: 28px; }
+
+.feedback h2 { margin: 0; }
+/* The Arabic line is the heading again, not decoration around it, so it has
+   to be as readable as the English. --leaf is a gold picked to sit on a dark
+   mark; on the light card it comes to 2.4:1, which is a colour you notice
+   rather than one you read. */
+.feedback .title-ar {
+  margin: .1rem 0 1.2rem; font-size: 1.25rem; font-weight: 700;
+  color: var(--primary);
+}
+
+/* The two languages sit side by side once there is room, so neither reads as
+   a footnote to the other. */
+.feedback .says {
+  display: grid; gap: 1rem; text-align: start;
+  max-width: 62ch; margin: 0 auto;
+}
+@media (min-width: 780px) { .feedback .says { grid-template-columns: 1fr 1fr; max-width: none; gap: 2rem; } }
+.feedback .says p { color: var(--text-2); margin: 0; }
+
+/* What someone wants to know before tapping: how much is this going to cost
+   me. Four short answers beat a sentence promising it is quick. */
+.feedback .reassure {
+  list-style: none; padding: 0; margin: 1.6rem 0 0;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem;
+}
+.feedback .reassure li {
+  padding: .3rem .75rem; border-radius: 999px; font-size: .84rem; font-weight: 600;
+  background: var(--card-2); color: var(--text-2);
+  border: 1px solid var(--outline-soft);
+}
+
+.feedback .btn.lg { margin: 1.5rem 0 1.4rem; padding: .85rem 1.6rem; font-size: 1.02rem; }
+.feedback .btn svg { width: 16px; height: 16px; }
+.feedback .btn span { font-weight: 700; }
+
+.feedback .small { color: var(--muted); font-size: .86rem; max-width: 60ch; margin: 0 auto .5rem; }
+.feedback .small a { color: var(--text-2); text-decoration: underline; }
 
 /* footer */
 footer { padding: 2.5rem 0 3rem; border-top: 1px solid var(--outline-soft); color: var(--muted); font-size: .92rem; }
