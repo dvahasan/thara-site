@@ -24,6 +24,7 @@
       <a href="#security">Security</a>
       <a href="#backup">Backup</a>
       <a href="#get">Get the app</a>
+      <a href="#install">Installing</a>
     </nav>
   </div>
 </header>
@@ -215,7 +216,7 @@
       <div class="platforms">
         <div class="card">
           <b>Android</b>
-          <span>A signed APK, installed directly. Android 8 or newer. Android will ask you to allow installs from this source.</span>
+          <span>A signed APK. Tap the link on the phone itself and install it &mdash; nothing else is needed. Android 8 or newer.</span>
           <a class="btn filled" href="https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk" download>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
             Download APK
@@ -223,8 +224,8 @@
           <small class="meta" data-asset="thara-release.apk">Latest build</small>
         </div>
         <div class="card">
-          <b>iOS</b>
-          <span>An unsigned IPA. Install it with a sideloading tool such as Sideloadly using your own Apple ID. iOS 13 or newer.</span>
+          <b>iPhone</b>
+          <span>An unsigned IPA, so it cannot be installed from the phone on its own: it has to be signed with your Apple ID on a computer once. <a href="#install">How to install</a>. iOS 15 or newer.</span>
           <a class="btn filled" href="https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa" download>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
             Download IPA
@@ -238,6 +239,39 @@
   </div>
 </section>
 
+<section id="install" class="install">
+  <div class="wrap">
+    <h2>Installing it</h2>
+    <p class="lede">Thara is not in either app store, so the two platforms are not the same amount of work. Android is one tap on the phone. iPhone needs a computer once, because Apple only runs apps carrying a signature it trusts, and only a computer can ask Apple for one.</p>
+
+    <div class="install-grid">
+      <div>
+        <h3>Android &mdash; on the phone</h3>
+        <ol class="steps">
+          <li class="card"><span class="n">1</span><div><b>Open this page on the phone</b><span>Then press <b>Download APK</b> above.</span></div></li>
+          <li class="card"><span class="n">2</span><div><b>Allow the install</b><span>Android asks whether your browser may install apps. Say yes; it is asking because the file did not come from the Play Store.</span></div></li>
+          <li class="card"><span class="n">3</span><div><b>Open it</b><span>That is all. Later builds install over the top and keep everything in your wallet.</span></div></li>
+        </ol>
+      </div>
+
+      <div>
+        <h3>iPhone &mdash; a computer once</h3>
+        <p class="note">Both routes below sign the app with <b>your own</b> Apple ID. Nothing is sent to the developer, and the signature is what lets your phone trust an app that did not come from the App Store. On a free Apple ID a signature lasts <b>seven days</b>; renewing it does not touch your data.</p>
+        <ol class="steps">
+          <li class="card"><span class="n">1</span><div><b>SideStore &mdash; the computer is needed once</b><span>Set it up from a Windows PC or a Mac following <a href="https://sidestore.io" rel="noopener">sidestore.io</a>. After that the phone renews the app by itself over Wi-Fi, with no cable and no computer ever again. This is the one to pick if somebody else will be living with it.</span></div></li>
+          <li class="card"><span class="n">2</span><div><b>Sideloadly &mdash; simpler, but every week</b><span>Install <a href="https://www.apple.com/itunes/" rel="noopener">iTunes from Apple</a> (the download from Apple's own site, not the Microsoft Store version, which leaves out the device drivers) and <a href="https://sideloadly.io" rel="noopener">Sideloadly</a>. Plug the phone in, drag the IPA onto the window, enter your Apple ID, press Start. Quicker to set up; needs the cable again every seven days.</span></div></li>
+          <li class="card"><span class="n">3</span><div><b>Trust it on the phone</b><span>Either way, the first launch is refused until you go to <b>Settings &rarr; General &rarr; VPN &amp; Device Management</b>, tap your Apple ID and choose <b>Trust</b>.</span></div></li>
+        </ol>
+        <p class="note">Two Apple limits worth knowing before you start: a free Apple ID may hold <b>three</b> sideloaded apps at once, and if your Apple ID uses two-factor authentication you will need an <a href="https://account.apple.com/account/manage" rel="noopener">app-specific password</a> rather than your real one.</p>
+      </div>
+    </div>
+
+    <div class="card warn">
+      <h3>Before you reinstall anything, take a backup</h3>
+      <p>Renewing a signature keeps your wallet exactly as it is. <b>Deleting the app does not</b> &mdash; the encrypted database goes with it, and nobody can bring it back, including the developer. If Thara is already on that phone, open <b>Settings &rarr; Save an encrypted backup</b> first and put the file somewhere that is not the phone. On iPhone you can fetch backups afterwards from <b>Files &rarr; On My iPhone &rarr; Thara &rarr; Thara Backups</b>.</p>
+    </div>
+  </div>
+</section>
 <script>
 // Fills in the build number, the build date and the download sizes, so the
 // page cannot claim a version it is not actually serving.
