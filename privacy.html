@@ -31,7 +31,7 @@
   <div class="wrap">
     <article class="card">
       <h1>Privacy policy</h1>
-      <p class="updated">Last updated 12 September 2026</p>
+      <p class="updated">Last updated 13 September 2026</p>
 
       <div class="callout">
         <p><b>The short version.</b> Thara keeps your financial records in an encrypted database on your phone. The developer runs no server and cannot see your data. Backups are encrypted on the phone and written only where you point them, and only you hold the passphrase. The one thing that leaves your control is anything you choose to type into the feedback form, which is a Google Form and is described below.</p>
@@ -41,12 +41,13 @@
       <p>Thara stores the sources, records, types, obligations, plans, gold holdings, exchange rates and settings you enter. All of it lives in a SQLCipher encrypted database on your device. The encryption key is generated on the device and kept in the Android Keystore or iOS Keychain. Nothing is sent to any server operated by the developer, because there is none.</p>
 
       <h2 id="network-access">Network access</h2>
-      <p>Thara declares internet access for exactly two features, and both can be switched off:</p>
+      <p>Thara declares internet access for three features, and each can be switched off:</p>
       <ul>
         <li><b>Rate updates.</b> Off until you switch them on. Fetches the published dollar rate and world gold price from a public, key-less currency API. The request contains the currency being asked about and nothing else: no balance, no identifier, no account.</li>
         <li><b>The update check.</b> On by default, because Thara is installed as a file rather than from a store and nothing else would ever tell you that a fix has shipped. Once a day the app fetches <code>version.json</code> from this website and compares the build number in it with its own. The request is a plain GET for a public file: it carries no identifier, no account and nothing about your wallet, and the reply is the same bytes for everyone. You can switch it off under Settings, About.</li>
+        <li><b>Reading a receipt.</b> Off until you switch it on under Settings, Read receipts, and paste an API key of your own from <a href="https://www.anthropic.com/">Anthropic</a>. Then, and only when you press the button in a new record, the photo you just took or chose is sent to Anthropic's Claude API with your key, together with today's date, the names of your own types and the codes of the currencies your sources hold, so the answer can use your words. No balance, no history and no identifier are sent, and Thara keeps no copy of the picture. What Anthropic does with a request made under your key is governed by <a href="https://www.anthropic.com/legal/privacy">Anthropic's privacy policy</a> and the terms of your account with them, not by this policy; the developer of Thara never sees the picture, the key or the answer. The key is kept in your phone's keystore, is never included in a backup, and can be removed under the same setting.</li>
       </ul>
-      <p>With both features off, the app makes no network requests at all. Thara contains no advertising, no analytics and no crash reporting.</p>
+      <p>With all three features off, the app makes no network requests at all. Thara contains no advertising, no analytics and no crash reporting.</p>
 
       <h2>Links the app can open</h2>
       <p>Settings carries a few links: the feedback form, the download page, and this policy. These are not a third network feature. Tapping one hands the address to whatever your phone uses for links and that is the end of Thara's part in it &mdash; the app fetches nothing, sends nothing, and attaches nothing about your wallet to the address.</p>
@@ -69,6 +70,7 @@
         <li><b>Biometrics.</b> Only if you enable fingerprint or face unlock. The app receives a yes or no from the operating system and never sees biometric data.</li>
         <li><b>Notifications.</b> Only if you enable reminders, and requested at that moment rather than at first launch.</li>
         <li><b>Storage.</b> Folder backups use the system document picker with a permission on one folder. No general storage permission is requested.</li>
+        <li><b>Camera and photos.</b> Only when you press Read a receipt in a new record. The picture is taken by your phone's own camera app or chosen with its photo picker; Thara declares no camera permission of its own and never opens the camera or your photos on its own.</li>
       </ul>
 
       <h2>Children</h2>
