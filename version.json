@@ -1,12 +1,12 @@
 {
-  "buildNumber": 72,
+  "buildNumber": 73,
   "version": "1.0.0",
-  "commit": "351fa8a",
-  "publishedAt": "2026-09-12T18:36:34Z",
+  "commit": "9ccf8cf",
+  "publishedAt": "2026-09-13T20:20:55Z",
   "notes": {
-    "en": "Merge header-and-status-bar: the bell and the eye everywhere, and a visible status bar"
+    "en": "Merge read-receipts: fill a record from a photo of a receipt, with your own Claude key"
   },
-  "sizeBytes": 84501593,
+  "sizeBytes": 85044170,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
