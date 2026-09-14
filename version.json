@@ -1,12 +1,12 @@
 {
-  "buildNumber": 74,
+  "buildNumber": 75,
   "version": "1.0.0",
-  "commit": "bdf25c8",
-  "publishedAt": "2026-09-14T11:21:12Z",
+  "commit": "da3425c",
+  "publishedAt": "2026-09-14T15:51:37Z",
   "notes": {
-    "en": "Say what the reading service said, and manage without its fallback"
+    "en": "Merge read-receipts-on-device: receipts are read on the phone; nothing is sent anywhere"
   },
-  "sizeBytes": 85044170,
+  "sizeBytes": 111930717,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
