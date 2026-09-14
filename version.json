@@ -1,10 +1,10 @@
 {
-  "buildNumber": 73,
+  "buildNumber": 74,
   "version": "1.0.0",
-  "commit": "9ccf8cf",
-  "publishedAt": "2026-09-13T20:20:55Z",
+  "commit": "bdf25c8",
+  "publishedAt": "2026-09-14T11:21:12Z",
   "notes": {
-    "en": "Merge read-receipts: fill a record from a photo of a receipt, with your own Claude key"
+    "en": "Say what the reading service said, and manage without its fallback"
   },
   "sizeBytes": 85044170,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
