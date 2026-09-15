@@ -47,7 +47,8 @@
         <li><b>The update check.</b> On by default, because Thara is installed as a file rather than from a store and nothing else would ever tell you that a fix has shipped. Once a day the app fetches <code>version.json</code> from this website and compares the build number in it with its own. The request is a plain GET for a public file: it carries no identifier, no account and nothing about your wallet, and the reply is the same bytes for everyone. You can switch it off under Settings, About.</li>
       </ul>
       <p>With both features off, the app makes no network requests at all. Thara contains no advertising, no analytics and no crash reporting.</p>
-      <p><b>Reading a receipt</b> is not a network feature. When you scan a receipt to fill in a record, the picture is taken by the system's document scanner (on Android the scanner built into Google Play services, which runs on the phone; on iOS the system document camera) or chosen from your photos, and read on your phone &mdash; by text recognition built into the app on Android, and by the system's own recogniser on iOS. The picture is shown back to you with the reading marked on it, then discarded: it is not stored, uploaded or shared, and nothing about it leaves the device. The lines of the receipt you accept are kept with the record, in the same encrypted database as everything else.</p>
+      <p><b>Reading a receipt</b> is not a network feature. When you scan a receipt to fill in a record, the app's own camera view shows what it can read as you hold the receipt, then takes one picture, and reads it on your phone &mdash; by text recognition built into the app on Android, and by the system's own recogniser on iOS. Nothing about it leaves the device. The lines of the receipt you accept are kept with the record, in the same encrypted database as everything else.</p>
+      <p>When you save a scanned record, the picture is kept in your phone's gallery, in an album called <b>Thara</b>, under a unique name that the record remembers. That album is ordinary gallery content: it is not encrypted, it is not covered by the app's lock, and any app you have given access to your photos can see it. Delete a picture from the album like any other photo; the record keeps its figures.</p>
 
       <h2>Links the app can open</h2>
       <p>Settings carries a few links: the feedback form, the download page, and this policy. These are not a third network feature. Tapping one hands the address to whatever your phone uses for links and that is the end of Thara's part in it &mdash; the app fetches nothing, sends nothing, and attaches nothing about your wallet to the address.</p>
@@ -70,7 +71,8 @@
         <li><b>Biometrics.</b> Only if you enable fingerprint or face unlock. The app receives a yes or no from the operating system and never sees biometric data.</li>
         <li><b>Notifications.</b> Only if you enable reminders, and requested at that moment rather than at first launch.</li>
         <li><b>Storage.</b> Folder backups use the system document picker with a permission on one folder. No general storage permission is requested.</li>
-        <li><b>Camera and photos.</b> Only when you press Read a receipt in a new record. The picture is taken by your phone's own camera app or chosen with its photo picker, read on the phone, and not kept; Thara declares no camera permission of its own and never opens the camera or your photos on its own.</li>
+        <li><b>Camera.</b> Asked for the first time you press Scan in a new record, and used only while that scanner view is open. Thara never opens the camera on its own.</li>
+        <li><b>Photos.</b> Choosing a picture uses the system photo picker, which needs no permission. Keeping a scanned receipt in the Thara album asks, on iOS, for permission to add to your photo library only; on Android it needs none.</li>
       </ul>
 
       <h2>Children</h2>
