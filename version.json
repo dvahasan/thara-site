@@ -1,12 +1,12 @@
 {
-  "buildNumber": 83,
+  "buildNumber": 84,
   "version": "1.0.0",
-  "commit": "a22b858",
-  "publishedAt": "2026-09-16T11:35:02Z",
+  "commit": "b3417b6",
+  "publishedAt": "2026-09-16T16:02:01Z",
   "notes": {
-    "en": "Choose the record's type from the receipt, remember it, and show the choice plainly"
+    "en": "Read receipts more accurately, name a place, and write the reading down"
   },
-  "sizeBytes": 111562228,
+  "sizeBytes": 111578688,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
