@@ -1,12 +1,12 @@
 {
-  "buildNumber": 80,
+  "buildNumber": 81,
   "version": "1.0.0",
-  "commit": "09631fd",
-  "publishedAt": "2026-09-16T03:12:22Z",
+  "commit": "ef58c58",
+  "publishedAt": "2026-09-16T04:04:53Z",
   "notes": {
-    "en": "Capture, then read; teach the scanner by pointing; remember; file card slips"
+    "en": "Read bank statements into records, and scan a receipt into an existing record"
   },
-  "sizeBytes": 111168920,
+  "sizeBytes": 111447448,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
