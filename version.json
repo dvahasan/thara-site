@@ -1,12 +1,12 @@
 {
-  "buildNumber": 79,
+  "buildNumber": 80,
   "version": "1.0.0",
-  "commit": "ed8ea23",
-  "publishedAt": "2026-09-15T13:32:02Z",
+  "commit": "09631fd",
+  "publishedAt": "2026-09-16T03:12:22Z",
   "notes": {
-    "en": "Show the receipt's picture inside the record, and read more of the paper, faster"
+    "en": "Capture, then read; teach the scanner by pointing; remember; file card slips"
   },
-  "sizeBytes": 111004956,
+  "sizeBytes": 111168920,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
