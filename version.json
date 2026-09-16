@@ -1,10 +1,10 @@
 {
-  "buildNumber": 84,
+  "buildNumber": 85,
   "version": "1.0.0",
-  "commit": "b3417b6",
-  "publishedAt": "2026-09-16T16:02:01Z",
+  "commit": "fe3b251",
+  "publishedAt": "2026-09-16T18:46:56Z",
   "notes": {
-    "en": "Read receipts more accurately, name a place, and write the reading down"
+    "en": "Say everything that is wrong with a form at once, and mark each field"
   },
   "sizeBytes": 111578688,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
