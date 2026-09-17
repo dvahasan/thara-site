@@ -1,12 +1,12 @@
 {
-  "buildNumber": 85,
+  "buildNumber": 86,
   "version": "1.0.0",
-  "commit": "fe3b251",
-  "publishedAt": "2026-09-16T19:07:36Z",
+  "commit": "3b5fff5",
+  "publishedAt": "2026-09-17T01:45:43Z",
   "notes": {
-    "en": "Say everything that is wrong with a form at once, and mark each field"
+    "en": "Encrypt the pictures the app keeps, and let the gallery copy be asked for"
   },
-  "sizeBytes": 111578688,
+  "sizeBytes": 111758932,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
