@@ -1,12 +1,12 @@
 {
-  "buildNumber": 87,
+  "buildNumber": 88,
   "version": "1.0.0",
-  "commit": "7bfa0bd",
-  "publishedAt": "2026-09-18T01:03:18Z",
+  "commit": "9db3b4f",
+  "publishedAt": "2026-09-18T14:49:54Z",
   "notes": {
-    "en": "Put the scanner's settings in the user's hands, and start writing readings down"
+    "en": "Let the badge say how sure the recogniser was, not only how tidy the parse"
   },
-  "sizeBytes": 112185048,
+  "sizeBytes": 117926156,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
