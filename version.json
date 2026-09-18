@@ -1,10 +1,10 @@
 {
-  "buildNumber": 89,
+  "buildNumber": 90,
   "version": "1.0.0",
-  "commit": "5f01136",
-  "publishedAt": "2026-09-18T21:33:07Z",
+  "commit": "5cecba8",
+  "publishedAt": "2026-09-18T22:34:24Z",
   "notes": {
-    "en": "Ship what the measurement chose: Sauvola, no crop, both languages at once"
+    "en": "Keep the name the recogniser stood behind, and the figure the label owns"
   },
   "sizeBytes": 117926156,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
