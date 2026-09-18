@@ -1,10 +1,10 @@
 {
-  "buildNumber": 90,
+  "buildNumber": 91,
   "version": "1.0.0",
-  "commit": "5cecba8",
-  "publishedAt": "2026-09-18T22:34:24Z",
+  "commit": "c9f8fb4",
+  "publishedAt": "2026-09-18T22:58:18Z",
   "notes": {
-    "en": "Keep the name the recogniser stood behind, and the figure the label owns"
+    "en": "Keep every page layout the bench tried, so the next change is scored against them"
   },
   "sizeBytes": 117926156,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
