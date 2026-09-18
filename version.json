@@ -1,12 +1,12 @@
 {
-  "buildNumber": 86,
+  "buildNumber": 87,
   "version": "1.0.0",
-  "commit": "3b5fff5",
-  "publishedAt": "2026-09-17T01:45:43Z",
+  "commit": "7bfa0bd",
+  "publishedAt": "2026-09-18T01:03:18Z",
   "notes": {
-    "en": "Encrypt the pictures the app keeps, and let the gallery copy be asked for"
+    "en": "Put the scanner's settings in the user's hands, and start writing readings down"
   },
-  "sizeBytes": 111758932,
+  "sizeBytes": 112185048,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
