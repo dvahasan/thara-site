@@ -1,10 +1,10 @@
 {
-  "buildNumber": 92,
+  "buildNumber": 93,
   "version": "1.0.0",
-  "commit": "1f2f98e",
-  "publishedAt": "2026-09-20T00:13:09Z",
+  "commit": "f7c519e",
+  "publishedAt": "2026-09-20T08:50:44Z",
   "notes": {
-    "en": "Put back a decimal point the reading lost, when the receipt itself proves it"
+    "en": "Read the picture at the size the recogniser was trained for"
   },
   "sizeBytes": 117942540,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
