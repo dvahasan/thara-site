@@ -1,12 +1,12 @@
 {
-  "buildNumber": 91,
+  "buildNumber": 92,
   "version": "1.0.0",
-  "commit": "c9f8fb4",
-  "publishedAt": "2026-09-18T22:58:18Z",
+  "commit": "1f2f98e",
+  "publishedAt": "2026-09-20T00:13:09Z",
   "notes": {
-    "en": "Keep every page layout the bench tried, so the next change is scored against them"
+    "en": "Put back a decimal point the reading lost, when the receipt itself proves it"
   },
-  "sizeBytes": 117926156,
+  "sizeBytes": 117942540,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
