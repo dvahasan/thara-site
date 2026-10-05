@@ -1,12 +1,12 @@
 {
-  "buildNumber": 94,
+  "buildNumber": 95,
   "version": "1.0.0",
-  "commit": "34fbc8b",
-  "publishedAt": "2026-10-02T21:15:14Z",
+  "commit": "7acf296",
+  "publishedAt": "2026-10-05T00:33:33Z",
   "notes": {
-    "en": "Sign every build with the same key, so an update keeps the wallet"
+    "en": "Stop the loading page hanging for the whole of October"
   },
-  "sizeBytes": 117942536,
+  "sizeBytes": 117975304,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
