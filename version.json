@@ -4,7 +4,8 @@
   "commit": "3850fe1",
   "publishedAt": "2026-10-11T22:00:42Z",
   "notes": {
-    "en": "Bank messages by sharing: no SMS permission, so Play Protect allows the install"
+    "en": "Say a record in any language: hold the microphone like a voice note, and Thara writes it down on your phone and fills in the form. The voice model is downloaded once. Receipts: the shop, total, date, time and kind of paper, with a warning for a blurred photo or faded print and one tap to take it again. Bank messages: share your bank's text message to Thara and it becomes a record to approve. This build installs where the last one was blocked by Play Protect.",
+    "ar": "قل السجل بأي لغة: اضغط مطوّلًا على الميكروفون كرسالة صوتية، فيكتبه ثراء على هاتفك ويملأ النموذج. يُنزَّل نموذج الصوت مرة واحدة. الإيصالات: اسم المتجر والإجمالي والتاريخ والوقت ونوع الورقة، مع تنبيه للصورة غير الواضحة أو الطباعة الباهتة وزر لإعادة التصوير. رسائل البنك: شارك رسالة البنك مع ثراء فتصبح سجلًا ينتظر موافقتك. هذا الإصدار يُثبَّت بعد أن منع Play Protect الإصدار السابق."
   },
   "sizeBytes": 125928621,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
