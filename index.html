@@ -364,7 +364,7 @@ footer a { color: var(--text-2); font-weight: 600; }
   <div class="wrap">
     <div class="sec-head">
       <h2>Everything a finance app should do, without the cloud</h2>
-      <p>Twelve areas, grouped by what you would open the app to do. One line each; the app is where the detail lives.</p>
+      <p>Fifteen areas, grouped by what you would open the app to do. One line each; the app is where the detail lives.</p>
     </div>
     <div class="groups">
       <div class="group">
@@ -374,8 +374,12 @@ footer a { color: var(--text-2); font-weight: 600; }
           <dd>Cash, banks, wallets, cards and loans, each in its own currency.</dd>
           <dt>Records <span class="ar" lang="ar">السجلات</span></dt>
           <dd>Income, spending and transfers, with notes, search and filters.</dd>
+          <dt>Say it <span class="ar" lang="ar">قلها بصوتك</span></dt>
+          <dd>Hold the microphone like a voice note and say the record, in Arabic, English or any language: Thara works out which, and fills in the form for you to check. Written down on the phone; nothing you say leaves it.</dd>
           <dt>Read a receipt <span class="ar" lang="ar">قراءة الفاتورة</span></dt>
-          <dd>Scan a receipt, in Arabic or English: see what the phone reads as you hold it, capture, tap anything it got wrong, and the record is filled in with its lines. Read on the phone; nothing is sent anywhere.</dd>
+          <dd>Photograph a receipt, invoice or card slip: Thara reads the shop, the total, the date, the time and the kind of paper. A blurred photo or faded print is pointed out, with one tap to take it again. Read on the phone; nothing is sent anywhere.</dd>
+          <dt>Bank messages <span class="ar" lang="ar">رسائل البنك</span></dt>
+          <dd>Optional, on Android: your bank's text messages, from the senders you pick, become records waiting for your approval.</dd>
           <dt>Types <span class="ar" lang="ar">الأنواع</span></dt>
           <dd>Your own categories, each with an optional monthly cap.</dd>
           <dt>Obligations <span class="ar" lang="ar">الالتزامات</span></dt>
@@ -430,7 +434,7 @@ footer a { color: var(--text-2); font-weight: 600; }
         <summary>
           <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V7z"/></svg></span>
           <span class="lede"><b>Security</b><span>AES-256 at rest, the key in the phone's own keystore, and two network calls you can switch off.</span></span>
-          <span class="count">4 controls</span>
+          <span class="count">5 controls</span>
           <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
         </summary>
         <div class="body">
@@ -438,7 +442,8 @@ footer a { color: var(--text-2); font-weight: 600; }
             <li><span class="k">Encrypted at rest</span><span class="v">SQLCipher, AES-256. The key is 256 bits from the device's own generator, held in the Android Keystore or iOS Keychain. Copying the file off the phone yields ciphertext.</span></li>
             <li><span class="k">App lock</span><span class="v">Optional PIN, PBKDF2-hashed with a random salt, with fingerprint or face unlock on top. Wrong attempts cool down. The PIN is deliberately not the encryption key.</span></li>
             <li><span class="k">Nothing leaks</span><span class="v">Screenshots, recording and the recent-apps thumbnail are blocked. Hide-amounts turns every figure to dots. Auto-lock from immediately to never.</span></li>
-            <li><span class="k">Two network calls</span><span class="v">Rate updates send only the currency asked about. The update check reads one public file a day, with no identifier. With both off, the app makes no requests at all.</span></li>
+            <li><span class="k">Two network calls</span><span class="v">Rate updates send only the currency asked about. The update check reads one public file a day, with no identifier. With both off, the app makes no requests at all. The one exception is yours to start: the voice model, downloaded once when you first use the microphone, from Whisper's published files and checked against their published fingerprint.</span></li>
+            <li><span class="k">Asked, in plain words</span><span class="v">The microphone, camera, photos, notifications and text messages are each asked for only when you use the feature, with what it is for. Your voice and your pictures are read on the phone and never sent anywhere.</span></li>
           </ul>
         </div>
       </details>
