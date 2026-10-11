@@ -1,13 +1,12 @@
 {
-  "buildNumber": 98,
+  "buildNumber": 99,
   "version": "1.0.0",
-  "commit": "09aadb6",
-  "publishedAt": "2026-10-11T12:38:36Z",
+  "commit": "3850fe1",
+  "publishedAt": "2026-10-11T22:00:42Z",
   "notes": {
-    "en": "Say a record in any language: hold the microphone like a voice note, and Thara writes it down on your phone and fills in the form. The voice model is downloaded once. Receipts: the shop, total, date, time and kind of paper, with a warning for a blurred photo or faded print and one tap to take it again. Optional suggestions from your bank's text messages. The app asks before using the microphone, camera, photos or messages.",
-    "ar": "قل السجل بأي لغة: اضغط مطوّلًا على الميكروفون كرسالة صوتية، فيكتبه ثراء على هاتفك ويملأ النموذج. يُنزَّل نموذج الصوت مرة واحدة. الإيصالات: اسم المتجر والإجمالي والتاريخ والوقت ونوع الورقة، مع تنبيه للصورة غير الواضحة أو الطباعة الباهتة وزر لإعادة التصوير. اقتراحات اختيارية من رسائل البنك. يستأذنك التطبيق قبل استخدام الميكروفون والكاميرا والصور والرسائل."
+    "en": "Bank messages by sharing: no SMS permission, so Play Protect allows the install"
   },
-  "sizeBytes": 125994081,
+  "sizeBytes": 125928621,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
