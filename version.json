@@ -1,12 +1,12 @@
 {
-  "buildNumber": 95,
+  "buildNumber": 98,
   "version": "1.0.0",
-  "commit": "7acf296",
-  "publishedAt": "2026-10-05T00:33:33Z",
+  "commit": "09aadb6",
+  "publishedAt": "2026-10-11T12:38:36Z",
   "notes": {
-    "en": "Stop the loading page hanging for the whole of October"
+    "en": "CI: free the runner's disk before building, now that Whisper is native"
   },
-  "sizeBytes": 117975304,
+  "sizeBytes": 125994081,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
