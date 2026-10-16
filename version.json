@@ -4,7 +4,8 @@
   "commit": "21f59bc",
   "publishedAt": "2026-10-16T23:21:52Z",
   "notes": {
-    "en": "Talk to Thara: one quick-actions button, and an assistant that drafts records and talks back"
+    "en": "Talk to Thara. One button on every screen now opens every quick action: add a record, scan a receipt, add an obligation, browse plans, add a source, and Thara itself. Say or type a record and Thara drafts it, asks for anything missing, and saves it when you say \"save it\" — or change it in words: \"make it 90\", \"from cash\", \"cancel\". Ask how much you spent and it answers from your records, on your phone. Ask about saving, gold or a small business and it looks the answer up online and shows its sources; only the question is sent, and you can switch that off. Thara can also speak its replies aloud.",
+    "ar": "تحدّث مع ثراء. زر واحد في كل شاشة يفتح كل الإجراءات السريعة: أضف سجلًا، امسح إيصالًا، أضف التزامًا، تصفّح الخطط، أضف مصدرًا، وثراء نفسه. قل سجلًا أو اكتبه فيجهّزه ثراء، ويسألك عمّا ينقصه، ويحفظه عندما تقول «احفظه» — أو عدّله بكلامك: «خليها ٩٠»، «من الكاش»، «الغي». اسأله كم صرفت فيجيبك من سجلاتك على هاتفك. واسأله عن الادخار أو الذهب أو مشروع صغير فيبحث عن الإجابة على الإنترنت ويعرض مصادرها؛ يُرسل السؤال وحده، ويمكنك إيقاف ذلك. ويستطيع ثراء أيضًا أن ينطق ردوده بصوت."
   },
   "sizeBytes": 133275599,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
