@@ -31,7 +31,7 @@
   <div class="wrap">
     <article class="card">
       <h1>Privacy policy</h1>
-      <p class="updated">Last updated 16 October 2026</p>
+      <p class="updated">Last updated 16 October 2026 (backup protection)</p>
 
       <div class="callout">
         <p><b>The short version.</b> Thara keeps your financial records in an encrypted database on your phone. The developer runs no server and cannot see your records. Backups are encrypted on the phone before they go anywhere, and only you hold the passphrase. Two things can leave the phone, and each has a switch: on phones without Google's built-in Gemini Nano, a receipt photo or a spoken sentence is sent to Google's Gemini to be read (<a href="#gemini">Gemini online</a>), and reports of errors and freezes go to the developer, with nothing of your records in them (<a href="#problems">problem reports</a>). Anything you type into the feedback form is described below.</p>
@@ -74,7 +74,12 @@
       <h2 id="drive">Google Drive backup</h2>
       <p>Drive backup is optional and off until you connect a Google account under Settings, Backup. Once connected, an encrypted backup is uploaded once a day, which one switch turns off; when Thara is set up again on a new phone, it can find the backup in the same account and restore it with your passphrase.</p>
       <p>If you connect a Google account, Thara asks for a single permission: access to its own application data folder on your Google Drive. This is the <code>drive.appdata</code> scope. That folder is hidden from the regular Drive interface and is readable only by Thara. Thara cannot see, read, list or change any other file on your Drive, and it does not read your Google profile beyond the email address shown in Settings so you can tell which account is connected.</p>
-      <p>Before a backup is uploaded it is encrypted on the device with AES-256-GCM, using a key derived from a passphrase you choose. The passphrase is never stored in the backup, never sent to Google, and never sent to the developer. Without it the backup cannot be read. If you forget it, no one can recover the backup for you.</p>
+      <p>Before a backup is uploaded it is encrypted on the device with AES-256-GCM. You choose how, when setting Thara up or later under <b>How backups are protected</b>:</p>
+      <ul>
+        <li><b>No passphrase (like WhatsApp), the default.</b> Thara makes a long random key and locks your backups with it. So that a new phone can restore with nothing to remember, the key is kept in your phone's keystore and beside your backups: in Thara's hidden folder in your Google Drive, and in the backup folder on your phone. This means that anyone who can open that Drive folder (through your Google account) or that phone folder could open your backups. It is never sent to the developer.</li>
+        <li><b>A passphrase (most private).</b> The key is derived from a passphrase you choose. The passphrase is never stored in the backup, never sent to Google, and never sent to the developer. Without it the backup cannot be read, by anyone. If you forget it, no one can recover the backup for you.</li>
+      </ul>
+      <p>You can see and delete every backup, and choose how many automatic backups are kept, under <b>Manage backups</b>.</p>
       <p>You can disconnect the Google account from the app's Settings at any time. You can also revoke Thara's access from your Google account's third-party access page, and delete the backup from Google Drive under Settings, Manage apps.</p>
 
       <h2>Google API Services User Data Policy</h2>
