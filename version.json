@@ -4,7 +4,8 @@
   "commit": "7317916",
   "publishedAt": "2026-10-16T15:15:17Z",
   "notes": {
-    "en": "Teach Thara your voice: a one-minute lesson, and learning from corrections"
+    "en": "Teach Thara your voice: a one-minute lesson (Settings, or the cap in the voice sheet) where you say a few amounts, words and your own names. Thara learns the language you speak and how you say things, and puts right what it mishears from then on. It also learns from every word you correct. Everything stays on your phone.",
+    "ar": "علّم ثراء صوتك: درس مدته دقيقة (من الإعدادات، أو أيقونة القبعة في نافذة الصوت) تقول فيه بعض المبالغ والكلمات وأسماءك. يتعلم ثراء اللغة التي تتحدثها وطريقة نطقك، ويصحح ما يسمعه خطأ من الآن فصاعدًا. ويتعلم أيضًا من كل كلمة تصححها. يبقى كل شيء على هاتفك."
   },
   "sizeBytes": 132898251,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
