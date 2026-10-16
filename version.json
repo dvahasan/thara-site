@@ -1,11 +1,10 @@
 {
-  "buildNumber": 102,
+  "buildNumber": 103,
   "version": "1.0.0",
-  "commit": "aaa806b",
-  "publishedAt": "2026-10-16T10:05:28Z",
+  "commit": "4cab30f",
+  "publishedAt": "2026-10-16T10:35:22Z",
   "notes": {
-    "en": "Fixes Thara closing by itself right after an automatic backup. Thara now keeps running through most errors, reports them so they can be fixed, and shows a short note instead of a blank space if part of a screen cannot be drawn. Also in this version: Gemini reads receipts and spoken records, backups survive deleting the app, and Google Drive backup works like WhatsApp's.",
-    "ar": "يصلح إغلاق ثراء لنفسه بعد النسخ الاحتياطي التلقائي مباشرة. أصبح ثراء يواصل العمل رغم معظم الأخطاء، ويبلّغ عنها حتى يمكن إصلاحها، ويعرض ملاحظة قصيرة بدل مساحة فارغة إذا تعذّر رسم جزء من الشاشة. وفي هذا الإصدار أيضًا: يقرأ Gemini الإيصالات والسجلات المنطوقة، وتبقى النسخ الاحتياطية بعد حذف التطبيق، ويعمل النسخ الاحتياطي إلى Google Drive مثل واتساب."
+    "en": "CI: ask Sentry's own region for the project when uploading the R8 mapping"
   },
   "sizeBytes": 132521155,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
