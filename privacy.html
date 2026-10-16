@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Privacy policy · Thara</title>
-<meta name="description" content="How Thara handles your data: everything stays on your phone, and backups go only where you put them, encrypted with a passphrase you choose.">
+<meta name="description" content="How Thara handles your data: your records stay on your phone, backups are encrypted with a passphrase you choose, and what little is sent anywhere is listed here, each with a switch.">
 <meta name="theme-color" content="#00695C">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
@@ -31,33 +31,48 @@
   <div class="wrap">
     <article class="card">
       <h1>Privacy policy</h1>
-      <p class="updated">Last updated 14 September 2026</p>
+      <p class="updated">Last updated 16 October 2026</p>
 
       <div class="callout">
-        <p><b>The short version.</b> Thara keeps your financial records in an encrypted database on your phone. The developer runs no server and cannot see your data. Backups are encrypted on the phone and written only where you point them, and only you hold the passphrase. The one thing that leaves your control is anything you choose to type into the feedback form, which is a Google Form and is described below.</p>
+        <p><b>The short version.</b> Thara keeps your financial records in an encrypted database on your phone. The developer runs no server and cannot see your records. Backups are encrypted on the phone before they go anywhere, and only you hold the passphrase. Two things can leave the phone, and each has a switch: on phones without Google's built-in Gemini Nano, a receipt photo or a spoken sentence is sent to Google's Gemini to be read (<a href="#gemini">Gemini online</a>), and reports of errors and freezes go to the developer, with nothing of your records in them (<a href="#problems">problem reports</a>). Anything you type into the feedback form is described below.</p>
       </div>
 
       <h2>What Thara stores</h2>
       <p>Thara stores the sources, records, types, obligations, plans, gold holdings, exchange rates and settings you enter. All of it lives in a SQLCipher encrypted database on your device. The encryption key is generated on the device and kept in the Android Keystore or iOS Keychain. Nothing is sent to any server operated by the developer, because there is none.</p>
 
       <h2 id="network-access">Network access</h2>
-      <p>Thara declares internet access for exactly two features, and both can be switched off:</p>
+      <p>Thara uses the internet only for the features below, and each can be switched off:</p>
       <ul>
         <li><b>Rate updates.</b> Off until you switch them on. Fetches the published dollar rate and world gold price from a public, key-less currency API. The request contains the currency being asked about and nothing else: no balance, no identifier, no account.</li>
         <li><b>The update check.</b> On by default, because Thara is installed as a file rather than from a store and nothing else would ever tell you that a fix has shipped. When a new build is first seen it is announced once as a phone notification and in the app's own notification list; the phone may ask for notification permission at that moment. Once a day the app fetches <code>version.json</code> from this website and compares the build number in it with its own. The request is a plain GET for a public file: it carries no identifier, no account and nothing about your wallet, and the reply is the same bytes for everyone. You can switch it off under Settings, About.</li>
+        <li><b>Google Drive backup.</b> Only if you connect a Google account; see <a href="#drive">below</a>.</li>
+        <li><b>Gemini online.</b> Reads receipt photos and spoken sentences on phones that do not have Gemini Nano; see <a href="#gemini">below</a>.</li>
+        <li><b>Problem reports.</b> Errors and freezes, sent to the developer; see <a href="#problems">below</a>.</li>
+        <li><b>The speech model.</b> The first time you use the microphone, the speech-recognition model (OpenAI's Whisper: 60 MB, or 190 MB for the more accurate one you can choose) is downloaded once from Hugging Face and checked against its published fingerprint. The request carries nothing about you or your wallet; after that, speech is written down on the phone.</li>
       </ul>
-      <p>With both features off, the app makes no network requests at all. Thara contains no advertising, no analytics and no crash reporting.</p>
-      <p><b>Reading a receipt</b> is not a network feature. When you scan a receipt to fill in a record, the app's own camera view takes one picture, and reads it on your phone &mdash; by text recognition built into the app on Android, and by the system's own recogniser on iOS. Nothing about it leaves the device. The lines of the receipt you accept are kept with the record, in the same encrypted database as everything else. When you correct a reading &mdash; move the total, fix a date, name an item, file a card slip under an account, choose a different type, turn a statement row between money in and money out &mdash; the app remembers that correction for the same shop, in the same encrypted database, so the next receipt from there is read right. These lessons never leave your phone, are not part of a backup file, and can be forgotten at any time from Settings.</p>
+      <p>With these switched off, and Drive not connected, the app makes no network requests. Thara contains no advertising and no analytics.</p>
+      <p><b>Reading a receipt.</b> When you scan a receipt to fill in a record, the app's own camera view takes one picture and reads it on your phone &mdash; by text recognition built into the app on Android, and by the system's own recogniser on iOS. On phones that carry Google's <b>Gemini Nano</b> (recent models such as the Galaxy S25 and Pixel 9), Gemini Nano also reads it, on the phone; nothing leaves the device. On other phones, <a href="#gemini">Gemini online</a> may read the photo instead, unless you switch it off. The lines of the receipt you accept are kept with the record, in the same encrypted database as everything else. When you correct a reading &mdash; move the total, fix a date, name an item, file a card slip under an account, choose a different type, turn a statement row between money in and money out &mdash; the app remembers that correction for the same shop, in the same encrypted database, so the next receipt from there is read right. These lessons never leave your phone, are not part of a backup file, and can be forgotten at any time from Settings.</p>
       <p>When you save a scanned record, the app keeps <b>one copy of the picture, encrypted</b>, in its own storage. A receipt shows where you were and what you bought, and a bank statement shows a month of your life, so it is sealed with the same kind of encryption as your ledger, under a separate key held by your phone's keystore. No other app can read it, and the app itself only unseals it into memory while you are looking at it &mdash; open the record and tap the picture tile.</p>
       <p><b>A copy in your photo gallery happens only when you ask for one.</b> In the picture viewer, "Save a copy to the gallery" puts one in an album called <b>Thara</b>. That copy is yours rather than the app's: it is not encrypted, it is not covered by the app's lock, it follows whatever your phone does with photo backups, and any app you have given access to your photos can see it. The app tells you so when it makes one, and never deletes a gallery copy afterwards &mdash; delete it like any other photo.</p>
       <p>Deleting a record deletes the app's copy of its picture, unless another record still uses it: the rows of one bank statement share a picture, so it survives until the last of them is deleted. Erasing everything erases the pictures too. Neither copy is in a backup file, so a record restored on another phone keeps what the receipt said but shows its picture as missing.</p>
+
+      <p><b>Speaking a record.</b> What you say into the microphone is written down on the phone by the speech model; the recording is not kept and not sent. The sentence is then turned into a record on the phone, by the app's own reader or by Gemini Nano where the phone has it, or by <a href="#gemini">Gemini online</a> on other phones unless you switch it off. Nothing is saved until you check the record and save it.</p>
+      <p><b>Bank messages.</b> Thara does not read your text messages and asks for no SMS permission. If you share a bank's message to Thara from your messaging app, that one message is read on the phone into a record for you to check.</p>
+
+      <h2 id="gemini">Gemini online</h2>
+      <p>On phones without Gemini Nano, Thara can use Google's Gemini over the internet to read a receipt photo or a spoken sentence. It is on by default where it is available and can be switched off under Settings, <b>Gemini online</b>; it is never used on a phone where Gemini Nano does the reading. What is sent is only what is being read: the receipt photo, or the sentence together with the names of your sources and types for it to choose from. Your records, balances, other receipts and backups are never sent, and nothing identifies you to the developer.</p>
+      <p>The request goes to Google's Gemini API under the developer's key and is handled under <a href="https://ai.google.dev/gemini-api/terms">Google's Gemini API terms</a> and <a href="https://policies.google.com/privacy">privacy policy</a>. Under those terms Google may use what is sent through a free-of-charge key to improve its products. If you would rather nothing leave the phone, switch Gemini online off: receipts and spoken records are then read on the phone, as before. Without an internet connection the phone does the reading anyway.</p>
+
+      <h2 id="problems">Problem reports</h2>
+      <p>So that crashes and freezes can be found and fixed, Thara records what went wrong: the error, where in the code it happened, the screen it was on (by the screen's name in the code, not anything shown on it), how long a freeze lasted, the phone's model and operating-system version, and Thara's version. These are kept on the phone, listed under Settings, <b>Problems</b>, where you can read them, send them to the developer yourself, or clear them.</p>
+      <p>They are also sent automatically to the developer's error-tracking service, <a href="https://sentry.io/privacy/">Sentry</a>, unless you switch that off on the same screen. No screenshot, no text you typed, no name, no account, no amount and no device name is included: before anything is kept or sent, numbers (amounts, card digits, phone numbers) and e-mail addresses in error messages are replaced by placeholders. Problem reports are used only to fix the app.</p>
 
       <h2>Links the app can open</h2>
       <p>Settings carries a few links: the feedback form, the download page, and this policy. These are not a third network feature. Tapping one hands the address to whatever your phone uses for links and that is the end of Thara's part in it &mdash; the app fetches nothing, sends nothing, and attaches nothing about your wallet to the address.</p>
       <p>What happens after that is between you and the site you opened. The feedback form is a <b>Google Form</b>, so anything you type into it is held by Google and by the developer in a Google spreadsheet, under <a href="https://policies.google.com/privacy">Google's privacy policy</a> rather than this one. It asks for no account and no name, and the only required question is what went wrong. Please leave real amounts, balances and account numbers out of it: knowing what happened is enough, and nothing you write there has the protection that the data on your phone has.</p>
 
-      <h2>Google Drive backup</h2>
-      <p><b>Not currently offered.</b> Drive backup is switched off in the app: there is no card to connect an account, no sign-in is attempted, and no upload runs. The section below describes how it behaves if it is offered again, and applies to nothing while it is off. Automatic backups into a folder you choose cover the same ground and involve no account anywhere.</p>
+      <h2 id="drive">Google Drive backup</h2>
+      <p>Drive backup is optional and off until you connect a Google account under Settings, Backup. Once connected, an encrypted backup is uploaded once a day, which one switch turns off; when Thara is set up again on a new phone, it can find the backup in the same account and restore it with your passphrase.</p>
       <p>If you connect a Google account, Thara asks for a single permission: access to its own application data folder on your Google Drive. This is the <code>drive.appdata</code> scope. That folder is hidden from the regular Drive interface and is readable only by Thara. Thara cannot see, read, list or change any other file on your Drive, and it does not read your Google profile beyond the email address shown in Settings so you can tell which account is connected.</p>
       <p>Before a backup is uploaded it is encrypted on the device with AES-256-GCM, using a key derived from a passphrase you choose. The passphrase is never stored in the backup, never sent to Google, and never sent to the developer. Without it the backup cannot be read. If you forget it, no one can recover the backup for you.</p>
       <p>You can disconnect the Google account from the app's Settings at any time. You can also revoke Thara's access from your Google account's third-party access page, and delete the backup from Google Drive under Settings, Manage apps.</p>
@@ -73,15 +88,16 @@
         <li><b>Biometrics.</b> Only if you enable fingerprint or face unlock. The app receives a yes or no from the operating system and never sees biometric data.</li>
         <li><b>Notifications.</b> Only if you enable reminders, and requested at that moment rather than at first launch.</li>
         <li><b>Storage.</b> Folder backups use the system document picker with a permission on one folder. No general storage permission is requested.</li>
+        <li><b>Microphone.</b> Asked for the first time you press the microphone to speak a record, and used only while you hold or lock the record button.</li>
         <li><b>Camera.</b> Asked for the first time you press Scan in a new record, and used only while that scanner view is open. Thara never opens the camera on its own.</li>
         <li><b>Photos.</b> Choosing a picture uses the system photo picker, which needs no permission. Keeping a scanned receipt in the Thara album asks, on iOS, for permission to add to your photo library only; on Android it needs none.</li>
       </ul>
 
       <h2>Children</h2>
-      <p>Thara is not directed at children under 13 and does not knowingly collect information from them. Since it collects nothing, there is nothing to collect.</p>
+      <p>Thara is not directed at children under 13 and does not knowingly collect information from them.</p>
 
       <h2>Changes</h2>
-      <p>If this policy changes, the date at the top of this page changes with it. Because Thara has no server, the app cannot notify you of policy changes itself.</p>
+      <p>If this policy changes, the date at the top of this page changes with it. Because Thara has no server of its own, the app cannot notify you of policy changes itself.</p>
 
       <h2>Contact</h2>
       <p>Questions about this policy can be sent to the developer at the support email shown on the Google sign-in consent screen.</p>
