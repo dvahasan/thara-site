@@ -31,10 +31,10 @@
   <div class="wrap">
     <article class="card">
       <h1>Privacy policy</h1>
-      <p class="updated">Last updated 16 October 2026 (backup protection)</p>
+      <p class="updated">Last updated 17 October 2026 (Talk to Thara)</p>
 
       <div class="callout">
-        <p><b>The short version.</b> Thara keeps your financial records in an encrypted database on your phone. The developer runs no server and cannot see your records. Backups are encrypted on the phone before they go anywhere, and only you hold the passphrase. Two things can leave the phone, and each has a switch: on phones without Google's built-in Gemini Nano, a receipt photo or a spoken sentence is sent to Google's Gemini to be read (<a href="#gemini">Gemini online</a>), and reports of errors and freezes go to the developer, with nothing of your records in them (<a href="#problems">problem reports</a>). Anything you type into the feedback form is described below.</p>
+        <p><b>The short version.</b> Thara keeps your financial records in an encrypted database on your phone. The developer runs no server and cannot see your records. Backups are encrypted on the phone before they go anywhere, and only you hold the passphrase. Three things can leave the phone, and each has a switch: on phones without Google's built-in Gemini Nano, a receipt photo or a spoken or typed record is sent to Google's Gemini to be read (<a href="#gemini">Gemini online</a>); a general money question you ask in Talk to Thara is sent to Gemini to be answered, without any of your records (<a href="#assistant">Talk to Thara</a>); and reports of errors and freezes go to the developer, with nothing of your records in them (<a href="#problems">problem reports</a>). Anything you type into the feedback form is described below.</p>
       </div>
 
       <h2>What Thara stores</h2>
@@ -47,6 +47,7 @@
         <li><b>The update check.</b> On by default, because Thara is installed as a file rather than from a store and nothing else would ever tell you that a fix has shipped. When a new build is first seen it is announced once as a phone notification and in the app's own notification list; the phone may ask for notification permission at that moment. Once a day the app fetches <code>version.json</code> from this website and compares the build number in it with its own. The request is a plain GET for a public file: it carries no identifier, no account and nothing about your wallet, and the reply is the same bytes for everyone. You can switch it off under Settings, About.</li>
         <li><b>Google Drive backup.</b> Only if you connect a Google account; see <a href="#drive">below</a>.</li>
         <li><b>Gemini online.</b> Reads receipt photos and spoken sentences on phones that do not have Gemini Nano; see <a href="#gemini">below</a>.</li>
+        <li><b>Talk to Thara.</b> A general money or business question you ask the assistant, when <b>Answer money questions online</b> is on; see <a href="#assistant">below</a>.</li>
         <li><b>Problem reports.</b> Errors and freezes, sent to the developer; see <a href="#problems">below</a>.</li>
         <li><b>The speech model.</b> The first time you use the microphone, the speech-recognition model (OpenAI's Whisper: 60 MB, or 190 MB for the more accurate one you can choose) is downloaded once from Hugging Face and checked against its published fingerprint. The request carries nothing about you or your wallet; after that, speech is written down on the phone.</li>
       </ul>
@@ -62,6 +63,17 @@
       <h2 id="gemini">Gemini online</h2>
       <p>On phones without Gemini Nano, Thara can use Google's Gemini over the internet to read a receipt photo or a spoken sentence. It is on by default where it is available and can be switched off under Settings, <b>Gemini online</b>; it is never used on a phone where Gemini Nano does the reading. What is sent is only what is being read: the receipt photo, or the sentence together with the names of your sources and types for it to choose from. Your records, balances, other receipts and backups are never sent, and nothing identifies you to the developer.</p>
       <p>The request goes to Google's Gemini API under the developer's key and is handled under <a href="https://ai.google.dev/gemini-api/terms">Google's Gemini API terms</a> and <a href="https://policies.google.com/privacy">privacy policy</a>. Under those terms Google may use what is sent through a free-of-charge key to improve its products. If you would rather nothing leave the phone, switch Gemini online off: receipts and spoken records are then read on the phone, as before. Without an internet connection the phone does the reading anyway.</p>
+
+      <h2 id="assistant">Talk to Thara</h2>
+      <p>Talk to Thara is the assistant behind the floating button. You can type to it or speak to it, and it can speak back. What happens to what you say depends on what you ask:</p>
+      <ul>
+        <li><b>A record</b> (&ldquo;paid 85 for coffee from cash&rdquo;) is read exactly like a spoken record: on the phone, by Gemini Nano where the phone has it, or by <a href="#gemini">Gemini online</a> on other phones unless you switch that off. If something is missing, Thara asks; nothing is saved until you say so or press Save.</li>
+        <li><b>A question about your own money</b> (&ldquo;how much did I spend this month?&rdquo;) is answered on the phone, from your records. Nothing is sent.</li>
+        <li><b>A general money or business question</b> (&ldquo;are bank certificates worth it?&rdquo;) is sent to Google's Gemini under the developer's key, with Google Search allowed so the answer can use current facts; the sites it leaned on are shown under the answer. Only the question is sent, with the earlier questions and answers of the same conversation so a follow-up makes sense. Your records, balances, sources and backups are never sent. This can be switched off under Settings, <b>Answer money questions online</b>; it is also off whenever Gemini online is off. The same <a href="https://ai.google.dev/gemini-api/terms">Gemini API terms</a> apply as above.</li>
+        <li><b>Thara's voice.</b> Replies are read aloud by the phone's own text-to-speech engine. Thara sends nothing for this; the engine is part of your phone. It can be muted in the conversation or switched off under Settings, <b>Thara speaks its replies</b>.</li>
+        <li><b>Listening.</b> When you use the microphone in the conversation, what you say is written down on the phone, as for any spoken record; after Thara answers it may listen again for your reply, and it stops when you press Stop or nothing more is needed. The recording is not kept.</li>
+      </ul>
+      <p>The conversation itself is never written down: it lives in the phone's memory while Thara is open, and is gone when you start a new chat or close the app.</p>
 
       <h2 id="problems">Problem reports</h2>
       <p>So that crashes and freezes can be found and fixed, Thara records what went wrong: the error, where in the code it happened, the screen it was on (by the screen's name in the code, not anything shown on it), how long a freeze lasted, the phone's model and operating-system version, and Thara's version. These are kept on the phone, listed under Settings, <b>Problems</b>, where you can read them, send them to the developer yourself, or clear them.</p>
