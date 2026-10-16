@@ -1,12 +1,12 @@
 {
-  "buildNumber": 103,
+  "buildNumber": 104,
   "version": "1.0.0",
-  "commit": "4cab30f",
-  "publishedAt": "2026-10-16T10:35:22Z",
+  "commit": "a261eb1",
+  "publishedAt": "2026-10-16T12:15:47Z",
   "notes": {
-    "en": "CI: ask Sentry's own region for the project when uploading the R8 mapping"
+    "en": "Voice models download in the background, through Android's download service"
   },
-  "sizeBytes": 132521155,
+  "sizeBytes": 132783519,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
