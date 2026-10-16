@@ -4,7 +4,8 @@
   "commit": "a261eb1",
   "publishedAt": "2026-10-16T12:15:47Z",
   "notes": {
-    "en": "Voice models download in the background, through Android's download service"
+    "en": "Backups your way: no passphrase, like WhatsApp (restore on a new phone with just your Google account), or a passphrase only you know. Backing up and restoring now show each step until done. New: Manage backups, to see and delete backups in Google Drive and on the phone and choose how many to keep. Thara reconnects to Google Drive quietly while it opens, and the voice model keeps downloading when you leave the page or the app.",
+    "ar": "النسخ الاحتياطي كما تريد: بدون كلمة مرور مثل واتساب (تستعيد على هاتف جديد بحساب Google فقط)، أو بكلمة مرور تعرفها أنت وحدك. يعرض النسخ والاستعادة الآن كل خطوة حتى النهاية. جديد: إدارة النسخ الاحتياطية، لعرض النسخ وحذفها في Google Drive وعلى الهاتف واختيار عدد ما يُحفظ منها. يعيد ثراء الاتصال بـ Google Drive بهدوء أثناء فتحه، ويواصل نموذج الصوت التنزيل عند مغادرة الصفحة أو التطبيق."
   },
   "sizeBytes": 132783519,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
