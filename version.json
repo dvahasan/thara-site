@@ -4,7 +4,8 @@
   "commit": "49a8f5c",
   "publishedAt": "2026-10-16T03:54:36Z",
   "notes": {
-    "en": "CI: fit Gradle to the runner's memory, so the release build is not lost"
+    "en": "Receipts and spoken records are now read with Google's Gemini: on the phone itself where it has Gemini Nano, and online on other phones (you can switch that off in Settings). Your backups now stay on the phone even if Thara is deleted, and a new install finds them. Google Drive backup is back, like WhatsApp: once a day, and restored when you set Thara up again. Settings, Problems lists any error or freeze so it can be fixed. Needs Android 8 or newer.",
+    "ar": "تُقرأ الإيصالات والسجلات المنطوقة الآن بمساعدة Gemini من Google: على الهاتف نفسه إذا كان فيه Gemini Nano، وعبر الإنترنت على الهواتف الأخرى (ويمكنك إيقاف ذلك من الإعدادات). تبقى نسخك الاحتياطية على الهاتف حتى لو حُذف ثراء، ويجدها التثبيت الجديد. وعاد النسخ الاحتياطي إلى Google Drive مثل واتساب: مرة كل يوم، ويُستعاد عند إعداد ثراء من جديد. وتعرض الإعدادات ← المشكلات أي خطأ أو تجمّد حتى يمكن إصلاحه. يتطلب Android 8 أو أحدث."
   },
   "sizeBytes": 132521071,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
