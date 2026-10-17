@@ -4,7 +4,8 @@
   "commit": "6fa7cfd",
   "publishedAt": "2026-10-17T09:13:01Z",
   "notes": {
-    "en": "Talk to Thara: quicker, in the user's language, Stop that stops, receipts in the chat"
+    "en": "Talk to Thara is quicker and speaks your language. Answers appear word by word and Thara starts speaking after the first sentence. It replies in Arabic or English, whichever you used. Simple records are understood instantly on your phone. While you speak you see your voice level and what Thara is doing; Done sends what you said, and Stop stops everything. You can now show Thara a receipt or invoice right in the chat, and receipts are read faster everywhere. When something goes wrong online, Thara says what it was instead of always blaming the internet, and tries again on a slow connection.",
+    "ar": "أصبح «تحدّث مع ثراء» أسرع ويتحدث بلغتك. تظهر الإجابات كلمة بكلمة ويبدأ ثراء الكلام بعد أول جملة. يرد بالعربية أو الإنجليزية، بحسب ما استخدمت. السجلات البسيطة تُفهم فورًا على هاتفك. أثناء كلامك ترى مستوى صوتك وما يفعله ثراء؛ «تم» يرسل ما قلته، و«إيقاف» يوقف كل شيء. يمكنك الآن أن تُري ثراء إيصالًا أو فاتورة داخل المحادثة، وأصبحت قراءة الإيصالات أسرع في كل مكان. وعندما يحدث خطأ عبر الإنترنت يقول ثراء ما هو بدل أن يلوم الإنترنت دائمًا، ويعيد المحاولة عندما يكون الاتصال بطيئًا."
   },
   "sizeBytes": 133308391,
   "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
