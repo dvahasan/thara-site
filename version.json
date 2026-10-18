@@ -1,14 +1,13 @@
 {
-  "buildNumber": 108,
+  "buildNumber": 112,
   "version": "1.0.0",
-  "commit": "6e26d9d",
-  "publishedAt": "2026-10-17T11:21:16Z",
+  "commit": "69ba7d3",
+  "publishedAt": "2026-10-18T22:12:20Z",
   "notes": {
-    "en": "Talk to Thara answers \"hello\", \"thanks\" and \"who are you\" instantly, on your phone. When Gemini's free allowance or Google Search is not available, Thara still answers instead of saying it is busy, and when something really goes wrong it tells you what Google said. New in Settings: Check Gemini — one tiny question that shows how quickly Gemini answers, or exactly what is wrong.",
-    "ar": "يرد «تحدّث مع ثراء» فورًا على «أهلًا» و«شكرًا» و«مين إنت» على هاتفك. وعندما لا يتوفر رصيد Gemini المجاني أو بحث Google، يظل ثراء يجيب بدل أن يقول إنه مشغول، وعندما يحدث خطأ حقيقي يخبرك بما قاله Google. جديد في الإعدادات: «افحص Gemini» — سؤال صغير يعرض سرعة إجابة Gemini، أو ما المشكلة بالضبط."
+    "en": "CI: hand the APK over through the cache, not artifacts"
   },
-  "sizeBytes": 133308527,
-  "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk",
+  "sizeBytes": 133768199,
+  "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/build-112/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
 }
