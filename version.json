@@ -1,13 +1,13 @@
 {
-  "buildNumber": 112,
+  "buildNumber": 113,
   "version": "1.0.0",
-  "commit": "69ba7d3",
-  "publishedAt": "2026-10-18T22:12:20Z",
+  "commit": "86975f7",
+  "publishedAt": "2026-10-18T22:45:25Z",
   "notes": {
-    "en": "CI: hand the APK over through the cache, not artifacts"
+    "en": "Gemini only through the gateway; consent before anything goes online"
   },
-  "sizeBytes": 133768199,
-  "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/build-112/thara-release.apk",
+  "sizeBytes": 133801127,
+  "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/build-113/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get"
 }
