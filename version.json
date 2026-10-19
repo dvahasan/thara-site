@@ -1,14 +1,16 @@
 {
-  "buildNumber": 113,
+  "buildNumber": 115,
   "version": "1.0.0",
-  "commit": "86975f7",
-  "publishedAt": "2026-10-18T22:45:25Z",
+  "commit": "2ba3a9f",
+  "publishedAt": "2026-10-19T13:38:47Z",
   "notes": {
-    "en": "A big update to how Thara keeps you informed and keeps your data safe. Notifications: a bill its source can't cover, goals at risk, coaching when a type of spending runs high, a weekly review on the day you choose, records that need a look, and an optional evening reminder, each with its own switch. Nothing arrives at night, at most two a day, and the locked screen names nothing unless you turn on details. Talk to Thara now hears the place and the time (“at Starbucks at 6:30 pm”), reads back the exact date before saving, points out a likely duplicate, and never saves when you say no. Gemini online now goes through Thara's own gateway, so the app carries no key, and Thara asks once before anything goes online. Also fixed, after a full security review: restoring a backup asks for your phone's screen lock, erasing clears everything, and receipt photos lose their location data before they are read online.",
-    "ar": "تحديث كبير لطريقة إبقائك على اطلاع وحماية بياناتك. الإشعارات: فاتورة لا يكفيها رصيد مصدرها، وأهداف في خطر، ونصائح عندما يرتفع نوع من الإنفاق، ومراجعة أسبوعية في اليوم الذي تختاره، وسجلات تحتاج نظرة، وتذكير مسائي اختياري، ولكل منها مفتاحه. لا يصل شيء ليلًا، وبحد أقصى إشعاران يوميًا، ولا تُظهر الشاشة المقفلة أي أسماء إلا إذا شغّلت التفاصيل. «تحدّث مع ثراء» يفهم الآن المكان والوقت («في ستاربكس الساعة 6:30 مساءً»)، ويقرأ التاريخ بالضبط قبل الحفظ، وينبّهك إلى سجل قد يكون مكررًا، ولا يحفظ أبدًا عندما تقول لا. Gemini عبر الإنترنت يمر الآن عبر بوابة ثراء الخاصة، فلا يحمل التطبيق أي مفتاح، ويسألك ثراء مرة واحدة قبل إرسال أي شيء عبر الإنترنت. وأُصلح أيضًا بعد مراجعة أمنية كاملة: استعادة النسخة الاحتياطية تطلب قفل شاشة هاتفك، والمسح يزيل كل شيء، وتُزال بيانات الموقع من صور الإيصالات قبل قراءتها عبر الإنترنت."
+    "en": "Talk live: play Thara's voice with the app's own player"
   },
-  "sizeBytes": 133801127,
-  "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/build-113/thara-release.apk",
+  "sizeBytes": 134555011,
+  "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/build-115/thara-release.apk",
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
-  "pageUrl": "https://dvahasan.github.io/thara-site/#get"
+  "pageUrl": "https://dvahasan.github.io/thara-site/#get",
+  "sha256": "c77a71b3388aeac781a015d92f2217d0cbf99a4689cbb6d06b994fe1eb86f762",
+  "certSha256": "F4:FE:89:29:27:FF:81:A1:DF:0D:E3:22:DA:EB:2B:F6:F0:DA:10:0F:E6:AF:69:E9:FC:0E:8B:D8:EB:13:9D:DC",
+  "signature": "i1Dl3k/+rQyA6KwqcANECi7m8CtAEWqPKpQUDD0EvVtNe+wjD/XmUtgXOzNkPI4IdOY9bguokNj4EVmlXGaeCg=="
 }
