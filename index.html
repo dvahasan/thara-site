@@ -185,6 +185,8 @@ section { padding: clamp(1.8rem, 4vw, 3rem) 0; }
 .get .platforms span { color: var(--text-2); font-size: .88rem; flex: 1; }
 .get .platforms .btn { margin-top: .45rem; width: 100%; }
 .get .platforms .meta { display: block; margin-top: .45rem; color: var(--muted); font-size: .78rem; }
+.get .platforms .others { display: block; margin-top: .55rem; font-size: .82rem; color: var(--text-2); }
+.get .platforms .others a { display: block; margin-top: .2rem; }
 .get .small { color: var(--muted); font-size: .84rem; max-width: 62ch; margin: .4rem auto 0; }
 
 /* ---- the compact index of what the app does ----
@@ -336,11 +338,19 @@ footer a { color: var(--text-2); font-weight: 600; }
         <div class="card">
           <b>Android <span class="tag ready">Ready to use</span></b>
           <span>The build to use day to day. Tap the link on the phone itself and install it — nothing else is needed. Android 8 or newer.</span>
-          <a class="btn filled" href="https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk">
+          <!-- One APK per processor type. A browser cannot tell which processor a
+               phone has, so the button is the 64-bit file almost every phone
+               needs, and the other two are offered below it. -->
+          <a class="btn filled" href="https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release-arm64-v8a.apk">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
             Download APK
           </a>
-          <small class="meta" data-asset="thara-release.apk">Latest build</small>
+          <small class="meta" data-asset="thara-release-arm64-v8a.apk" data-note="for almost every phone (64-bit)">Latest build · for almost every phone (64-bit)</small>
+          <small class="others">
+            Not this one?
+            <a href="https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release-armeabi-v7a.apk">Older 32-bit phone</a>
+            <a href="https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk">Not sure — works on every phone, about twice the size</a>
+          </small>
         </div>
         <!-- The iPhone build is not offered for now: the card is kept here, unchanged, to
              bring back by removing this comment once it is worth downloading again.
@@ -589,12 +599,12 @@ footer a { color: var(--text-2); font-weight: 600; }
 // Build number, date and download sizes, so the page cannot claim a version
 // it is not actually serving.
 //
-// Two sources, in order. version.json is published by the same CI run that
-// produces the downloads and is the file the app itself reads to decide
-// whether an update exists, so the page and the app can never disagree. The
-// GitHub API is asked only for the file sizes, which the manifest does not
-// carry per platform; it is rate limited per IP for anonymous callers, so
-// nothing important depends on it.
+// version.json is published by the same CI run that produces the downloads
+// and is the file the app itself reads to decide whether an update exists, so
+// the page and the app can never disagree. It carries the size of each
+// Android APK. The GitHub API is asked only for what the manifest does not
+// carry (the iPhone file); it is rate limited per IP for anonymous callers,
+// so nothing important depends on it.
 //
 // Purely additive: with no network the cards keep their static text and
 // every link still works.
@@ -610,12 +620,25 @@ footer a { color: var(--text-2); font-weight: 600; }
       day: 'numeric', month: 'short', year: 'numeric'
     });
   }
+  // "68 MB · built 21 Oct 2026", or the line's own note after the size when
+  // it has one ("for almost every phone").
+  function size(name, bytes, date) {
+    var el = document.querySelector('[data-asset="' + name + '"]');
+    if (!el) return;
+    var note = el.getAttribute('data-note');
+    el.textContent = (bytes / 1048576).toFixed(0) + ' MB · ' +
+      (note || ('built ' + on(date)));
+  }
 
   fetch('version.json', { cache: 'no-cache' })
     .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function (v) {
       if (v.buildNumber) fill('[data-version-build]', v.buildNumber);
       if (v.publishedAt) fill('[data-version-date]', '· built ' + on(v.publishedAt));
+      var apk = v.androidApks && v.androidApks['arm64-v8a'];
+      if (apk && apk.sizeBytes) {
+        size('thara-release-arm64-v8a.apk', apk.sizeBytes, v.publishedAt);
+      }
     })
     .catch(function () { /* Keep the static text. */ });
 
@@ -624,9 +647,7 @@ footer a { color: var(--text-2); font-weight: 600; }
     .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function (release) {
       (release.assets || []).forEach(function (asset) {
-        var el = document.querySelector('[data-asset="' + asset.name + '"]');
-        if (!el) return;
-        el.textContent = (asset.size / 1048576).toFixed(0) + ' MB · built ' + on(asset.updated_at);
+        size(asset.name, asset.size, asset.updated_at);
       });
     })
     .catch(function () { /* Keep the static text. */ });
