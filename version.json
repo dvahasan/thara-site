@@ -1,16 +1,34 @@
 {
-  "buildNumber": 115,
+  "buildNumber": 122,
   "version": "1.0.0",
-  "commit": "2ba3a9f",
-  "publishedAt": "2026-10-19T13:38:47Z",
+  "commit": "23d1d27",
+  "publishedAt": "2026-10-21T08:01:46Z",
   "notes": {
-    "en": "Talk live: play Thara's voice with the app's own player"
+    "en": "Thara's own AI, on your phone (beta, Android 13+): switch it on in Settings, download its model once over Wi-Fi, and Thara turns what you say or type into records without sending anything anywhere. Thara also reads amounts and days better on its own: «١٨ ألف», «١٢ ألف و٥٠٠», «٤٥ جنيه ونص», «ألف ومتين», weekdays like «يوم الجمعة», days of the month, and transfers from the bank to cash. Smaller download: your phone now gets only the file made for its processor, about half the size. Also: Talk live has its own full screen, with rings that come alive as you talk and captions of what you both say.",
+    "ar": "ذكاء ثراء الخاص على هاتفك (تجريبي، أندرويد 13 أو أحدث): فعّله من الإعدادات ونزّل نموذجه مرة واحدة عبر Wi-Fi، فيحوّل ثراء ما تقوله أو تكتبه إلى حركات دون إرسال أي شيء إلى أي مكان. ويقرأ ثراء المبالغ والأيام بنفسه بشكل أفضل: «١٨ ألف» و«١٢ ألف و٥٠٠» و«٤٥ جنيه ونص» و«ألف ومتين»، وأيام الأسبوع مثل «يوم الجمعة»، وأيام الشهر، والتحويل من البنك إلى الكاش. تنزيل أصغر: يحصل هاتفك الآن على الملف المصنوع لمعالجه فقط، بنحو نصف الحجم. وأيضًا: للتحدث المباشر شاشة كاملة خاصة به، بحلقات تتحرك وأنت تتحدث ونص لما يقوله كل منكما."
   },
-  "sizeBytes": 134555011,
-  "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/build-115/thara-release.apk",
+  "sizeBytes": 157592106,
+  "androidUrl": "https://github.com/dvahasan/thara-site/releases/download/build-122/thara-release.apk",
+  "androidApks": {
+    "arm64-v8a": {
+      "url": "https://github.com/dvahasan/thara-site/releases/download/build-122/thara-release-arm64-v8a.apk",
+      "sizeBytes": 69481935,
+      "sha256": "54d4459dec4936c9a59b51e41b70d108efaaba4122ca0a8c40943603f1aa4fb2"
+    },
+    "armeabi-v7a": {
+      "url": "https://github.com/dvahasan/thara-site/releases/download/build-122/thara-release-armeabi-v7a.apk",
+      "sizeBytes": 46064324,
+      "sha256": "20a6a4ac626e200a51d375b9abcc91d1fcdad05d0a224183b17fed9ebd06f3c1"
+    },
+    "x86_64": {
+      "url": "https://github.com/dvahasan/thara-site/releases/download/build-122/thara-release-x86_64.apk",
+      "sizeBytes": 55120510,
+      "sha256": "d6cf5058f8a855a9fb34831373d71b3f30a47051d4ad8b2bac3530aa06948ea6"
+    }
+  },
   "iosUrl": "https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa",
   "pageUrl": "https://dvahasan.github.io/thara-site/#get",
-  "sha256": "c77a71b3388aeac781a015d92f2217d0cbf99a4689cbb6d06b994fe1eb86f762",
+  "sha256": "82d4a661b6c9d25db492c13c486a524909f5da4815e42873ec29b8a4f835eb2f",
   "certSha256": "F4:FE:89:29:27:FF:81:A1:DF:0D:E3:22:DA:EB:2B:F6:F0:DA:10:0F:E6:AF:69:E9:FC:0E:8B:D8:EB:13:9D:DC",
-  "signature": "i1Dl3k/+rQyA6KwqcANECi7m8CtAEWqPKpQUDD0EvVtNe+wjD/XmUtgXOzNkPI4IdOY9bguokNj4EVmlXGaeCg=="
+  "signature": "s8aZ5FvcmF3ZILLGaBIvdX0aow2sPWG8Yl61fBww9S6wEnXXw7GuqGtBu1mfvl9cIe6wJuPe6UWITuFVlrXiAQ=="
 }
