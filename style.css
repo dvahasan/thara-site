@@ -450,6 +450,28 @@ details, [data-find] { scroll-margin-top: 76px; scroll-margin-bottom: calc(var(-
 .note { color: var(--muted); font-size: 14.5px; margin: 0; }
 .build-tag b { font-weight: 800; }
 
+/* Thara in a browser: the way in to the web version, under the downloads.
+   The lavender hero card, with English and Arabic side by side as on the
+   feedback card. */
+.web-card { display: grid; gap: 16px; margin-top: 16px; border: 1px solid var(--line); }
+.web-card .top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.web-card h3 { font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 900; letter-spacing: -0.035em; }
+.web-card .names { display: flex; align-items: baseline; justify-content: space-between; gap: 4px 16px; flex-wrap: wrap; }
+.web-card .title-ar { margin: 0; font-size: 1.3rem; font-weight: 800; color: var(--purple); }
+.web-card .says { display: grid; gap: 14px; }
+@media (min-width: 800px) { .web-card .says { grid-template-columns: 1fr 1fr; gap: 28px; } }
+.web-card .says p { margin: 0; max-width: 62ch; }
+.web-card .says.less p { color: var(--muted); font-size: 14.5px; }
+.web-card .says.less p:lang(ar) { font-size: 15px; }
+.web-card .says a { font-weight: 700; }
+.web-card .btn { justify-self: start; text-align: center; padding-block: .6rem; }
+/* On a phone the button's two languages sit one above the other. */
+@media (max-width: 520px) {
+  .web-card .btn { justify-self: stretch; flex-wrap: wrap; row-gap: 2px; padding-inline: 1rem; }
+  .web-card .btn .dot { display: none; }
+  .web-card .btn [lang="ar"] { flex-basis: 100%; }
+}
+
 /* what it does */
 /* One group holds eight rows and the others two or three, so the long one
    runs the full width in two columns of rows and the short ones share the
