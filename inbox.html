@@ -90,7 +90,7 @@
       <div class="in-head">
         <div>
           <span class="kicker">Developer</span>
-          <h1>Feedback inbox</h1>
+          <h1>Thara, from the site</h1>
           <p class="in-who" id="in-who"></p>
         </div>
         <div class="in-acts">
@@ -99,23 +99,63 @@
         </div>
       </div>
 
-      <div class="in-tools">
-        <div class="chips" role="group" aria-label="Show">
-          <button class="chip" type="button" data-show="new" aria-pressed="true">New <b data-tally="new">0</b></button>
-          <button class="chip" type="button" data-show="done" aria-pressed="false">Handled <b data-tally="done">0</b></button>
-          <button class="chip" type="button" data-show="all" aria-pressed="false">All</button>
-        </div>
-        <label class="search in-search">
-          <svg class="i" aria-hidden="true"><use href="#i-search"/></svg>
-          <span class="sr">Search what is loaded</span>
-          <input id="in-find" type="search" placeholder="Search what is loaded" autocomplete="off" spellcheck="false">
-        </label>
+      <div class="seg in-views" role="group" aria-label="View">
+        <button type="button" data-view="feedback" aria-pressed="true">Feedback</button>
+        <button type="button" data-view="downloads" aria-pressed="false">Downloads</button>
+        <button type="button" data-view="survey" aria-pressed="false">Survey</button>
       </div>
 
-      <p class="in-status" id="in-list-status" role="status" aria-live="polite"></p>
-      <ol class="in-list" id="in-list"></ol>
-      <p class="in-empty" id="in-empty" hidden>Nothing here.</p>
-      <button class="btn ghost in-more" type="button" id="in-more" hidden>Load older</button>
+      <div class="in-view in-main" data-panel="feedback">
+        <div class="in-tools">
+          <div class="chips" role="group" aria-label="Show">
+            <button class="chip" type="button" data-show="new" aria-pressed="true">New <b data-tally="new">0</b></button>
+            <button class="chip" type="button" data-show="done" aria-pressed="false">Handled <b data-tally="done">0</b></button>
+            <button class="chip" type="button" data-show="all" aria-pressed="false">All</button>
+          </div>
+          <label class="search in-search">
+            <svg class="i" aria-hidden="true"><use href="#i-search"/></svg>
+            <span class="sr">Search what is loaded</span>
+            <input id="in-find" type="search" placeholder="Search what is loaded" autocomplete="off" spellcheck="false">
+          </label>
+        </div>
+
+        <p class="in-status" id="in-list-status" role="status" aria-live="polite"></p>
+        <ol class="in-list" id="in-list"></ol>
+        <p class="in-empty" id="in-empty" hidden>Nothing here.</p>
+        <button class="btn ghost in-more" type="button" id="in-more" hidden>Load older</button>
+      </div>
+
+      <div class="in-view in-main" data-panel="downloads" hidden>
+        <p class="in-status" id="dl-status" role="status" aria-live="polite"></p>
+        <div class="in-hero"><b id="dl-people">0</b><span>people pressed a download button. Each browser is counted once, however often it presses.</span></div>
+        <div class="in-grid two">
+          <div class="in-card">
+            <h3>The file they chose first</h3>
+            <ul class="hbars" id="dl-files"></ul>
+          </div>
+          <div class="in-card">
+            <h3>New downloaders a day, last 30 days</h3>
+            <div class="cols" id="dl-days" role="img"></div>
+            <div class="cols-axis"><span id="dl-from"></span><span id="dl-to"></span></div>
+            <details class="in-table">
+              <summary>Show as a table</summary>
+              <table><thead><tr><th>Day</th><th>People</th></tr></thead><tbody id="dl-table"></tbody></table>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <div class="in-view in-main" data-panel="survey" hidden>
+        <p class="in-status" id="svs-status" role="status" aria-live="polite"></p>
+        <div class="in-hero"><b id="svs-count">0</b><span>answers. One per browser; a new answer from the same browser replaces its old one.</span></div>
+        <div class="in-grid two" id="svs-questions"></div>
+        <div class="in-card">
+          <h3>What people wrote</h3>
+          <p class="in-sub">Newest first: what they think, their ideas, and a fair price in their words.</p>
+          <ol class="in-notes" id="svs-notes"></ol>
+          <p class="in-empty" id="svs-notes-empty" hidden>No written answers yet.</p>
+        </div>
+      </div>
     </section>
   </div>
 </main>

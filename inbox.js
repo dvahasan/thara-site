@@ -66,6 +66,8 @@
   function showMain() {
     signinBox.hidden = true;
     mainBox.hidden = false;
+    stats = null;
+    if (typeof showView === 'function') showView('feedback');
     $('#in-who').textContent = state.email ? 'Signed in as ' + state.email : '';
     load(false);
   }
@@ -289,7 +291,146 @@
     });
   });
   more.addEventListener('click', function () { load(true); });
-  $('#in-refresh').addEventListener('click', function () { load(false); });
+  /* ---------- Downloads and Survey: the site's totals ---------- */
+
+  var view = 'feedback';
+  var stats = null;
+
+  var FILE_NAMES = { arm64: 'Download APK (64-bit)', armv7: 'Older 32-bit phone', universal: 'Universal (not sure)' };
+  var QUESTIONS = [
+    ['used', 'Have you used Thara?', { app: 'The Android app', web: 'The web demo', both: 'Both', not_yet: 'Not yet' }],
+    ['useful', 'Is Thara useful to you?', { very: 'Very useful', somewhat: 'Somewhat', not_really: 'Not really', not_sure: 'Not sure yet' }],
+    ['pay', 'If Thara asked to be paid…', { monthly: 'Pay monthly', once: 'Pay once', extras_only: 'Pay for extras only', free_only: 'Only what is free', stop: 'Stop using it' }],
+    ['recommend', 'Would recommend it', { yes: 'Yes', maybe: 'Maybe', no: 'No' }],
+    ['freq', 'How often they use it', { daily: 'Every day', weekly: 'A few times a week', monthly: 'A few times a month', once: 'Tried once' }],
+    ['features', 'What they use most (any number)', { records: 'Records', bank_messages: 'Bank messages', receipts: 'Receipts', talk: 'Talking to Thara', plans_goals: 'Plans and goals', family_gameya: 'Family and gameya', gold_zakat: 'Gold, dollars, zakat', statistics: 'Statistics', backups: 'Backups' }],
+    ['add', 'How they add a record', { typing: 'Typing', speaking: 'Speaking', receipt: 'A receipt', bank_messages: 'Bank messages', none: 'Not yet' }],
+    ['lang', 'Language', { ar: 'Arabic', en: 'English', both: 'Both' }],
+  ];
+  var PAY_SHORT = { monthly: 'pay monthly', once: 'pay once', extras_only: 'pay for extras', free_only: 'free only', stop: 'would stop' };
+
+  function hbars(list, rows, total) {
+    list.textContent = '';
+    rows.forEach(function (row) {
+      var li = el('li', 'hbar');
+      var pct = total ? Math.round(row.n * 100 / total) : 0;
+      li.title = row.label + ': ' + row.n + (total ? ' (' + pct + '%)' : '');
+      li.appendChild(el('span', 'lbl', row.label));
+      var track = el('span', 'track');
+      var fill = el('span', 'fill');
+      fill.style.setProperty('--w', (total ? Math.max(row.n ? 2 : 0, row.n * 100 / total) : 0) + '%');
+      track.appendChild(fill);
+      li.appendChild(track);
+      li.appendChild(el('span', 'val', row.n + (total ? ' · ' + pct + '%' : '')));
+      list.appendChild(li);
+    });
+  }
+
+  function dayName(day) {
+    return new Date(day + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  }
+
+  function drawDownloads() {
+    var d = stats.downloads;
+    $('#dl-people').textContent = d.people.toLocaleString('en-US');
+    hbars($('#dl-files'), Object.keys(FILE_NAMES).map(function (f) { return { label: FILE_NAMES[f], n: d.byFile[f] || 0 }; }), d.people);
+
+    var cols = $('#dl-days');
+    var table = $('#dl-table');
+    cols.textContent = '';
+    table.textContent = '';
+    var most = Math.max.apply(null, d.last30.map(function (x) { return x.n; }).concat([1]));
+    var total = 0;
+    d.last30.forEach(function (x) {
+      total += x.n;
+      var c = el('span', 'col' + (x.n ? '' : ' zero'));
+      c.tabIndex = 0;
+      c.setAttribute('data-tip', dayName(x.day) + ': ' + x.n);
+      c.setAttribute('aria-label', dayName(x.day) + ', ' + x.n + ' new');
+      c.style.setProperty('--h', (x.n ? Math.max(3, x.n * 100 / most) : 0) + '%');
+      c.appendChild(el('i'));
+      cols.appendChild(c);
+      var tr = el('tr');
+      tr.appendChild(el('td', null, x.day));
+      tr.appendChild(el('td', null, String(x.n)));
+      table.appendChild(tr);
+    });
+    cols.setAttribute('aria-label', total + ' new downloaders in the last 30 days');
+    $('#dl-from').textContent = dayName(d.last30[0].day);
+    $('#dl-to').textContent = dayName(d.last30[d.last30.length - 1].day);
+  }
+
+  function drawSurvey() {
+    var s = stats.survey;
+    $('#svs-count').textContent = s.responses.toLocaleString('en-US');
+    var box = $('#svs-questions');
+    box.textContent = '';
+    QUESTIONS.forEach(function (q) {
+      var counts = s.counts[q[0]] || {};
+      var answered = Object.keys(counts).reduce(function (sum, k) { return sum + counts[k]; }, 0);
+      var card = el('div', 'in-card');
+      card.appendChild(el('h3', null, q[1]));
+      // A question where several may be chosen is shared out of all answers,
+      // not of the choices made.
+      var base = q[0] === 'features' ? s.responses : answered;
+      card.appendChild(el('p', 'in-sub', answered ? (q[0] === 'features' ? s.responses + ' answers' : answered + ' answered') : 'No answers yet'));
+      var list = el('ul', 'hbars');
+      hbars(list, Object.keys(q[2]).map(function (k) { return { label: q[2][k], n: counts[k] || 0 }; }), base);
+      card.appendChild(list);
+      box.appendChild(card);
+    });
+
+    var notes = $('#svs-notes');
+    notes.textContent = '';
+    s.notes.forEach(function (n) {
+      var li = el('li', 'in-note');
+      var top = el('div', 'in-top');
+      top.appendChild(el('span', 'in-when', when(n.at)));
+      if (n.useful) top.appendChild(el('span', 'tag plain', ({ very: 'Very useful', somewhat: 'Somewhat useful', not_really: 'Not really useful', not_sure: 'Not sure' })[n.useful] || n.useful));
+      if (n.pay) top.appendChild(el('span', 'tag plain', PAY_SHORT[n.pay] || n.pay));
+      li.appendChild(top);
+      [['see', 'Thinks'], ['ideas', 'Ideas'], ['payNote', 'Fair price']].forEach(function (part) {
+        if (!n[part[0]]) return;
+        li.appendChild(el('span', 'k', part[1]));
+        var p = el('p', null, n[part[0]]);
+        p.setAttribute('dir', 'auto');
+        li.appendChild(p);
+      });
+      notes.appendChild(li);
+    });
+    $('#svs-notes-empty').hidden = s.notes.length > 0;
+  }
+
+  function loadStats() {
+    var where = view === 'downloads' ? $('#dl-status') : $('#svs-status');
+    say(where, 'Loading…');
+    return gw.ask({ op: 'stats', token: state.token }).then(function (answer) {
+      if (signedOutIf(answer)) return;
+      if (answer.status !== 200) { say(where, 'The totals could not be loaded just now.', true); return; }
+      stats = answer.body;
+      say($('#dl-status'), '');
+      say($('#svs-status'), '');
+      drawDownloads();
+      drawSurvey();
+    }, function () {
+      say(where, 'Thara\'s server could not be reached.', true);
+    });
+  }
+
+  function showView(next) {
+    view = next;
+    $$('[data-view]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-view') === view)); });
+    $$('[data-panel]').forEach(function (p) { p.hidden = p.getAttribute('data-panel') !== view; });
+    if (view !== 'feedback' && !stats) loadStats();
+  }
+  $$('[data-view]').forEach(function (b) {
+    b.addEventListener('click', function () { showView(b.getAttribute('data-view')); });
+  });
+
+  $('#in-refresh').addEventListener('click', function () {
+    if (view === 'feedback') load(false);
+    else loadStats();
+  });
   find.addEventListener('input', render);
 
   if (state.token) showMain();

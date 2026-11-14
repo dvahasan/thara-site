@@ -541,6 +541,36 @@
   // For the inbox page (inbox.js), which loads this file first.
   window.tharaGateway = { ask: gatewayAsk, reason: reasonOf, url: GATEWAY };
 
+  // Download presses, counted once per browser: the gateway keeps one
+  // record per browser id, made the first time, and this browser remembers
+  // it was counted so that pressing again sends nothing at all.
+  var APK_FILES = {
+    'thara-release-arm64-v8a.apk': 'arm64',
+    'thara-release-armeabi-v7a.apk': 'armv7',
+    'thara-release.apk': 'universal',
+  };
+  document.addEventListener('click', function (e) {
+    var link = e.target && e.target.closest ? e.target.closest('a[href*="/releases/download/"]') : null;
+    if (!link || !window.fetch || !window.crypto || !crypto.getRandomValues) return;
+    var file = APK_FILES[link.getAttribute('href').split('/').pop()];
+    if (!file || get('thara-download-counted') === '1') return;
+    put('thara-download-counted', '1');
+    try {
+      fetch(GATEWAY + '/v1/feedback', {
+        method: 'POST',
+        keepalive: true,
+        headers: { 'content-type': 'application/json', 'x-thara-install': siteId() },
+        body: JSON.stringify({ op: 'download', file: file }),
+      }).then(function (r) {
+        // Not counted (the gateway was unreachable or busy): tried again on
+        // the next press.
+        if (!r.ok && r.status !== 429) put('thara-download-counted', null);
+      }, function () { put('thara-download-counted', null); });
+    } catch (err) {
+      put('thara-download-counted', null);
+    }
+  });
+
   var form = $('#fb-form');
   if (form && window.fetch && window.crypto && crypto.getRandomValues) {
     var text = $('#fb-text');
