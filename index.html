@@ -440,8 +440,46 @@
       <ul class="facts">
         <li class="tag">No sign-in</li><li class="tag">No name</li><li class="tag">One question</li><li class="tag">Under a minute</li>
       </ul>
-      <div><a class="btn lime" href="https://forms.gle/MkZcy2zSzj7bCAf68" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>Send feedback · <span lang="ar">أرسل ملاحظة</span></a></div>
-      <p class="small">The form is a Google Form, so what you write there is held by Google. It does not go through the app or your Thara account. Please leave real amounts and account numbers out of it.</p>
+      <form class="fb" id="fb-form" novalidate>
+        <fieldset class="fb-kinds">
+          <legend>What is it about?</legend>
+          <label><input type="radio" name="kind" value="broken" checked><span>Something broken <i lang="ar">خلل</i></span></label>
+          <label><input type="radio" name="kind" value="confusing"><span>Confusing <i lang="ar">غير مفهوم</i></span></label>
+          <label><input type="radio" name="kind" value="missing"><span>Missing <i lang="ar">ناقص</i></span></label>
+          <label><input type="radio" name="kind" value="idea"><span>An idea <i lang="ar">فكرة</i></span></label>
+          <label><input type="radio" name="kind" value="other"><span>Other <i lang="ar">غير ذلك</i></span></label>
+        </fieldset>
+        <label class="fb-field">
+          <span>What happened? <i lang="ar">ماذا حدث؟</i></span>
+          <textarea name="text" id="fb-text" rows="5" maxlength="2000" required dir="auto" placeholder="What you did, what you expected, and what happened instead."></textarea>
+          <small class="fb-count" id="fb-count" aria-live="off">0 / 2000</small>
+        </label>
+        <div class="fb-row">
+          <label class="fb-field">
+            <span>Your email, if you'd like an answer <em>optional</em></span>
+            <input type="email" name="contact" autocomplete="email" inputmode="email" dir="ltr" placeholder="you@example.com">
+          </label>
+          <label class="fb-field">
+            <span>Thara build <em>optional</em></span>
+            <input type="text" name="build" inputmode="numeric" pattern="[0-9]*" maxlength="6" dir="ltr" placeholder="e.g. 252">
+          </label>
+          <label class="fb-field">
+            <span>Phone <em>optional</em></span>
+            <input type="text" name="phone" maxlength="60" dir="auto" placeholder="e.g. Galaxy A54">
+          </label>
+        </div>
+        <!-- Only robots fill this in: it is hidden from people. -->
+        <div class="fb-trap" aria-hidden="true"><label>Leave this empty <input type="text" name="trap" tabindex="-1" autocomplete="off"></label></div>
+        <div class="fb-send">
+          <button class="btn lime" type="submit"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>Send feedback · <span lang="ar">أرسل ملاحظة</span></button>
+          <p class="fb-status" id="fb-status" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+      <div class="fb-done" id="fb-done" hidden>
+        <p><b>Thank you.</b> It is with the developer now. <span lang="ar">شكرًا، وصلت ملاحظتك.</span></p>
+        <button class="btn ghost" type="button" id="fb-again">Send another</button>
+      </div>
+      <p class="small">What you write goes to Thara's own database for the developer to read, with nothing about you but what you type here. Please leave real amounts and account numbers out of it. <a href="privacy.html#feedback">How it is kept</a></p>
     </div>
   </div>
 </section>

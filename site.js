@@ -483,6 +483,7 @@
       })
       .catch(function () { /* Keep the static text. */ });
 
+    // (The feedback form, below, talks to Thara's gateway.)
     // The GitHub API is asked only for what the manifest does not carry
     // (the iPhone file, when its card is back). Anonymous calls are rate
     // limited per IP, so nothing important depends on it.
@@ -494,5 +495,163 @@
         })
         .catch(function () { /* Keep the static text. */ });
     }
+  }
+  /* ---------- Thara's gateway: the feedback form, and the inbox page ---------- */
+
+  // The website calls one path of Thara's gateway, /v1/feedback, which
+  // answers only Thara's own pages. On a computer serving the site itself
+  // (localhost), a gateway running there is used instead.
+  var LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  var GATEWAY = LOCAL ? 'http://127.0.0.1:8797' : 'https://thara-gateway.thara-app.workers.dev';
+
+  // A random id for this browser, as the app has one per install: the
+  // gateway counts a day's messages by it (and forgets the count after two
+  // days). It says nothing about the visitor.
+  function siteId() {
+    var id = get('thara-site-id');
+    if (id && /^[A-Za-z0-9_-]{16,64}$/.test(id)) return id;
+    var bytes = new Uint8Array(18);
+    crypto.getRandomValues(bytes);
+    id = btoa(String.fromCharCode.apply(null, bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    put('thara-site-id', id);
+    return id;
+  }
+
+  /** One request to /v1/feedback: resolves `{ status, body }`; rejects
+   * only when the gateway could not be reached at all. */
+  function gatewayAsk(body) {
+    return fetch(GATEWAY + '/v1/feedback', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-thara-install': siteId() },
+      body: JSON.stringify(body),
+      cache: 'no-store',
+    }).then(function (r) {
+      return r.text().then(function (t) {
+        var parsed = null;
+        try { parsed = t ? JSON.parse(t) : null; } catch (e) { parsed = null; }
+        return { status: r.status, body: parsed };
+      });
+    });
+  }
+
+  function reasonOf(answer) {
+    return answer && answer.body && answer.body.error ? answer.body.error.reason : null;
+  }
+
+  // For the inbox page (inbox.js), which loads this file first.
+  window.tharaGateway = { ask: gatewayAsk, reason: reasonOf, url: GATEWAY };
+
+  var form = $('#fb-form');
+  if (form && window.fetch && window.crypto && crypto.getRandomValues) {
+    var text = $('#fb-text');
+    var tally = $('#fb-count');
+    var status = $('#fb-status');
+    var done = $('#fb-done');
+    var send = form.querySelector('button[type="submit"]');
+    var ARABIC = /[\u0600-\u06FF]/;
+
+    var counted = function () { tally.textContent = text.value.length + ' / 2000'; };
+    text.addEventListener('input', function () {
+      counted();
+      if (text.value.trim().length >= 3) text.removeAttribute('aria-invalid');
+    });
+    counted();
+
+    var say = function (words, bad) {
+      status.textContent = words;
+      status.classList.toggle('bad', !!bad);
+    };
+
+    // The app opens the form as #feedback?build=252&phone=Galaxy%20A54: the
+    // part after "#" never leaves the browser, so nothing is sent with it.
+    var fromApp = function () {
+      var h = location.hash;
+      if (h.indexOf('#feedback?') !== 0) return;
+      var params = {};
+      h.slice('#feedback?'.length).split('&').forEach(function (pair) {
+        var at = pair.indexOf('=');
+        if (at > 0) {
+          try { params[decodeURIComponent(pair.slice(0, at))] = decodeURIComponent(pair.slice(at + 1)); } catch (e) { /* skip */ }
+        }
+      });
+      if (/^[0-9]{1,6}$/.test(params.build || '')) form.build.value = params.build;
+      if (params.phone && params.phone.length <= 60) form.phone.value = params.phone;
+      var section = $('#feedback');
+      if (section) section.scrollIntoView({ block: 'start' });
+    };
+    fromApp();
+    window.addEventListener('hashchange', fromApp);
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var words = text.value.trim();
+      if (words.length < 3) {
+        text.setAttribute('aria-invalid', 'true');
+        say('Write a few words about what happened first.', true);
+        text.focus();
+        return;
+      }
+      var contact = form.contact.value.trim();
+      if (contact && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact)) {
+        form.contact.setAttribute('aria-invalid', 'true');
+        say('That email does not look right. Leave it empty if you prefer.', true);
+        form.contact.focus();
+        return;
+      }
+      form.contact.removeAttribute('aria-invalid');
+      var build = form.build.value.trim();
+      if (build && !/^[0-9]{1,6}$/.test(build)) {
+        form.build.setAttribute('aria-invalid', 'true');
+        say('The build is a number, like 252. Leave it empty if you are not sure.', true);
+        form.build.focus();
+        return;
+      }
+      form.build.removeAttribute('aria-invalid');
+      var kind = form.querySelector('input[name="kind"]:checked');
+      var body = {
+        op: 'send',
+        text: words,
+        kind: kind ? kind.value : 'other',
+        lang: ARABIC.test(words) ? 'ar' : 'en',
+        trap: form.trap.value,
+      };
+      if (contact) body.contact = contact;
+      if (build) body.build = Number(build);
+      if (form.phone.value.trim()) body.phone = form.phone.value.trim();
+
+      send.disabled = true;
+      say('Sending…');
+      gatewayAsk(body).then(function (answer) {
+        send.disabled = false;
+        if (answer.status === 200) {
+          // A next message is likely about the same phone: those stay.
+          var sameBuild = form.build.value;
+          var samePhone = form.phone.value;
+          form.reset();
+          form.build.value = sameBuild;
+          form.phone.value = samePhone;
+          counted();
+          say('');
+          form.hidden = true;
+          done.hidden = false;
+          done.querySelector('button').focus();
+          return;
+        }
+        var reason = reasonOf(answer);
+        if (reason === 'install_day' || reason === 'global_day') say('That is enough messages from here for today. Thank you — try again tomorrow.', true);
+        else if (reason === 'minute') say('A moment, please: too many at once. Try again in a minute.', true);
+        else if (answer.status === 400) say('That message could not be taken as it is. Shorten it, or take out unusual characters.', true);
+        else say('Feedback cannot be taken just now. Try again in a little while.', true);
+      }, function () {
+        send.disabled = false;
+        say('Thara\'s server could not be reached. Check your connection and try again.', true);
+      });
+    });
+
+    $('#fb-again').addEventListener('click', function () {
+      done.hidden = true;
+      form.hidden = false;
+      text.focus();
+    });
   }
 })();

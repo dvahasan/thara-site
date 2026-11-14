@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feedback inbox · Thara</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="The developer's page for reading what visitors send through Thara's feedback form.">
+<meta name="theme-color" content="#242037">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<script>
+(function () {
+  var r = document.documentElement, g = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  var t = g('thara-theme'); if (t === 'light' || t === 'dark') r.setAttribute('data-theme', t);
+  if (g('thara-motion') === 'off') r.setAttribute('data-motion', 'off');
+  var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!still && g('thara-motion') !== 'off') r.classList.add('motion');
+  setTimeout(function () { if (!window.tharaSite) r.classList.remove('motion'); }, 2500);
+})();
+</script>
+<link rel="stylesheet" href="style.css">
+<script defer src="site.js"></script>
+<script defer src="inbox.js"></script>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-brand" viewBox="0 0 96 96"><rect x="8" y="69" width="80" height="10" rx="5" fill="currentColor" stroke="none"/><circle cx="20" cy="58" r="5.2" fill="currentColor" stroke="none"/><circle cx="46" cy="43" r="5.6" fill="currentColor" stroke="none"/><circle cx="72" cy="23" r="6.2" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h8.5M17.5 7H20M4 17h2.5M11.5 17H20"/><circle cx="15" cy="7" r="2.5"/><circle cx="9" cy="17" r="2.5"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 7 4.5 11.5 9 16"/><path d="M5 11.5h9.5a5 5 0 0 1 0 10H11"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5v4h-4"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="m4.5 7 7.5 6 7.5-6"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24"><path d="M14 4.5h4.5A1.5 1.5 0 0 1 20 6v12a1.5 1.5 0 0 1-1.5 1.5H14M10 8l-4 4 4 4M6 12h10"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="bar on-ink">
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="Thara, home">
+      <svg class="glyph" aria-hidden="true"><use href="#i-brand"/></svg>
+      <span class="wordmark">Thara.</span>
+      <span class="wordmark-ar" lang="ar">ثراء</span>
+    </a>
+    <div class="bar-acts">
+      <button class="circle lime" type="button" data-pop="appearance" aria-expanded="false" aria-controls="appearance" aria-label="Appearance"><svg class="i" aria-hidden="true"><use href="#i-sliders"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<div class="pop" id="appearance" role="dialog" aria-label="Appearance" hidden>
+  <h3>Appearance</h3>
+  <div class="seg" role="group" aria-label="Theme">
+    <button type="button" data-theme-set="auto" aria-pressed="true">Auto</button>
+    <button type="button" data-theme-set="light" aria-pressed="false">Day</button>
+    <button type="button" data-theme-set="dark" aria-pressed="false">Night</button>
+  </div>
+  <div class="toggle-row">
+    <div><b id="lbl-motion">Effects</b><span>Things rise in and answer a touch.</span></div>
+    <button class="switch" type="button" role="switch" aria-checked="true" aria-labelledby="lbl-motion" data-switch="motion"></button>
+  </div>
+</div>
+
+<main class="inbox" id="main">
+  <div class="wrap">
+    <a class="back" href="./"><svg class="i flip" aria-hidden="true"><use href="#i-back"/></svg>Thara</a>
+
+    <section class="in-signin" id="in-signin">
+      <span class="kicker">Developer</span>
+      <h1>Feedback inbox</h1>
+      <p class="lead">Sign in with the Thara account that is allowed to read feedback. Your password becomes the same proof the app makes, here in the browser: the password itself never leaves this computer.</p>
+      <form class="in-form" id="in-form" novalidate>
+        <label class="in-field"><span>Email</span><input type="email" name="email" autocomplete="username" inputmode="email" dir="ltr" required></label>
+        <label class="in-field"><span>Password</span><input type="password" name="password" autocomplete="current-password" dir="ltr" required></label>
+        <div class="in-send">
+          <button class="btn ink" type="submit"><svg class="i" aria-hidden="true"><use href="#i-lock"/></svg>Sign in</button>
+          <p class="in-status" id="in-status" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+    </section>
+
+    <section class="in-main" id="in-main" hidden>
+      <div class="in-head">
+        <div>
+          <span class="kicker">Developer</span>
+          <h1>Feedback inbox</h1>
+          <p class="in-who" id="in-who"></p>
+        </div>
+        <div class="in-acts">
+          <button class="btn ghost" type="button" id="in-refresh"><svg class="i" aria-hidden="true"><use href="#i-refresh"/></svg>Refresh</button>
+          <button class="btn ghost" type="button" id="in-signout"><svg class="i" aria-hidden="true"><use href="#i-out"/></svg>Sign out</button>
+        </div>
+      </div>
+
+      <div class="in-tools">
+        <div class="chips" role="group" aria-label="Show">
+          <button class="chip" type="button" data-show="new" aria-pressed="true">New <b data-tally="new">0</b></button>
+          <button class="chip" type="button" data-show="done" aria-pressed="false">Handled <b data-tally="done">0</b></button>
+          <button class="chip" type="button" data-show="all" aria-pressed="false">All</button>
+        </div>
+        <label class="search in-search">
+          <svg class="i" aria-hidden="true"><use href="#i-search"/></svg>
+          <span class="sr">Search what is loaded</span>
+          <input id="in-find" type="search" placeholder="Search what is loaded" autocomplete="off" spellcheck="false">
+        </label>
+      </div>
+
+      <p class="in-status" id="in-list-status" role="status" aria-live="polite"></p>
+      <ol class="in-list" id="in-list"></ol>
+      <p class="in-empty" id="in-empty" hidden>Nothing here.</p>
+      <button class="btn ghost in-more" type="button" id="in-more" hidden>Load older</button>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <a class="brand" href="./" aria-label="Thara, home"><svg class="glyph" aria-hidden="true"><use href="#i-brand"/></svg><span class="wordmark">Thara.</span></a>
+      <p style="margin:.5rem 0 0">© 2026 Thara · <span lang="ar">ثراء</span> means wealth.</p>
+    </div>
+    <nav aria-label="Pages">
+      <a href="./">Home</a>
+      <a href="privacy.html">Privacy policy</a>
+      <a href="terms.html">Terms of use</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

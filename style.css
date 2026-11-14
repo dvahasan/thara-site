@@ -528,6 +528,87 @@ details, [data-find] { scroll-margin-top: 76px; scroll-margin-bottom: calc(var(-
 .ask .title-ar { font-size: 1.5rem; font-weight: 800; color: var(--lime); margin: 4px 0 0; }
 .ask .facts .tag { background: rgba(228, 218, 238, .14); color: var(--on-ink); }
 .ask .small { margin: 0; color: var(--on-ink-muted); font-size: 14px; max-width: 70ch; }
+.ask .small a { color: var(--lime); }
+
+/* The feedback form, on the ink card: fields as the app draws them on its
+   dark title bar, lime when chosen or in focus. */
+.fb { display: grid; gap: 16px; margin: 0; }
+.fb-kinds { border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.fb-kinds legend { padding: 0; margin-bottom: 8px; font-weight: 700; color: var(--on-ink); }
+.fb-kinds label { position: relative; }
+.fb-kinds input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.fb-kinds span {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px;
+  border-radius: 999px; border: 1px solid rgba(228, 218, 238, .32); color: var(--on-ink);
+  font-weight: 650; font-size: 15px; transition: background var(--quick) var(--out), color var(--quick) var(--out);
+}
+.fb-kinds i { font-style: normal; color: var(--on-ink-muted); font-weight: 500; }
+.fb-kinds input:checked + span { background: var(--lime); border-color: var(--lime); color: var(--ink); }
+.fb-kinds input:checked + span i { color: var(--on-pale-lime); }
+.fb-kinds input:focus-visible + span { outline: 3px solid var(--lime); outline-offset: 2px; }
+.fb-field { display: grid; gap: 6px; position: relative; }
+.fb-field > span { font-weight: 700; color: var(--on-ink); font-size: 15px; }
+.fb-field > span i { font-style: normal; font-weight: 500; color: var(--on-ink-muted); margin-inline-start: 6px; }
+.fb-field > span em { font-style: normal; font-weight: 500; color: var(--on-ink-muted); font-size: 13px; margin-inline-start: 6px; }
+.fb textarea, .fb input[type="text"], .fb input[type="email"] {
+  width: 100%; box-sizing: border-box; font: inherit; font-size: 16px; color: var(--on-ink);
+  background: rgba(255, 255, 255, .07); border: 1px solid rgba(228, 218, 238, .3); border-radius: 14px;
+  padding: 12px 14px; transition: border-color var(--quick) var(--out), background var(--quick) var(--out);
+}
+.fb textarea { resize: vertical; min-height: 120px; line-height: 1.5; }
+.fb textarea::placeholder, .fb input::placeholder { color: rgba(223, 211, 246, .55); }
+.fb textarea:focus, .fb input:focus { outline: none; border-color: var(--lime); background: rgba(255, 255, 255, .1); box-shadow: 0 0 0 3px rgba(223, 243, 117, .25); }
+.fb [aria-invalid="true"] { border-color: #ff9d9d; }
+.fb-count { justify-self: end; color: var(--on-ink-muted); font-size: 12px; font-family: var(--mono); }
+.fb-row { display: grid; gap: 14px; }
+@media (min-width: 760px) { .fb-row { grid-template-columns: 1.4fr .7fr 1fr; } }
+.fb-trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.fb-send { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+.fb-send .btn[disabled] { opacity: .6; cursor: progress; }
+.fb-status { margin: 0; color: var(--on-ink-muted); font-size: 14px; }
+.fb-status.bad { color: #ffb4a8; }
+.fb-done { display: grid; gap: 14px; justify-items: start; padding: 18px; border-radius: 18px; background: rgba(223, 243, 117, .12); border: 1px solid rgba(223, 243, 117, .4); }
+.fb-done p { margin: 0; color: var(--on-ink); }
+.fb-done .btn.ghost { color: var(--on-ink); border-color: rgba(228, 218, 238, .4); }
+
+/* The developer's feedback inbox (inbox.html). */
+.inbox { padding: 28px 0 64px; }
+.inbox h1 { margin: 6px 0 8px; font-size: clamp(2rem, 6vw, 3rem); }
+.in-signin { max-width: 520px; display: grid; gap: 12px; margin-top: 18px; }
+.in-signin .lead { margin: 0; color: var(--muted); }
+.in-form { display: grid; gap: 14px; padding: 20px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shade); }
+.in-field { display: grid; gap: 6px; }
+.in-field span { font-weight: 700; }
+.in-field input {
+  font: inherit; font-size: 16px; color: var(--text); background: var(--paper);
+  border: 1px solid var(--field-line); border-radius: 14px; padding: 12px 14px;
+}
+.in-field input:focus { outline: 3px solid var(--focus); outline-offset: 1px; }
+.in-send { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.in-status { margin: 0; color: var(--muted); font-size: 14px; }
+.in-status.bad { color: var(--error); }
+.in-main { margin-top: 18px; display: grid; gap: 16px; }
+.in-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px; }
+.in-who { margin: 0; color: var(--muted); }
+.in-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.in-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.in-tools .chips { margin: 0; }
+.in-tools .chip b { margin-inline-start: 6px; font-family: var(--mono); font-size: 13px; }
+.in-search { flex: 1 1 240px; margin: 0; }
+.in-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.in-item { padding: 16px 18px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shade); display: grid; gap: 10px; }
+.in-item.done { opacity: .78; }
+.in-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.in-when { color: var(--muted); font-size: 14px; font-family: var(--mono); }
+.in-text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.55; }
+.in-meta { margin: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--muted); font-size: 14px; }
+.in-contact { display: inline-flex; align-items: center; gap: 6px; color: var(--purple); overflow-wrap: anywhere; }
+.in-contact .i { width: 16px; height: 16px; }
+.in-item-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.in-item-acts .btn { min-height: 38px; padding: 0 14px; font-size: 14px; }
+.in-del { color: var(--error); }
+.in-empty { margin: 8px 0; color: var(--muted); }
+.in-more { justify-self: start; }
 
 /* footer */
 footer { padding: 2.2rem 0 1.6rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; }
