@@ -2,65 +2,104 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Terms of use · Thara</title>
-<meta name="description" content="Terms of use for the Thara personal finance app.">
-<meta name="theme-color" content="#00695C">
+<meta name="description" content="Terms of use for the Thara personal finance app: your Thara account, no advice, what its AI can get wrong, and the services it relies on.">
+<meta name="theme-color" content="#242037">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
+<script>
+(function () {
+  var r = document.documentElement, g = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  var t = g('thara-theme'); if (t === 'light' || t === 'dark') r.setAttribute('data-theme', t);
+  if (g('thara-motion') === 'off') r.setAttribute('data-motion', 'off');
+  var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!still && g('thara-motion') !== 'off') r.classList.add('motion');
+  setTimeout(function () { if (!window.tharaSite) r.classList.remove('motion'); }, 2500);
+})();
+</script>
 <link rel="stylesheet" href="style.css">
+<script defer src="site.js"></script>
 </head>
 <body>
 
-<header class="top">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-brand" viewBox="0 0 96 96"><rect x="8" y="69" width="80" height="10" rx="5" fill="currentColor" stroke="none"/><circle cx="20" cy="58" r="5.2" fill="currentColor" stroke="none"/><circle cx="46" cy="43" r="5.6" fill="currentColor" stroke="none"/><circle cx="72" cy="23" r="6.2" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10.5l5 4.5 5-4.5M5 20h14"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h8.5M17.5 7H20M4 17h2.5M11.5 17H20"/><circle cx="15" cy="7" r="2.5"/><circle cx="9" cy="17" r="2.5"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="bar on-ink">
   <div class="wrap">
-    <a class="brand" href="./">
-      <svg class="mark" viewBox="0 0 96 96" aria-hidden="true"><rect width="96" height="96" rx="24" fill="#0E2B26"/><rect x="24" y="66" width="48" height="4" rx="2" fill="#E7EEE9" opacity=".45"/><circle cx="30" cy="53" r="6.5" fill="#E7EEE9"/><circle cx="48" cy="43" r="7.5" fill="#E7EEE9"/><circle cx="67" cy="31" r="9" fill="#C8A44A"/></svg>
-      Thara <span class="ar" lang="ar">ثراء</span>
+    <a class="brand" href="./" aria-label="Thara, home">
+      <svg class="glyph" aria-hidden="true"><use href="#i-brand"/></svg>
+      <span class="wordmark">Thara.</span>
+      <span class="wordmark-ar" lang="ar">ثراء</span>
     </a>
-    <nav class="links">
-      <a href="./#features">Features</a>
-      <a href="./#plans">Plans</a>
-      <a href="./#security">Security</a>
-      <a href="./#backup">Backup</a>
-      <a href="./#get">Get the app</a>
-    </nav>
+    <div class="bar-acts">
+      <a class="bar-link" href="./#get"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Get Thara</a>
+      <button class="circle lime" type="button" data-pop="appearance" aria-expanded="false" aria-controls="appearance" aria-label="Appearance"><svg class="i" aria-hidden="true"><use href="#i-sliders"/></svg></button>
+    </div>
   </div>
 </header>
 
-<main class="doc">
+<div class="pop" id="appearance" role="dialog" aria-label="Appearance" hidden>
+  <h3>Appearance</h3>
+  <div class="seg" role="group" aria-label="Theme">
+    <button type="button" data-theme-set="auto" aria-pressed="true">Auto</button>
+    <button type="button" data-theme-set="light" aria-pressed="false">Day</button>
+    <button type="button" data-theme-set="dark" aria-pressed="false">Night</button>
+  </div>
+  <div class="toggle-row">
+    <div><b id="lbl-motion">Effects</b><span>Things rise in and answer a touch.</span></div>
+    <button class="switch" type="button" role="switch" aria-checked="true" aria-labelledby="lbl-motion" data-switch="motion"></button>
+  </div>
+</div>
+
+<main class="doc" id="main">
   <div class="wrap">
-    <article class="card">
+    <a class="back" href="./"><svg class="i flip" aria-hidden="true"><use href="#i-back"/></svg>Thara</a>
+    <span class="kicker">Terms</span>
+    <article>
       <h1>Terms of use</h1>
-      <p class="updated">Last updated 18 October 2026</p>
+      <p class="updated">Last updated 14 November 2026 (Thara accounts, Thara AI, bank messages, emailed reports)</p>
 
       <div class="callout">
-        <p><b>The short version.</b> Thara is a free personal project offered as is. It records what you enter and does the arithmetic. It is not financial, tax, legal or religious advice, and you are responsible for your own money and your own backups.</p>
+        <p><b>The short version.</b> Thara is a free personal project offered as is. It records what you enter, reads what you let it read, and does the arithmetic. It is not financial, tax, legal or religious advice, and what its AI writes or reads can be wrong, so check a record before you save it. You are responsible for your own money and for keeping your account's sign-in safe.</p>
       </div>
 
       <h2>What Thara is</h2>
-      <p>Thara is a personal finance application for Android and iOS that stores your records on your own device. It is provided free of charge, without an account, and without any subscription or in-app purchase. By installing or using it you agree to these terms.</p>
+      <p>Thara is a personal finance application for Android. It keeps your records in an encrypted database on your phone and a sealed copy in your Thara account. It is provided free of charge, without any subscription or in-app purchase. By installing or using it you agree to these terms.</p>
+
+      <h2 id="account">Your Thara account</h2>
+      <p>Thara needs a free Thara account, made with an email address or with a Google account. Use an email address that is yours, keep your password and your PIN to yourself, and tell the developer if you think someone else has signed in to your account. An account is for one person's own finances; family accounts are how you share a source with others. You can close your account at any time from the app: that deletes it and everything kept with it, as the <a href="privacy.html#closing">privacy policy</a> describes.</p>
 
       <h2>No advice</h2>
       <p>Everything Thara shows is calculated from figures you entered and rates you recorded or fetched. Plans, projections, grades and verdicts are arithmetic on those inputs. They are not investment, financial, tax or legal advice, and nothing in the app promises any return. Projections use the assumptions you set, and they are labelled as projections.</p>
+      <p>Answers from Thara AI, and what it reads from a receipt, a bank message or a sentence you say, are written by AI and can be wrong. Check a record before you save it, and treat an answer as general information, not advice.</p>
       <p>The zakat plan and calculator are arithmetic, not a religious ruling. Which assets count, which debts may be deducted and when a holding year completes vary by school and by circumstance. Consult a qualified scholar for a ruling on your own situation.</p>
 
       <h2>Your data and your backups</h2>
-      <p>Your records live only on your device and in any backups you choose to make. There is no server copy. If you lose the device, uninstall the app, forget your PIN and erase the data, or forget a backup passphrase, the data cannot be recovered by the developer or anyone else. Making and testing backups is your responsibility.</p>
+      <p>Your records live on your phone, in your Thara account and in any backups you choose to make. Losing or replacing the phone does not lose them: sign in on the new one and they come back. Closing your account deletes the copy kept in it, and that cannot be undone. Anything recorded on a phone that has not yet reached your account is lost if the app is deleted first. Backups made by older builds with a passphrase or a recovery code open only with that passphrase or code, and nobody, the developer included, can open them without it.</p>
 
       <h2>Distribution</h2>
-      <p>Thara is not distributed through an app store. Android builds are installed directly and iOS builds are installed with a sideloading tool under your own Apple ID. Installing software outside the store is your decision and is subject to the terms of your device's platform.</p>
+      <p>Thara is not distributed through an app store. Android builds are installed directly from this website. Installing software outside a store is your decision and is subject to the terms of your device's platform.</p>
 
       <h2>Third-party services</h2>
-      <p>These features reach the network, and the <a href="privacy.html#network-access">privacy policy</a> describes each: a public currency-rate API for rate updates, which is off until you turn it on; a check against this website for a newer build of the app, which is on by default and can be switched off under Settings, About; Google Drive backup, only if you connect an account; Gemini online for reading receipts and records and for answering general questions in Talk to Thara, each with its own switch; and problem reports, which can be switched off under Settings, Problems. Answers and readings by AI can be wrong: check a record before you save it, and treat an answer as general information, not financial advice. Gemini online is for adults aged 18 and over. Availability and accuracy of those services are outside the developer's control. Fetched rates are reference figures and may differ from the rate you can actually buy or sell at. The feedback form linked from the app and this site is a Google Form; what you write into it is handled by Google under its own terms, and you should not put real amounts or account numbers into it.</p>
+      <p>Thara relies on services the developer does not run: Cloudflare, which hosts Thara's gateway; MongoDB Atlas, which holds the sealed copy of your wallet; the outside AI service that Thara AI runs on; a mail service, for sign-in codes and the reports you ask for; Google, for signing in with Google, Google Drive backup and family notifications; a public currency-rate service; and Sentry, for problem reports. The <a href="privacy.html#network-access">privacy policy</a> describes what each one receives. Their availability and accuracy are outside the developer's control. Thara AI online and live talk are for adults aged 18 and over. Fetched rates are reference figures and may differ from the rate you can actually buy or sell at. The feedback form linked from the app and this site is a Google Form; what you write into it is handled by Google under its own terms, and you should not put real amounts or account numbers into it.</p>
 
       <h2>No warranty</h2>
-      <p>Thara is provided as is and as available, without warranty of any kind, express or implied, including fitness for a particular purpose and freedom from errors. The developer does not guarantee that the app will be uninterrupted, error-free or compatible with future versions of Android or iOS.</p>
+      <p>Thara is provided as is and as available, without warranty of any kind, express or implied, including fitness for a particular purpose and freedom from errors. The developer does not guarantee that the app or its online services will be uninterrupted, error-free or compatible with future versions of Android.</p>
 
       <h2>Limitation of liability</h2>
-      <p>To the fullest extent permitted by law, the developer is not liable for any loss or damage arising from use of, or inability to use, Thara, including loss of data, financial loss, or decisions made on the basis of figures shown in the app.</p>
+      <p>To the fullest extent permitted by law, the developer is not liable for any loss or damage arising from use of, or inability to use, Thara, including loss of data, financial loss, or decisions made on the basis of figures shown in the app or answers written by its AI.</p>
 
       <h2>Acceptable use</h2>
-      <p>You may use Thara for your own personal finances. You may not use it to store or process data you have no right to hold, or attempt to interfere with the services it optionally connects to.</p>
+      <p>You may use Thara for your own personal finances and, through family accounts, with people who have agreed to share with you. You may not use it to store or process data you have no right to hold, use Thara's gateway or its mail for anything other than Thara, or attempt to interfere with Thara's service or the services it connects to.</p>
 
       <h2>Changes</h2>
       <p>These terms may change. The date at the top of this page changes with them. Continued use after a change means you accept the updated terms.</p>
@@ -73,8 +112,11 @@
 
 <footer>
   <div class="wrap">
-    <div>© 2026 Thara · <span lang="ar">ثراء</span> means wealth.</div>
-    <nav>
+    <div>
+      <a class="brand" href="./" aria-label="Thara, home"><svg class="glyph" aria-hidden="true"><use href="#i-brand"/></svg><span class="wordmark">Thara.</span></a>
+      <p style="margin:.5rem 0 0">© 2026 Thara · <span lang="ar">ثراء</span> means wealth.</p>
+    </div>
+    <nav aria-label="Pages">
       <a href="./">Home</a>
       <a href="privacy.html">Privacy policy</a>
       <a href="terms.html">Terms of use</a>

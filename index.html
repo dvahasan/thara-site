@@ -1,531 +1,421 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="google-site-verification" content="9XWMD6QEMEXP8aq0Bn7HitkUXd0PHs_-tav6fFnA7BY" />
-<title>Thara · Private personal finance</title>
-<meta name="description" content="Thara (ثراء) is a private, offline personal finance app for Android and iOS. Encrypted on your phone, backed up to a folder you choose, in Arabic and English.">
-<meta name="theme-color" content="#00695C">
+<title>Thara · Personal finance</title>
+<meta name="description" content="Thara (ثراء) is a free personal finance app for Android, in Arabic and English. It reads your bank messages and receipts, keeps your wallet encrypted on your phone and sealed in your Thara account, and shows where your money goes.">
+<meta name="theme-color" content="#242037">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<style>
-/* Thara site theme, carried over from style.css so this reads as the same
-   site: Material 3 from seed #00695C, light scaffold #F6F8F7 with white
-   cards, dark scaffold #101514 with #1A211F cards, 20px card radius, 14px
-   control radius. Nothing here invents a palette. */
-:root {
-  --primary: #00695C;
-  --on-primary: #FFFFFF;
-  --primary-container: #A6F2E2;
-  --on-primary-container: #00201C;
-  --bg: #F6F8F7;
-  --card: #FFFFFF;
-  --card-2: #EEF3F1;
-  --text: #191C1B;
-  --text-2: #3F4946;
-  --muted: #6F7975;
-  --outline: #BEC9C5;
-  --outline-soft: rgba(190, 201, 197, 0.6);
-  --ink: #0E2B26;
-  --grain: #E7EEE9;
-  --leaf: #C8A44A;
-  --income: #1B7F5B;
-  --expense: #B3403A;
-  --tag-ready: #126649;
-  --tag-testing: #7A5B0E;
-  --shadow: 0 1px 2px rgba(14, 43, 38, 0.06), 0 12px 32px -16px rgba(14, 43, 38, 0.18);
-  color-scheme: light dark;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --primary: #6FDBC6; --on-primary: #00382F;
-    --primary-container: #005046; --on-primary-container: #A6F2E2;
-    --bg: #101514; --card: #1A211F; --card-2: #222B28;
-    --text: #E0E3E1; --text-2: #BEC9C5; --muted: #89938F;
-    --outline: #3F4946; --outline-soft: rgba(63, 73, 70, 0.6);
-    --income: #7ED7AF; --expense: #F0A39E;
-    --tag-ready: #7ED7AF; --tag-testing: #E0BE68;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -16px rgba(0, 0, 0, 0.6);
-  }
-}
-:root[data-theme="dark"] {
-  --primary: #6FDBC6; --on-primary: #00382F;
-  --primary-container: #005046; --on-primary-container: #A6F2E2;
-  --bg: #101514; --card: #1A211F; --card-2: #222B28;
-  --text: #E0E3E1; --text-2: #BEC9C5; --muted: #89938F;
-  --outline: #3F4946; --outline-soft: rgba(63, 73, 70, 0.6);
-  --income: #7ED7AF; --expense: #F0A39E;
-  --tag-ready: #7ED7AF; --tag-testing: #E0BE68;
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -16px rgba(0, 0, 0, 0.6);
-}
-
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Naskh Arabic", sans-serif;
-  font-size: 16px; line-height: 1.6;
-  color: var(--text); background: var(--bg);
-  -webkit-font-smoothing: antialiased;
-}
-a { color: var(--primary); text-decoration: none; }
-a:hover { text-decoration: underline; }
-h1, h2, h3 { line-height: 1.15; margin: 0 0 .5rem; letter-spacing: -0.01em; text-wrap: balance; }
-h1 { font-size: clamp(2.1rem, 5.2vw, 3.3rem); font-weight: 800; }
-h2 { font-size: clamp(1.45rem, 2.8vw, 1.9rem); font-weight: 700; }
-h3 { font-size: 1.02rem; font-weight: 700; }
-p { margin: 0 0 1rem; }
-.wrap { width: min(1120px, 100% - 2.5rem); margin-inline: auto; }
-:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 6px; }
-/* Two sticky rows to clear when a link jumps to a section. */
-section, details { scroll-margin-top: 112px; }
-
-
-/* ---- header ---- */
-.top {
-  position: sticky; top: 0; z-index: 12;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--outline-soft);
-}
-.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 58px; gap: 1rem; }
-.brand { display: flex; align-items: center; gap: .6rem; color: var(--text); font-weight: 800; font-size: 1.15rem; }
-.brand:hover { text-decoration: none; }
-.brand .mark { width: 30px; height: 30px; border-radius: 8px; flex: none; }
-.brand .ar { font-weight: 600; color: var(--muted); font-size: .95rem; margin-inline-start: .2rem; }
-.top .btn { padding: .4rem .95rem; font-size: .88rem; }
-
-/* ---- section links: one row of chips, on every screen size ----
-   A chip rail rather than a hamburger. Six links fit a scrolling row, and a
-   row you can see beats a menu you have to open to discover what is behind
-   it — which was the complaint about the page in the first place. */
-.railwrap {
-  position: sticky; top: 58px; z-index: 11;
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--outline-soft);
-}
-.rail {
-  display: flex; gap: .4rem; overflow-x: auto; padding: .55rem 0;
-  scrollbar-width: none; -ms-overflow-style: none;
-  scroll-snap-type: x proximity;
-}
-.rail::-webkit-scrollbar { display: none; }
-@media (min-width: 900px) { .rail { justify-content: center; overflow: visible; } }
-.rail a {
-  flex: none; scroll-snap-align: start;
-  padding: .34rem .8rem; border-radius: 999px;
-  background: var(--card-2); border: 1px solid var(--outline-soft);
-  color: var(--text-2); font-size: .86rem; font-weight: 600; white-space: nowrap;
-}
-.rail a:hover { color: var(--primary); border-color: var(--primary); text-decoration: none; }
-.rail a.key { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
-
-/* ---- shared controls ---- */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
-  padding: .68rem 1.25rem; border-radius: 14px; font-weight: 700; font-size: .96rem;
-  border: 1px solid transparent; cursor: pointer;
-}
-.btn:hover { text-decoration: none; }
-.btn.filled { background: var(--primary); color: var(--on-primary); }
-.btn.filled:hover { filter: brightness(1.06); }
-.btn.outlined { border-color: var(--outline); color: var(--text); }
-.btn.outlined:hover { background: var(--card-2); }
-.btn svg { width: 17px; height: 17px; }
-.card { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); }
-
-.tag {
-  display: inline-block; vertical-align: middle; margin-inline-start: .4rem;
-  padding: .1rem .48rem; border-radius: 999px; font-size: .64rem; font-weight: 700;
-  letter-spacing: .02em; text-transform: uppercase;
-}
-.tag.ready { background: color-mix(in srgb, var(--income) 18%, transparent); color: var(--tag-ready); }
-.tag.testing { background: color-mix(in srgb, var(--leaf) 22%, transparent); color: var(--tag-testing); }
-
-section { padding: clamp(1.8rem, 4vw, 3rem) 0; }
-.alt { background: color-mix(in srgb, var(--card) 55%, var(--bg)); border-top: 1px solid var(--outline-soft); border-bottom: 1px solid var(--outline-soft); }
-.sec-head { max-width: 62ch; margin-bottom: 1.2rem; }
-.sec-head p { color: var(--text-2); margin: 0; }
-
-/* ---- hero ---- */
-.hero { padding-top: clamp(1.4rem, 3.5vw, 2.6rem); }
-.hero .wrap { display: grid; grid-template-columns: 1.15fr .85fr; gap: 2.4rem; align-items: center; }
-.shot { display: block; position: relative; width: min(330px, 100%); margin-inline: auto; }
-.shot img {
-  display: block; width: 100%; height: auto;
-  border-radius: 26px; border: 9px solid var(--ink);
-  box-shadow: 0 2px 4px rgba(14,43,38,.16), 0 26px 60px -22px rgba(14,43,38,.5);
-}
-.shot-cta {
-  display: block; margin-top: .8rem; text-align: center;
-  color: var(--primary); font-size: .9rem; font-weight: 700;
-}
-.shot:hover { text-decoration: none; }
-.shot:hover .shot-cta { text-decoration: underline; }
-
-/* The phone used to be hidden below 900px, which removed the one thing on the
-   page that shows what the app looks like from every visitor who is holding
-   one. It stacks under the copy instead. */
-@media (max-width: 900px) { .hero .wrap { grid-template-columns: 1fr; } .hero .phone-wrap { margin-top: .4rem; } }
-.eyebrow { display: inline-block; margin-bottom: .85rem; padding: .28rem .75rem; border-radius: 999px; background: var(--card-2); color: var(--text-2); font-size: .8rem; font-weight: 700; }
-.hero .lead { color: var(--text-2); font-size: 1.04rem; max-width: 56ch; }
-.hero .cta { display: flex; gap: .65rem; flex-wrap: wrap; margin: 1.3rem 0 .85rem; }
-.hero .fine { color: var(--muted); font-size: .84rem; margin: 0; }
-
-/* ---- download: second on the page, because it is what the page is for ---- */
-.get { text-align: center; }
-.get .card { padding: clamp(1.5rem, 3.5vw, 2.2rem) clamp(1.1rem, 3.5vw, 2.4rem); max-width: 760px; margin: 0 auto; }
-.get h2 { margin-bottom: .3rem; }
-.get .build { display: inline-block; margin: .2rem 0 0; padding: .26rem .7rem; border-radius: 999px; background: var(--card-2); color: var(--muted); font-size: .82rem; }
-.get .build b { color: var(--text); font-variant-numeric: tabular-nums; }
-.get .platforms { display: flex; justify-content: center; gap: .9rem; flex-wrap: wrap; margin: 1.2rem 0 .7rem; }
-.get .platforms .card { padding: 1.1rem 1.2rem; flex: 1 1 245px; max-width: 325px; background: var(--card-2); box-shadow: none; text-align: start; display: flex; flex-direction: column; gap: .4rem; }
-.get .platforms b { display: block; font-size: 1.06rem; }
-.get .platforms span { color: var(--text-2); font-size: .88rem; flex: 1; }
-.get .platforms .btn { margin-top: .45rem; width: 100%; }
-.get .platforms .meta { display: block; margin-top: .45rem; color: var(--muted); font-size: .78rem; }
-.get .small { color: var(--muted); font-size: .84rem; max-width: 62ch; margin: .4rem auto 0; }
-
-/* ---- the compact index of what the app does ----
-   Always on the page, because it is the reason to install anything. Kept to
-   a name and one line each: twelve paragraphs was the section that made the
-   page feel endless, and the app itself is where the detail belongs. */
-.groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: .9rem; }
-.group { padding: 1.1rem 1.2rem; background: var(--card); border-radius: 18px; box-shadow: var(--shadow); }
-.group > h3 { color: var(--primary); font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .7rem; }
-.group dl { margin: 0; display: grid; gap: .6rem; }
-.group dt { font-weight: 700; font-size: .94rem; }
-.group dt .ar { font-weight: 600; color: var(--muted); font-size: .8rem; margin-inline-start: .3rem; }
-.group dd { margin: 0; color: var(--text-2); font-size: .86rem; line-height: 1.45; }
-
-/* ---- folded sections ---- */
-.folds { display: grid; gap: .65rem; }
-.fold { border: 1px solid var(--outline-soft); border-radius: 18px; background: var(--card); box-shadow: var(--shadow); overflow: hidden; }
-.fold[open] { border-color: color-mix(in srgb, var(--primary) 40%, var(--outline-soft)); }
-.fold > summary {
-  display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: .85rem;
-  padding: .95rem 1.1rem; cursor: pointer; list-style: none;
-}
-.fold > summary::-webkit-details-marker { display: none; }
-.fold > summary:hover { background: var(--card-2); }
-.fold .ico { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; flex: none; background: var(--primary-container); color: var(--on-primary-container); }
-.fold .ico svg { width: 19px; height: 19px; }
-.fold .lede { min-width: 0; }
-.fold .lede b { display: block; font-size: 1rem; font-weight: 700; }
-.fold .lede span { display: block; color: var(--text-2); font-size: .87rem; line-height: 1.4; }
-.fold .count { color: var(--muted); font-size: .76rem; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
-@media (max-width: 620px) { .fold .count { display: none; } }
-.fold .chev { color: var(--muted); transition: transform .18s ease; }
-.fold .chev svg { width: 17px; height: 17px; display: block; }
-.fold[open] .chev { transform: rotate(180deg); color: var(--primary); }
-@media (prefers-reduced-motion: reduce) { .fold .chev { transition: none; } }
-.fold .body { padding: 0 1.1rem 1.2rem; border-top: 1px solid var(--outline-soft); }
-.fold .body > :first-child { margin-top: 1.1rem; }
-
-/* Compact patterns for what is inside a fold. The point of folding was never
-   to hide a wall of text behind one click. */
-.lines { list-style: none; padding: 0; margin: 0; display: grid; gap: .55rem; }
-.lines li { display: grid; grid-template-columns: auto 1fr; gap: .7rem; align-items: baseline; }
-.lines .k { font-weight: 700; font-size: .92rem; white-space: nowrap; }
-.lines .v { color: var(--text-2); font-size: .87rem; }
-@media (max-width: 560px) { .lines li { grid-template-columns: 1fr; gap: .1rem; } }
-
-.numbered { counter-reset: s; list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; }
-.numbered li { counter-increment: s; display: grid; grid-template-columns: auto 1fr; gap: .7rem; align-items: baseline; }
-.numbered li::before {
-  content: counter(s); width: 22px; height: 22px; border-radius: 7px;
-  background: var(--primary); color: var(--on-primary);
-  display: grid; place-items: center; font-size: .74rem; font-weight: 800;
-}
-.numbered b { font-size: .92rem; }
-.numbered span { color: var(--text-2); font-size: .87rem; display: block; }
-
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: .89rem; min-width: 420px; }
-th, td { text-align: start; padding: .5rem .7rem; border-bottom: 1px solid var(--outline-soft); vertical-align: top; }
-th { color: var(--muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; }
-tbody tr:last-child td { border-bottom: 0; }
-td:first-child { font-weight: 700; white-space: nowrap; }
-td:last-child { color: var(--text-2); }
-
-.two { display: grid; gap: 1.3rem; }
-@media (min-width: 760px) { .two { grid-template-columns: 1fr 1fr; } }
-.note { color: var(--text-2); font-size: .88rem; }
-.warn { margin-top: 1rem; padding: .9rem 1.1rem; background: var(--card-2); border-radius: 13px; border-inline-start: 4px solid var(--expense); }
-.warn b { display: block; margin-bottom: .15rem; }
-.warn p { color: var(--text-2); margin: 0; font-size: .87rem; }
-
-/* ---- feedback: never folded ---- */
-.feedback { text-align: center; }
-.feedback .card { padding: clamp(1.6rem, 4vw, 2.4rem) clamp(1.1rem, 3.5vw, 2.4rem); max-width: 760px; margin: 0 auto; position: relative; overflow: hidden; }
-.feedback .card::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--primary) 12%, transparent) 0%, transparent 62%);
-}
-.feedback .card > * { position: relative; }
-.feedback .mark { width: 52px; height: 52px; margin: 0 auto .85rem; border-radius: 16px; display: grid; place-items: center; background: var(--primary-container); color: var(--on-primary-container); }
-.feedback .mark svg { width: 25px; height: 25px; }
-.feedback h2 { margin: 0; }
-.feedback .title-ar { margin: .1rem 0 1rem; font-size: 1.18rem; font-weight: 700; color: var(--primary); }
-.feedback .says { display: grid; gap: .9rem; text-align: start; max-width: 62ch; margin: 0 auto; }
-@media (min-width: 780px) { .feedback .says { grid-template-columns: 1fr 1fr; max-width: none; gap: 1.8rem; } }
-.feedback .says p { color: var(--text-2); margin: 0; font-size: .92rem; }
-.reassure { list-style: none; padding: 0; margin: 1.3rem 0 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .45rem; }
-.reassure li { padding: .26rem .7rem; border-radius: 999px; font-size: .82rem; font-weight: 600; background: var(--card-2); color: var(--text-2); border: 1px solid var(--outline-soft); }
-.feedback .btn { margin: 1.2rem 0 1.1rem; padding: .8rem 1.5rem; font-size: 1rem; }
-.feedback .small { color: var(--muted); font-size: .84rem; max-width: 60ch; margin: 0 auto .4rem; }
-
-footer { padding: 2rem 0 2.6rem; border-top: 1px solid var(--outline-soft); color: var(--muted); font-size: .88rem; }
-footer .wrap { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; align-items: center; }
-footer nav { display: flex; gap: 1.1rem; }
-footer a { color: var(--text-2); font-weight: 600; }
-</style>
+<script>
+// Before the first paint: the theme, hidden amounts and effects chosen on an
+// earlier visit, so the page never flashes the wrong one. Storage may be
+// refused (a private window); then the defaults stand.
+(function () {
+  var r = document.documentElement, g = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  var t = g('thara-theme'); if (t === 'light' || t === 'dark') r.setAttribute('data-theme', t);
+  if (g('thara-hide') === '1') r.setAttribute('data-hide', '1');
+  if (g('thara-motion') === 'off') r.setAttribute('data-motion', 'off');
+  var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!still && g('thara-motion') !== 'off') r.classList.add('motion');
+  // If site.js never arrives, nothing may stay waiting to fade in.
+  setTimeout(function () { if (!window.tharaSite) r.classList.remove('motion'); }, 2500);
+})();
+</script>
+<link rel="stylesheet" href="style.css">
+<script defer src="site.js"></script>
 </head>
-<body>
+<body class="has-dock">
 
-<header class="top">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dff375" stop-opacity=".32"/><stop offset="1" stop-color="#dff375" stop-opacity="0"/></linearGradient>
+    <symbol id="i-brand" viewBox="0 0 96 96"><rect x="8" y="69" width="80" height="10" rx="5" fill="currentColor" stroke="none"/><circle cx="20" cy="58" r="5.2" fill="currentColor" stroke="none"/><circle cx="46" cy="43" r="5.6" fill="currentColor" stroke="none"/><circle cx="72" cy="23" r="6.2" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19z"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6.5h11M9 12h11M9 17.5h11M4.5 6.5h.01M4.5 12h.01M4.5 17.5h.01"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.2 19.5 6v5.6c0 4.6-3.2 8-7.5 9.2-4.3-1.2-7.5-4.6-7.5-9.2V6z"/><path d="m9 12 2.2 2.2L15.5 10"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10.5l5 4.5 5-4.5M5 20h14"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.3-4.3"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="m3.5 3.5 17 17M10.4 5.7c.5-.1 1-.2 1.6-.2 6 0 9.5 6.5 9.5 6.5a17 17 0 0 1-2.9 3.7M6.7 6.7A16.6 16.6 0 0 0 2.5 12S6 18.5 12 18.5c1.9 0 3.6-.6 5-1.5M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h8.5M17.5 7H20M4 17h2.5M11.5 17H20"/><circle cx="15" cy="7" r="2.5"/><circle cx="9" cy="17" r="2.5"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="m9.5 6 6 6-6 6"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9.5 6 6 6-6"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M6.5 10.5 12 5l5.5 5.5"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6.5 13.5 12 19l5.5-5.5"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="14" rx="3"/><path d="M21 10h-4.2a2.5 2.5 0 0 0 0 5H21"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="m11 4 1.8 5.2L18 11l-5.2 1.8L11 18l-1.8-5.2L4 11l5.2-1.8zM19 3v4M17 5h4"/></symbol>
+    <symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 8.5V6a2 2 0 0 1 2-2h2.5M15.5 4H18a2 2 0 0 1 2 2v2.5M20 15.5V18a2 2 0 0 1-2 2h-2.5M8.5 20H6a2 2 0 0 1-2-2v-2.5M4 12h16"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M4 13.5 6.4 5.5h11.2l2.4 8V18a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18zM4 13.5h4.8l1.2 2h4l1.2-2H20"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3.5 12V5a1.5 1.5 0 0 1 1.5-1.5h7l8.5 8.5-8.5 8.5z"/><circle cx="8.2" cy="8.2" r="1.4"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15.5" rx="2.5"/><path d="M8.5 3v4M15.5 3v4M4 10h16M8 14h3M8 17h6"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 4v16h16M7.5 15.5l3.8-4.3 3 2.5L20 7.5"/></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24"><path d="m3.5 17.5 6-6 4 4 7-7M15 8.5h5.5V14"/></symbol>
+    <symbol id="i-gem" viewBox="0 0 24 24"><path d="M7 4.5h10l3.5 4.8L12 20 3.5 9.3zM3.5 9.3h17M10 4.5 8.6 9.3 12 20l3.4-10.7L14 4.5"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="9.5" cy="9.5" r="5.5"/><path d="M15.6 9.2a5.5 5.5 0 1 1-6.4 6.4M9.5 7.5v4M7.5 9.5h4"/></symbol>
+    <symbol id="i-gold" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="2.6"/><path d="M5 6v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6V6M5 12v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6v-6"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7h7M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 14.8h.01M12 14.8h.01M15.5 14.8h.01M8.5 18h.01M12 18h.01M15.5 18h.01"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15zM10 21h4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 2.6 2.8 15.4 0 18M12 3c-2.8 2.6-2.8 15.4 0 18"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20.5 11.5a8.4 8.4 0 0 1-12.1 7.6L4 20.5l1.4-4.3A8.4 8.4 0 1 1 20.5 11.5z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6"/><path d="M11 18.5h2"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></symbol>
+    <symbol id="i-backup" viewBox="0 0 24 24"><path d="M7 18.5a4.5 4.5 0 0 1-.6-9A6 6 0 0 1 17.8 8a4.3 4.3 0 0 1-.3 10.5zM12 16v-5.5M9.5 13 12 10.5l2.5 2.5"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/></symbol>
+    <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M15.5 5.2a3.5 3.5 0 0 1 0 6.6M18 14.2a6.5 6.5 0 0 1 3.5 5.8"/></symbol>
+    <symbol id="i-cycle" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 0 1-12.8 5.3M4.5 12a7.5 7.5 0 0 1 12.8-5.3M17.5 3v4h-4M6.5 21v-4h4"/></symbol>
+    <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 4h2.5l2.2 10.5h10.6L20.5 7H6.6"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="m4.5 7 7.5 6 7.5-6"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 6.5C10 5 7 4.5 4 5v13.5c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V5c-3-.5-6 0-8 1.5zM12 6.5V20"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="bar on-ink">
   <div class="wrap">
-    <a class="brand" href="#top">
-      <svg class="mark" viewBox="0 0 96 96" aria-hidden="true"><rect width="96" height="96" rx="24" fill="#0E2B26"/><rect x="24" y="66" width="48" height="4" rx="2" fill="#E7EEE9" opacity=".45"/><circle cx="30" cy="53" r="6.5" fill="#E7EEE9"/><circle cx="48" cy="43" r="7.5" fill="#E7EEE9"/><circle cx="67" cy="31" r="9" fill="#C8A44A"/></svg>
-      Thara <span class="ar" lang="ar">ثراء</span>
+    <a class="brand" href="#top" aria-label="Thara, back to the top">
+      <svg class="glyph" aria-hidden="true"><use href="#i-brand"/></svg>
+      <span class="wordmark">Thara.</span>
+      <span class="wordmark-ar" lang="ar">ثراء</span>
     </a>
-    <a class="btn filled" href="#get">Get Thara</a>
+    <div class="bar-acts">
+      <a class="bar-link" href="#get"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Get Thara</a>
+      <button class="circle" type="button" data-sheet="hub" aria-label="Find anything on this page"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg></button>
+      <button class="circle" type="button" data-eye aria-pressed="false" aria-label="Hide amounts"><svg class="i" aria-hidden="true"><use href="#i-eye"/></svg></button>
+      <button class="circle lime" type="button" data-pop="appearance" aria-expanded="false" aria-controls="appearance" aria-label="Appearance"><svg class="i" aria-hidden="true"><use href="#i-sliders"/></svg></button>
+    </div>
   </div>
 </header>
 
-<div class="railwrap">
-  <nav class="wrap rail" aria-label="Sections">
-    <a class="key" href="#get">Get it</a>
-    <a href="#features">What it does</a>
-    <a href="#security">Security</a>
-    <a href="#plans">Plans</a>
-    <a href="#backup">Backups</a>
-    <a href="#install">Installing</a>
-    <a href="#feedback">Feedback</a>
-  </nav>
+<div class="pop" id="appearance" role="dialog" aria-label="Appearance" hidden>
+  <h3>Appearance</h3>
+  <div class="seg" role="group" aria-label="Theme">
+    <button type="button" data-theme-set="auto" aria-pressed="true">Auto</button>
+    <button type="button" data-theme-set="light" aria-pressed="false">Day</button>
+    <button type="button" data-theme-set="dark" aria-pressed="false">Night</button>
+  </div>
+  <div class="toggle-row">
+    <div><b id="lbl-hide">Hide amounts</b><span>Every figure turns to dots, as in the app.</span></div>
+    <button class="switch" type="button" role="switch" aria-checked="false" aria-labelledby="lbl-hide" data-switch="hide"></button>
+  </div>
+  <div class="toggle-row">
+    <div><b id="lbl-motion">Effects</b><span>Things rise in, figures count, rings ripple.</span></div>
+    <button class="switch" type="button" role="switch" aria-checked="true" aria-labelledby="lbl-motion" data-switch="motion"></button>
+  </div>
 </div>
 
-<section class="hero" id="top">
+<main id="main">
+
+<section class="intro" id="top" data-section="top">
   <div class="wrap">
-    <div>
-      <span class="eyebrow">Offline · Encrypted · No account</span>
-      <h1>Your money, on your phone.<br>Nowhere else.</h1>
-      <p class="lead">Thara records what you earn and spend, shows where it actually goes each month and year, and grades your progress against nine standard financial plans. Everything lives in an encrypted database on your device. There is no server and no account.</p>
+    <div data-reveal>
+      <span class="kicker">Encrypted · Arabic and English · Free</span>
+      <h1>Your money, clear and sealed.</h1>
+      <p class="lead">Thara records what you earn and spend, reads your bank's messages and your receipts, and shows where your money actually goes each month and year, graded against standard financial plans. Your wallet is encrypted on your phone and kept, sealed, in your Thara account, so a new phone signs in and has everything back.</p>
       <div class="cta">
-        <a class="btn filled" href="#get">Get Thara</a>
-        <a class="btn outlined" href="demo.html" target="_blank" rel="noopener">Try the demo</a>
+        <a class="btn lime" href="#get"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Get Thara</a>
+        <a class="btn ghost" href="demo.html" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-play"/></svg>Try the demo</a>
       </div>
-      <p class="fine">Android and iOS · Arabic and English with right-to-left layout · Free, no ads, no analytics</p>
+      <ul class="facts">
+        <li class="tag violet">Android 8 or newer</li>
+        <li class="tag violet">Sign in with email or Google</li>
+        <li class="tag violet">Free · no ads · no analytics</li>
+      </ul>
     </div>
-    <div class="phone-wrap">
-      <a class="shot" href="demo.html" target="_blank" rel="noopener">
-        <img src="thara-home.png" width="404" height="661" alt="Thara's home screen: net worth, a year of it as a line, this month's income and spending, and what falls due next." loading="eager" decoding="async">
-        <span class="shot-cta">Open the working demo &rarr;</span>
+
+    <div data-reveal style="--n:2">
+      <a class="phone-link" href="demo.html" target="_blank" rel="noopener" aria-label="Open the working demo of Thara's Today screen: net worth, what you spent this month, and what falls due next.">
+        <div class="phone" aria-hidden="true">
+          <div class="screen">
+            <div class="s-bar">
+              <span class="brand"><svg class="glyph"><use href="#i-brand"/></svg><span class="wordmark">Thara.</span></span>
+              <span class="dots"><span><svg class="i"><use href="#i-eye"/></svg></span><span>T</span></span>
+            </div>
+            <div class="s-body">
+              <div>
+                <div class="s-kick" data-today>FRI 13 NOV / THARA</div>
+                <div class="s-title">Money, today.</div>
+                <div class="s-sub">Your balances and the next things to do.</div>
+              </div>
+              <div class="s-hero">
+                <svg class="rings" viewBox="0 0 520 520"><circle class="r1" cx="260" cy="260" r="200"/><circle class="r2" cx="260" cy="260" r="140"/><circle class="r3" cx="260" cy="260" r="236"/><circle class="wave" cx="260" cy="260" r="150"/><circle class="wave w2" cx="260" cy="260" r="210"/></svg>
+                <div class="s-kick">Net worth · EGP</div>
+                <span class="amt" data-money="104705" data-count>E£104,705</span>
+                <span class="tag">↑ <span data-money="25275" data-sign="+">+E£25,275</span> this month</span>
+                <svg class="spark" viewBox="0 0 276 46">
+                  <path class="base" d="M2 38H274"/>
+                  <path class="area" d="M2 38H206L272 8V46H2z"/>
+                  <path class="line" pathLength="1" d="M2 38H206L272 8"/>
+                  <circle class="dot" cx="272" cy="8" r="3.2"/>
+                </svg>
+              </div>
+              <div class="s-tiles">
+                <div class="s-tile"><small data-month>Spent in November</small><b data-money="725">E£725</b></div>
+                <div class="s-tile violet"><small>Next due</small><b data-money="480">E£480</b></div>
+              </div>
+              <div class="s-h">Dues &amp; gameya <span>All dues</span></div>
+              <div class="s-list">
+                <div class="s-row"><span class="tile peach"><svg class="i"><use href="#i-calendar"/></svg></span><span><b>Home internet</b><small>Due in 4 days</small></span><span class="end" data-money="480">E£480</span></div>
+                <div class="s-row"><span class="tile"><svg class="i"><use href="#i-gold"/></svg></span><span><b>Family gameya</b><small>Your turn in March</small></span><span class="end" data-money="2000">E£2,000</span></div>
+                <div class="s-row"><span class="tile lime"><svg class="i"><use href="#i-down"/></svg></span><span><b>November salary</b><small>Salary · 12 Nov</small></span><span class="end in" data-money="26000" data-sign="+">+E£26,000</span></div>
+              </div>
+            </div>
+            <div class="s-fade"></div>
+            <div class="s-nav">
+              <span class="on"><svg class="i"><use href="#i-home"/></svg>Today</span>
+              <span><svg class="i"><use href="#i-list"/></svg>Records</span>
+              <span class="s-plus"><i><svg class="i"><use href="#i-plus"/></svg></i><span style="visibility:hidden">·</span>Add</span>
+              <span><svg class="i"><use href="#i-calendar"/></svg>Plan</span>
+              <span><svg class="i"><use href="#i-grid"/></svg>More</span>
+            </div>
+          </div>
+        </div>
+        <span class="phone-cta">Open the working demo <svg class="i flip" aria-hidden="true"><use href="#i-next"/></svg></span>
       </a>
     </div>
   </div>
 </section>
 
-<section id="get" class="alt get">
+<section id="get" class="band" data-section="get" data-find="Get Thara" data-find-ar="تنزيل" data-find-line="Download the Android app: the newest build, for almost every phone.">
   <div class="wrap">
-    <div class="card">
-      <h2>Get Thara</h2>
-      <p class="build">Latest build <b data-version-build>&mdash;</b> <span data-version-date></span></p>
-      <div class="platforms">
-        <div class="card">
-          <b>Android <span class="tag ready">Ready to use</span></b>
-          <span>The build to use day to day. Tap the link on the phone itself and install it — nothing else is needed. Android 8 or newer.</span>
-          <a class="btn filled" href="https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
-            Download APK
-          </a>
-          <small class="meta" data-asset="thara-release.apk">Latest build</small>
+    <div class="head head-row" data-reveal>
+      <div>
+        <span class="kicker">Download</span>
+        <h2>Get Thara</h2>
+        <p class="sub">The link always serves the newest build, and the app checks this site once a day and tells you when there is one.</p>
+      </div>
+      <span class="tag build-tag">Latest build <b data-version-build>—</b> · <span data-version-date></span></span>
+    </div>
+
+    <div class="get-grid">
+      <div class="hero-card get-card on-ink" data-reveal style="--n:1">
+        <svg class="rings" viewBox="0 0 520 520" aria-hidden="true"><circle class="r1" cx="260" cy="260" r="200"/><circle class="r2" cx="260" cy="260" r="140"/><circle class="r3" cx="260" cy="260" r="236"/><circle class="wave" cx="260" cy="260" r="150"/><circle class="wave w2" cx="260" cy="260" r="210"/></svg>
+        <div class="top">
+          <span class="kicker">Android</span>
+          <span class="tag"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Ready to use</span>
         </div>
-        <!-- The iPhone build is not offered for now: the card is kept here, unchanged, to
-             bring back by removing this comment once it is worth downloading again.
-        <div class="card">
-          <b>iPhone <span class="tag testing">Testing only</span></b>
-          <span>Not ready to keep real money in yet, and it cannot be installed from the phone alone — see <a href="#install">Installing</a>. iOS 15 or newer.</span>
-          <a class="btn filled" href="https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
-            Download IPA
+        <h3>Thara for Android</h3>
+        <p>The build to use day to day. Tap the link on the phone itself and install it — nothing else is needed. Android 8 or newer.</p>
+        <!-- One APK per processor type. A browser cannot tell which processor a
+             phone has, so the button is the 64-bit file almost every phone
+             needs, and the other two are offered beside it. -->
+        <a class="btn lime" href="https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release-arm64-v8a.apk">
+          <svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Download APK
+        </a>
+        <span class="meta" data-asset="thara-release-arm64-v8a.apk" data-note="for almost every phone (64-bit)">Latest build · for almost every phone (64-bit)</span>
+      </div>
+
+      <div class="get-side" data-reveal style="--n:2">
+        <h3>Not this one?</h3>
+        <div class="list">
+          <a class="row" href="https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release-armeabi-v7a.apk">
+            <span class="tile"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg></span>
+            <span class="t"><b>Older 32-bit phone</b><span data-asset="thara-release-armeabi-v7a.apk" data-note="for older 32-bit phones">For older 32-bit phones</span></span>
+            <svg class="i chev" aria-hidden="true"><use href="#i-download"/></svg>
           </a>
-          <small class="meta" data-asset="thara-unsigned.ipa">Latest build</small>
+          <a class="row" href="https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-release.apk">
+            <span class="tile"><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg></span>
+            <span class="t"><b>Not sure</b><span data-asset="thara-release.apk" data-note="works on every phone, about twice the size">Works on every phone, about twice the size</span></span>
+            <svg class="i chev" aria-hidden="true"><use href="#i-download"/></svg>
+          </a>
+        </div>
+        <!-- The iPhone build is not offered for now: the row is kept here, to
+             bring back by removing this comment once it is worth downloading again.
+        <div class="list">
+          <a class="row" href="https://github.com/dvahasan/thara-site/releases/download/apk-latest/thara-unsigned.ipa">
+            <span class="tile peach"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg></span>
+            <span class="t"><b>iPhone <span class="tag peach">Testing only</span></b><span>Not ready to keep real money in yet, and it cannot be installed from the phone alone — see Installing. iOS 15 or newer.</span><span data-asset="thara-unsigned.ipa">Latest build</span></span>
+            <svg class="i chev" aria-hidden="true"><use href="#i-download"/></svg>
+          </a>
         </div>
         -->
+        <p class="note">Android asks once to allow the install, because the file did not come from the Play Store. Later builds install over the top and keep your wallet. <a href="#install">How installing works</a></p>
       </div>
-      <p class="small">The link always serves the newest build, and the app checks this site once a day and tells you when there is one.</p>
     </div>
   </div>
 </section>
 
-<section id="features">
+<section id="features" data-section="features">
   <div class="wrap">
-    <div class="sec-head">
-      <h2>Everything a finance app should do, without the cloud</h2>
-      <p>Fifteen areas, grouped by what you would open the app to do. One line each; the app is where the detail lives.</p>
+    <div class="head" data-reveal>
+      <span class="kicker">What it does</span>
+      <h2>Everything a finance app should do, and the paperwork read for you</h2>
+      <p class="sub">Twenty-four areas, grouped by what you would open the app to do. One line each; the app is where the detail lives.</p>
     </div>
+
+    <div class="chips" role="group" aria-label="Show a group" data-reveal>
+      <button class="chip" type="button" data-filter="all" aria-pressed="true">All</button>
+      <button class="chip" type="button" data-filter="money" aria-pressed="false">Money in and out</button>
+      <button class="chip" type="button" data-filter="stand" aria-pressed="false">Where you stand</button>
+      <button class="chip" type="button" data-filter="gold" aria-pressed="false">Gold, dollars and zakat</button>
+      <button class="chip" type="button" data-filter="together" aria-pressed="false">Together</button>
+      <button class="chip" type="button" data-filter="living" aria-pressed="false">Living with it</button>
+    </div>
+
     <div class="groups">
-      <div class="group">
+      <div class="group wide" data-group="money" data-reveal>
         <h3>Money in and out</h3>
-        <dl>
-          <dt>Sources <span class="ar" lang="ar">المصادر</span></dt>
-          <dd>Cash, banks, wallets, cards and loans, each in its own currency.</dd>
-          <dt>Records <span class="ar" lang="ar">السجلات</span></dt>
-          <dd>Income, spending and transfers, with notes, search and filters.</dd>
-          <dt>Say it <span class="ar" lang="ar">قلها بصوتك</span></dt>
-          <dd>Hold the microphone like a voice note and say the record, in Arabic, English or any language: Thara works out which, and fills in the form for you to check. Written down on the phone; nothing you say leaves it.</dd>
-          <dt>Talk to Thara <span class="ar" lang="ar">تحدّث مع ثراء</span></dt>
-          <dd>One button on every screen opens every quick action and the assistant. Say or type a record and Thara drafts it, asks for anything missing, and saves it when you say "save it". Ask what you spent and it answers from your records, on the phone. Ask about saving, gold or a small business and it looks the answer up online, showing its sources, and only if you allow it. It can speak its replies aloud.</dd>
-          <dt>Read a receipt <span class="ar" lang="ar">قراءة الفاتورة</span></dt>
-          <dd>Photograph a receipt, invoice or card slip: Thara reads the shop, the total, the date, the time and the kind of paper. A blurred photo or faded print is pointed out, with one tap to take it again. Read on the phone; nothing is sent anywhere.</dd>
-          <dt>Bank messages <span class="ar" lang="ar">رسائل البنك</span></dt>
-          <dd>On Android, share your bank's text message to Thara and it becomes a record waiting for your approval. Thara never reads your messages itself.</dd>
-          <dt>Types <span class="ar" lang="ar">الأنواع</span></dt>
-          <dd>Your own categories, each with an optional monthly cap.</dd>
-          <dt>Obligations <span class="ar" lang="ar">الالتزامات</span></dt>
-          <dd>Rent, instalments and bills with due dates. Paying one writes the record.</dd>
-        </dl>
+        <div class="list">
+          <div class="row" data-find="Sources"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-wallet"/></svg></span><span class="t"><b>Sources <span class="ar" lang="ar">المصادر</span></b><span>Cash, banks, wallets, cards and loans, each in its own currency.</span></span></div>
+          <div class="row" data-find="Records"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-list"/></svg></span><span class="t"><b>Records <span class="ar" lang="ar">السجلات</span></b><span>Income, spending and transfers, with notes, search and filters.</span></span></div>
+          <div class="row" data-find="Say it"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg></span><span class="t"><b>Say it <span class="ar" lang="ar">قلها بصوتك</span></b><span>Hold the microphone like a voice note and say the record, in Arabic or English, and Thara fills in the form for you to check. Written down on the phone; in Enhanced AI mode the sound goes online to Thara AI to be written down.</span></span></div>
+          <div class="row" data-find="Talk to Thara"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-sparkle"/></svg></span><span class="t"><b>Talk to Thara <span class="ar" lang="ar">تحدّث مع ثراء</span></b><span>The + button opens every quick action and the assistant. Type or say a record and Thara drafts it, asks for anything missing, and saves it only when you say "save it". Questions about your wallet are answered from your records, with charts; anything else is answered online by Thara AI, with its sources shown. Or talk to it live, as on a call.</span></span></div>
+          <div class="row" data-find="Read a receipt"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-scan"/></svg></span><span class="t"><b>Read a receipt <span class="ar" lang="ar">قراءة الفاتورة</span></b><span>Photograph a receipt, invoice or card slip: Thara reads the shop, the total, the date, the time and the kind of paper, and points out a blurred photo or faded print. Read on the phone; in Enhanced AI mode the photo also goes online for Thara AI to read.</span></span></div>
+          <div class="row" data-find="Bank messages"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-inbox"/></svg></span><span class="t"><b>Bank messages <span class="ar" lang="ar">رسائل البنك</span></b><span>Turn it on and Thara reads the messages your banks, wallets, InstaPay and card companies send, on the phone, and turns each into a record for the right source, by itself or for your approval. Codes, offers, personal messages and anything from a phone number are left alone.</span></span></div>
+          <div class="row" data-find="Types"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-tag"/></svg></span><span class="t"><b>Types <span class="ar" lang="ar">الأنواع</span></b><span>Your own categories, each with an optional monthly cap.</span></span></div>
+          <div class="row" data-find="Obligations"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-calendar"/></svg></span><span class="t"><b>Obligations <span class="ar" lang="ar">الالتزامات</span></b><span>Rent, instalments and bills with due dates. Paying one writes the record.</span></span></div>
+        </div>
       </div>
-      <div class="group">
+
+      <div class="group" data-group="stand" data-reveal style="--n:1">
         <h3>Where you stand</h3>
-        <dl>
-          <dt>Analysis <span class="ar" lang="ar">التحليل</span></dt>
-          <dd>Monthly and yearly: savings rate, where it went, needs against wants.</dd>
-          <dt>Looking ahead <span class="ar" lang="ar">التخطيط</span></dt>
-          <dd>Pick two dates; months that cannot pay for themselves are named.</dd>
-          <dt>Real wealth <span class="ar" lang="ar">قيمة ثروتك</span></dt>
-          <dd>Net worth in your currency, in grams of gold and in dollars.</dd>
-        </dl>
+        <div class="list">
+          <div class="row" data-find="Analysis"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-chart"/></svg></span><span class="t"><b>Analysis <span class="ar" lang="ar">التحليل</span></b><span>Charts for any stretch of time: savings rate, where it went by type and by source, needs against wants.</span></span></div>
+          <div class="row" data-find="Looking ahead"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-route"/></svg></span><span class="t"><b>Looking ahead <span class="ar" lang="ar">التخطيط</span></b><span>Pick two dates; months that cannot pay for themselves are named.</span></span></div>
+          <div class="row" data-find="Real wealth"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-gem"/></svg></span><span class="t"><b>Real wealth <span class="ar" lang="ar">قيمة ثروتك</span></b><span>Net worth in your currency, in grams of gold and in dollars.</span></span></div>
+          <div class="row" data-find="Goals"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-target"/></svg></span><span class="t"><b>Goals <span class="ar" lang="ar">الأهداف</span></b><span>A car, a trip, a wedding or Hajj: an amount by a date, followed from the balances you pick, paused when life needs it.</span></span></div>
+          <div class="row" data-find="Emailed reports"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg></span><span class="t"><b>Emailed reports <span class="ar" lang="ar">تقارير بالبريد</span></b><span>Your balances, dues and goals in your inbox, weekly or monthly, if you ask for them.</span></span></div>
+        </div>
       </div>
-      <div class="group">
+
+      <div class="group" data-group="gold" data-reveal style="--n:2">
         <h3>Gold, dollars and zakat</h3>
-        <dl>
-          <dt>Dollar and gold <span class="ar" lang="ar">الدولار والذهب</span></dt>
-          <dd>What they actually cost where you are. A rate you typed always wins.</dd>
-          <dt>Gold you hold <span class="ar" lang="ar">ذهبك</span></dt>
-          <dd>By weight and karat, valued at today's price, not a number you rewrite.</dd>
-          <dt>Zakat <span class="ar" lang="ar">الزكاة</span></dt>
-          <dd>The holding year tracked for you, with the nisab and the working shown.</dd>
-        </dl>
+        <div class="list">
+          <div class="row" data-find="Dollar and gold"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-coins"/></svg></span><span class="t"><b>Dollar and gold <span class="ar" lang="ar">الدولار والذهب</span></b><span>What they actually cost where you are. A rate you typed always wins.</span></span></div>
+          <div class="row" data-find="Gold you hold"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-gold"/></svg></span><span class="t"><b>Gold you hold <span class="ar" lang="ar">ذهبك</span></b><span>By weight and karat, valued at today's price, not a number you rewrite.</span></span></div>
+          <div class="row" data-find="Zakat"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-calc"/></svg></span><span class="t"><b>Zakat <span class="ar" lang="ar">الزكاة</span></b><span>The holding year tracked for you, with the nisab and the working shown.</span></span></div>
+        </div>
       </div>
-      <div class="group">
+
+      <div class="group" data-group="together" data-reveal style="--n:3">
+        <h3>Together</h3>
+        <div class="list">
+          <div class="row" data-find="Family accounts"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-people"/></svg></span><span class="t"><b>Family accounts <span class="ar" lang="ar">حسابات العائلة</span></b><span>Share a source with the people you trust: each records into it from their own phone, and the others hear of it at once.</span></span></div>
+          <div class="row" data-find="Gameya"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-cycle"/></svg></span><span class="t"><b>Gameya <span class="ar" lang="ar">الجمعية</span></b><span>Your turn, the payments due and who has paid, for a gameya you join or one you run.</span></span></div>
+          <div class="row" data-find="Shopping lists"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-cart"/></svg></span><span class="t"><b>Shopping lists <span class="ar" lang="ar">قوائم التسوق</span></b><span>What to buy, with prices, reminders and sharing.</span></span></div>
+        </div>
+      </div>
+
+      <div class="group" data-group="living" data-reveal style="--n:4">
         <h3>Living with it</h3>
-        <dl>
-          <dt>Reminders <span class="ar" lang="ar">التنبيهات</span></dt>
-          <dd>Bills due, anything late, a zakat year completing, a backup that has not run.</dd>
-          <dt>Arabic and English <span class="ar" lang="ar">عربي وإنجليزي</span></dt>
-          <dd>Both throughout, with right-to-left layout and Arabic-Indic numerals.</dd>
-        </dl>
+        <div class="list">
+          <div class="row" data-find="Your Thara account"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg></span><span class="t"><b>Your Thara account <span class="ar" lang="ar">حساب ثراء</span></b><span>Sign in with email or Google. Your wallet is sealed in the account, so a lost or new phone costs you nothing.</span></span></div>
+          <div class="row" data-find="Reminders"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg></span><span class="t"><b>Reminders <span class="ar" lang="ar">التنبيهات</span></b><span>Bills due, anything late, a new bank message, a zakat year completing, a backup that has not run.</span></span></div>
+          <div class="row" data-find="Home-screen widgets"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg></span><span class="t"><b>Home-screen widgets <span class="ar" lang="ar">أدوات الشاشة الرئيسية</span></b><span>Add a record, or glance at goals, plans and shopping, without opening the app. Never a balance.</span></span></div>
+          <div class="row" data-find="Learn"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-book"/></svg></span><span class="t"><b>Learn <span class="ar" lang="ar">تعلّم</span></b><span>Ideas, checks and calculators on saving, debt, gold and zakat; information, not advice.</span></span></div>
+          <div class="row" data-find="Arabic and English"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-globe"/></svg></span><span class="t"><b>Arabic and English <span class="ar" lang="ar">عربي وإنجليزي</span></b><span>Both throughout, with right-to-left layout and Arabic-Indic numerals.</span></span></div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="alt">
+<section id="detail" class="band" data-section="detail">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="head" data-reveal>
+      <span class="kicker">The detail</span>
       <h2>The detail, when you want it</h2>
-      <p>Open one and the last one closes, so this page never gets long again.</p>
+      <p class="sub">Open one and the last one closes, so this page never gets long again.</p>
     </div>
 
-    <div class="folds">
+    <div class="folds" data-reveal>
 
-      <details class="fold" id="security" name="thara">
+      <details class="fold" id="security" name="thara" data-find="Security">
         <summary>
-          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V7z"/></svg></span>
-          <span class="lede"><b>Security</b><span>AES-256 at rest, the key in the phone's own keystore, and two network calls you can switch off.</span></span>
-          <span class="count">5 controls</span>
-          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
+          <span class="tile"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg></span>
+          <span class="t"><b>Security</b><span>AES-256 on the phone, sealed in your account, and online only for what you are told about first.</span></span>
+          <span class="tag plain count">6 controls</span>
+          <svg class="i chev" aria-hidden="true"><use href="#i-chev"/></svg>
         </summary>
         <div class="body">
           <ul class="lines">
-            <li><span class="k">Encrypted at rest</span><span class="v">SQLCipher, AES-256. The key is 256 bits from the device's own generator, held in the Android Keystore or iOS Keychain. Copying the file off the phone yields ciphertext.</span></li>
-            <li><span class="k">App lock</span><span class="v">Optional PIN, PBKDF2-hashed with a random salt, with fingerprint or face unlock on top. Wrong attempts cool down. The PIN is deliberately not the encryption key.</span></li>
-            <li><span class="k">Nothing leaks</span><span class="v">Screenshots, recording and the recent-apps thumbnail are blocked. Hide-amounts turns every figure to dots. Auto-lock from immediately to never.</span></li>
-            <li><span class="k">Two network calls</span><span class="v">Rate updates send only the currency asked about. The update check reads one public file a day, with no identifier. With both off, the app makes no requests at all. The one exception is yours to start: the voice model, downloaded once when you first use the microphone, from Whisper's published files and checked against their published fingerprint.</span></li>
-            <li><span class="k">Asked, in plain words</span><span class="v">The microphone, camera, photos and notifications are each asked for only when you use the feature, with what it is for. Messages are never read: you share the ones you want recorded. Your voice and your pictures are read on the phone and never sent anywhere.</span></li>
+            <li data-find="Encrypted at rest"><span class="k">Encrypted at rest</span><span class="v">SQLCipher, AES-256. The key is 256 bits from the device's own generator, held in the Android Keystore. Copying the file off the phone yields ciphertext.</span></li>
+            <li data-find="In your Thara account"><span class="k">In your Thara account</span><span class="v">A sealed copy of your wallet is kept in Thara's cloud, so a new phone signs in and has everything back. Thara's service keeps the key to it, locked with a master key of its own: that is how a reset by email or a Google sign-in can always bring your wallet back. It hands the key only to a phone that has proved it is you. Holding the key, it could open your wallet; it is built not to.</span></li>
+            <li data-find="App lock"><span class="k">App lock</span><span class="v">A 4-digit PIN, hashed with a random salt, with fingerprint or face unlock on top. Wrong attempts cool down. Forget it and your account proves it is you: you set a new PIN and nothing is erased. The PIN is not the encryption key.</span></li>
+            <li data-find="Nothing leaks"><span class="k">Nothing leaks</span><span class="v">Screenshots, recording and the recent-apps thumbnail are blocked. Hide-amounts turns every figure to dots. Auto-lock from immediately to never.</span></li>
+            <li data-find="What goes online"><span class="k">What goes online</span><span class="v">Your account and its sealed copy. Thara AI, only in the ways it asks you about first. Family accounts you join. Today's rates, if you turn them on. One public file a day, to see whether there is a newer build. Reports of errors and freezes, with nothing of your records in them. The reports you ask to have emailed. Nothing else, and no ads or analytics.</span></li>
+            <li data-find="Asked, in plain words"><span class="k">Asked, in plain words</span><span class="v">The microphone, camera, text messages, photos and notifications are each asked for only when you use the feature, with what it is for. The text of your bank messages is read on the phone and never sent anywhere.</span></li>
           </ul>
         </div>
       </details>
 
-      <details class="fold" id="plans" name="thara">
+      <details class="fold" id="plans" name="thara" data-find="Seventeen plans">
         <summary>
-          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-7"/></svg></span>
-          <span class="lede"><b>Nine plans</b><span>Graded against your real records, not a questionnaire you filled in once.</span></span>
-          <span class="count">9 plans</span>
-          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
+          <span class="tile"><svg class="i" aria-hidden="true"><use href="#i-target"/></svg></span>
+          <span class="t"><b>Seventeen plans</b><span>Graded against your real records, not a questionnaire you filled in once.</span></span>
+          <span class="tag plain count">17 plans</span>
+          <svg class="i chev" aria-hidden="true"><use href="#i-chev"/></svg>
         </summary>
         <div class="body">
           <p class="note">Run as many at once as you like. Each gives a status, a progress bar, the numbers behind it and specific advice. Projections are labelled as projections, at the return you assume.</p>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Plan</th><th>What it does</th></tr></thead>
-              <tbody>
-                <tr><td>50/30/20 rule</td><td>Grades the month's needs, wants and saving split against the targets.</td></tr>
-                <tr><td>Monthly limits</td><td>Per-type caps, with a warning before you go over.</td></tr>
-                <tr><td>Emergency fund</td><td>A target from your actual average spending, not a guess.</td></tr>
-                <tr><td>Savings goal</td><td>An amount by a date, and the monthly figure to reach it.</td></tr>
-                <tr><td>Pay yourself first</td><td>Set aside a share of income before spending any of it.</td></tr>
-                <tr><td>Invest every month</td><td>Regular investing projected at your assumed return.</td></tr>
-                <tr><td>Financial independence</td><td>Your FI number, and how long to reach it in real terms.</td></tr>
-                <tr><td>Get out of debt</td><td>Snowball against avalanche, with the exact debt-free month.</td></tr>
-                <tr><td>Zakat</td><td>2.5% of zakatable wealth against the nisab, working shown.</td></tr>
-              </tbody>
-            </table>
+          <div class="plans">
+            <div class="plan" data-find="50/30/20 rule"><b><span class="n">01</span>50/30/20 rule</b><span class="v">Grades the month's needs, wants and saving split against the targets.</span></div>
+            <div class="plan" data-find="Monthly limits"><b><span class="n">02</span>Monthly limits</b><span class="v">Per-type caps, with a warning before you go over.</span></div>
+            <div class="plan" data-find="Expense plan"><b><span class="n">03</span>Expense plan</b><span class="v">A ceiling for the month, with the pace that says where it is heading.</span></div>
+            <div class="plan" data-find="Income plan"><b><span class="n">04</span>Income plan</b><span class="v">What you mean to earn each month, from all incomes or the ones you pick.</span></div>
+            <div class="plan" data-find="Six jars"><b><span class="n">05</span>Six jars</b><span class="v">Every income split six ways, from necessities to giving.</span></div>
+            <div class="plan" data-find="Emergency fund"><b><span class="n">06</span>Emergency fund</b><span class="v">A target from your actual average spending, not a guess.</span></div>
+            <div class="plan" data-find="Savings goal"><b><span class="n">07</span>Savings goal</b><span class="v">An amount by a date, and the monthly figure to reach it.</span></div>
+            <div class="plan" data-find="Pay yourself first"><b><span class="n">08</span>Pay yourself first</b><span class="v">Set aside a share of income before spending any of it.</span></div>
+            <div class="plan" data-find="Invest every month"><b><span class="n">09</span>Invest every month</b><span class="v">Regular investing projected at your assumed return.</span></div>
+            <div class="plan" data-find="Financial independence"><b><span class="n">10</span>Financial independence</b><span class="v">Your FI number, and how long to reach it in real terms.</span></div>
+            <div class="plan" data-find="Get out of debt"><b><span class="n">11</span>Get out of debt</b><span class="v">Order your debts and see the exact debt-free month.</span></div>
+            <div class="plan" data-find="Zakat plan"><b><span class="n">12</span>Zakat</b><span class="v">2.5% of zakatable wealth against the nisab, working shown.</span></div>
+            <div class="plan" data-find="52-week challenge"><b><span class="n">13</span>52-week challenge</b><span class="v">A small amount in week one, a little more every week, for a year.</span></div>
+            <div class="plan" data-find="100 envelopes"><b><span class="n">14</span>100 envelopes</b><span class="v">Envelopes 1 to 100, each filled with its number times an amount.</span></div>
+            <div class="plan" data-find="No-spend challenge"><b><span class="n">15</span>No-spend challenge</b><span class="v">Only what you need, for a set number of days; every day kept turns green.</span></div>
+            <div class="plan" data-find="Save every day"><b><span class="n">16</span>Save every day</b><span class="v">A small fixed amount put aside every single day.</span></div>
+            <div class="plan" data-find="Step-up saving"><b><span class="n">17</span>Step-up saving</b><span class="v">Keep a small share of income, and raise it a little every month.</span></div>
           </div>
         </div>
       </details>
 
-      <details class="fold" id="backup" name="thara">
+      <details class="fold" id="backup" name="thara" data-find="Backups locked with your account">
         <summary>
-          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span>
-          <span class="lede"><b>Backups only you can read</b><span>Encrypted on the phone first, then written into a folder you chose, on a schedule.</span></span>
-          <span class="count">4 steps</span>
-          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
+          <span class="tile"><svg class="i" aria-hidden="true"><use href="#i-backup"/></svg></span>
+          <span class="t"><b>Backups locked with your account</b><span>Encrypted on the phone first, then written to a folder you chose or your Google Drive, on a schedule.</span></span>
+          <span class="tag plain count">3 steps</span>
+          <svg class="i chev" aria-hidden="true"><use href="#i-chev"/></svg>
         </summary>
         <div class="body">
-          <ol class="numbered">
-            <li><div><b>Choose a passphrase</b><span>At least 12 characters. Never stored in the backup, never leaves the phone.</span></div></li>
-            <li><div><b>Encrypt on the device</b><span>AES-256-GCM, PBKDF2 at 600,000 rounds, a fresh salt every time.</span></div></li>
-            <li><div><b>Write the ciphertext</b><span>Into the folder you picked. Older automatic copies are pruned.</span></div></li>
-            <li><div><b>Restore anywhere</b><span>Same passphrase on another phone. Restore runs in one transaction, so an interrupted one leaves the old wallet intact.</span></div></li>
+          <ol class="steps">
+            <li><div><b>Encrypted on the phone</b><span>AES-256-GCM, with a key that comes from your Thara account: no passphrase to choose and no code to write down.</span></div></li>
+            <li><div><b>Written where you chose</b><span>Into a folder on the phone, or Thara's own hidden folder in your Google Drive. Older automatic copies are pruned.</span></div></li>
+            <li><div><b>Restore by signing in</b><span>On any phone, sign in to your Thara account and the backup opens. Restore runs in one transaction, so an interrupted one leaves the old wallet intact.</span></div></li>
           </ol>
-          <p class="note" style="margin:1rem 0 0">Thara writes the file and nothing else. Whether the folder sits on the phone, an SD card or inside a cloud app you already have is your choice and that app's business. Or connect your Google account, like WhatsApp: Thara backs up once a day to its own hidden folder in your Drive, encrypted the same way so Google cannot read it, and restores from it when you set Thara up on a new phone.</p>
+          <p class="note" style="margin-top:16px">Thara writes the file and nothing else. Whether the folder sits on the phone, an SD card or inside a cloud app you already have is your choice and that app's business. In Google Drive, Thara can open only its own hidden folder, and the file there is encrypted, so Google cannot read it. Backups made by earlier builds, with a passphrase or a recovery code, still open with that passphrase or code.</p>
         </div>
       </details>
 
-      <details class="fold" id="install" name="thara">
+      <details class="fold" id="install" name="thara" data-find="Installing it" data-find-ar="التثبيت">
         <summary>
-          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 19h2"/></svg></span>
-          <span class="lede"><b>Installing it</b><span>Android is one tap. iPhone needs a computer once, and Apple is the reason.</span></span>
-          <span class="count">2 platforms</span>
-          <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span>
+          <span class="tile"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg></span>
+          <span class="t"><b>Installing it</b><span>One tap on the phone. Later builds install over the top and keep your wallet.</span></span>
+          <span class="tag plain count">4 steps</span>
+          <svg class="i chev" aria-hidden="true"><use href="#i-chev"/></svg>
         </summary>
         <div class="body">
-          <div class="two">
-            <div>
-              <h3>Android <span class="tag ready">Ready to use</span></h3>
-              <ol class="numbered">
-                <li><div><b>Open this page on the phone</b><span>Press Download APK.</span></div></li>
-                <li><div><b>Allow the install</b><span>Android asks because the file did not come from the Play Store.</span></div></li>
-                <li><div><b>Open it</b><span>Later builds install over the top and keep your wallet.</span></div></li>
-              </ol>
-            </div>
-            <div>
-              <h3>iPhone <span class="tag testing">Testing only</span></h3>
-              <p class="note">Apple runs only apps carrying a signature it trusts, and only a computer can ask Apple for one. Both routes use <b>your own</b> Apple ID; a free one lasts seven days, and renewing never touches your data.</p>
-              <ol class="numbered">
-                <li><div><b>SideStore</b><span>A computer once, then the phone renews itself over Wi-Fi. <a href="https://sidestore.io" rel="noopener">sidestore.io</a></span></div></li>
-                <li><div><b>Sideloadly</b><span>Simpler to set up, but a cable every seven days. Needs iTunes from Apple's own site.</span></div></li>
-                <li><div><b>Trust it</b><span>Settings → General → VPN &amp; Device Management → your Apple ID → Trust.</span></div></li>
-              </ol>
-            </div>
-          </div>
+          <h3>Android <span class="tag">Ready to use</span></h3>
+          <ol class="steps">
+            <li><div><b>Open this page on the phone</b><span>Press Download APK.</span></div></li>
+            <li><div><b>Allow the install</b><span>Android asks because the file did not come from the Play Store.</span></div></li>
+            <li><div><b>Open it and sign in</b><span>Make your Thara account with an email or Google, or sign in to the one you have: your wallet comes back with it.</span></div></li>
+            <li><div><b>Choose a PIN</b><span>Four digits, with fingerprint or face on top if you like.</span></div></li>
+          </ol>
           <div class="warn">
-            <b>Take a backup before you reinstall anything</b>
-            <p>Renewing a signature keeps your wallet. <b>Deleting the app does not</b> — the encrypted database goes with it, and nobody can bring it back, the developer included.</p>
+            <b>Coming from an older Thara? Install over the top</b>
+            <p>The new build installs over the old one and keeps everything. <b>Never delete the old app first</b>: until your wallet is in an account, it lives only on that phone, and deleting the app deletes it.</p>
           </div>
         </div>
       </details>
@@ -534,31 +424,37 @@ footer a { color: var(--text-2); font-weight: 600; }
   </div>
 </section>
 
-<section id="feedback" class="feedback">
+<section id="feedback" data-section="feedback" data-find="Feedback" data-find-ar="أرسل ملاحظة" data-find-line="Tell me what is wrong: one question, no sign-in, under a minute.">
   <div class="wrap">
-    <div class="card">
-      <div class="mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4L3 21l1.1-9A8.4 8.4 0 1 1 21 11.5z"/><path d="M8.2 11.3h.01M12 11.3h.01M15.8 11.3h.01"/></svg>
+    <div class="hero-card on-ink ask" data-reveal>
+      <svg class="rings" viewBox="0 0 520 520" aria-hidden="true"><circle class="r1" cx="260" cy="260" r="200"/><circle class="r2" cx="260" cy="260" r="140"/><circle class="r3" cx="260" cy="260" r="236"/><circle class="wave" cx="260" cy="260" r="150"/><circle class="wave w2" cx="260" cy="260" r="210"/></svg>
+      <div>
+        <span class="kicker">Feedback</span>
+        <h2>Tell me what is wrong</h2>
+        <p class="title-ar" lang="ar" dir="rtl">قل لي ما الخطأ</p>
       </div>
-      <h2>Tell me what is wrong</h2>
-      <p class="title-ar" lang="ar" dir="rtl">قل لي ما الخطأ</p>
       <div class="says">
-        <p>Thara is built by one person and used by a handful, which makes every report worth far more than it would be anywhere else. If something is broken, confusing, or simply missing, say so — particularly on iPhone, where the build has had much less use.</p>
-        <p lang="ar" dir="rtl">يبني ثراءَ شخصٌ واحد ويستخدمه قليلون، ولذلك تساوي كل ملاحظة هنا أكثر بكثير مما تساوي في أي مكان آخر. إن وجدت خللاً أو شيئاً غير مفهوم أو ناقصاً فقل لي، وخاصةً على الآيفون.</p>
+        <p>Thara is built by one person and used by a handful, which makes every report worth far more than it would be anywhere else. If something is broken, confusing, or simply missing, say so.</p>
+        <p lang="ar" dir="rtl">يبني ثراءَ شخصٌ واحد ويستخدمه قليلون، ولذلك تساوي كل ملاحظة هنا أكثر بكثير مما تساوي في أي مكان آخر. إن وجدت خللاً أو شيئاً غير مفهوم أو ناقصاً فقل لي.</p>
       </div>
-      <ul class="reassure">
-        <li>No account</li><li>No name</li><li>One question</li><li>Under a minute</li>
+      <ul class="facts">
+        <li class="tag">No sign-in</li><li class="tag">No name</li><li class="tag">One question</li><li class="tag">Under a minute</li>
       </ul>
-      <a class="btn filled" href="https://forms.gle/MkZcy2zSzj7bCAf68" target="_blank" rel="noopener">Send feedback · أرسل ملاحظة</a>
-      <p class="small">The form is a Google Form, so what you write there is held by Google — it does not go through the app, which still sends nothing about your wallet anywhere. Please leave real amounts and account numbers out of it.</p>
+      <div><a class="btn lime" href="https://forms.gle/MkZcy2zSzj7bCAf68" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>Send feedback · <span lang="ar">أرسل ملاحظة</span></a></div>
+      <p class="small">The form is a Google Form, so what you write there is held by Google. It does not go through the app or your Thara account. Please leave real amounts and account numbers out of it.</p>
     </div>
   </div>
 </section>
+
+</main>
 
 <footer>
   <div class="wrap">
-    <div>© 2026 Thara · <span lang="ar">ثراء</span> means wealth. The mark is the three dots of ث, rising.</div>
-    <nav>
+    <div>
+      <a class="brand" href="#top" aria-label="Thara, back to the top"><svg class="glyph" aria-hidden="true"><use href="#i-brand"/></svg><span class="wordmark">Thara.</span></a>
+      <p style="margin:.5rem 0 0">© 2026 Thara · <span lang="ar">ثراء</span> means wealth. The mark is the three dots of ث, rising.</p>
+    </div>
+    <nav aria-label="Pages">
       <a href="#feedback">Feedback</a>
       <a href="privacy.html">Privacy policy</a>
       <a href="terms.html">Terms of use</a>
@@ -566,72 +462,72 @@ footer a { color: var(--text-2); font-weight: 600; }
   </div>
 </footer>
 
-<script>
-// A link to a folded section has to open it, not scroll to a closed row.
-// Browsers differ on whether targeting a <details> expands it, so this makes
-// it certain. The exclusive `name` still applies, so opening one closes the
-// other. Without script the links still jump to the right row; only the
-// opening is lost, which is why the markup does not depend on this.
-(function () {
-  function reveal() {
-    var id = location.hash.slice(1);
-    if (!id) return;
-    var el = document.getElementById(id);
-    if (!el) return;
-    var fold = el.tagName === 'DETAILS' ? el : (el.closest ? el.closest('details') : null);
-    if (fold && !fold.open) fold.open = true;
-  }
-  window.addEventListener('hashchange', reveal);
-  reveal();
-})();
-</script>
-<script>
-// Build number, date and download sizes, so the page cannot claim a version
-// it is not actually serving.
-//
-// Two sources, in order. version.json is published by the same CI run that
-// produces the downloads and is the file the app itself reads to decide
-// whether an update exists, so the page and the app can never disagree. The
-// GitHub API is asked only for the file sizes, which the manifest does not
-// carry per platform; it is rate limited per IP for anonymous callers, so
-// nothing important depends on it.
-//
-// Purely additive: with no network the cards keep their static text and
-// every link still works.
-(function () {
-  function fill(selector, value) {
-    Array.prototype.forEach.call(
-      document.querySelectorAll(selector),
-      function (el) { el.textContent = value; }
-    );
-  }
-  function on(date) {
-    return new Date(date).toLocaleDateString(undefined, {
-      day: 'numeric', month: 'short', year: 'numeric'
-    });
-  }
+<nav class="dock" aria-label="Sections">
+  <ul>
+    <li><a href="#top" data-spy="top" aria-current="true"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg>Home</a></li>
+    <li><a href="#features" data-spy="features" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-list"/></svg>Features</a></li>
+    <li class="plus-slot">
+      <button class="slot" id="plus" type="button" aria-expanded="false" aria-controls="arc" aria-label="Menu: download, demo and every part of the page">
+        <span class="plus" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span>
+        <span class="plus-label" aria-hidden="true">Menu</span>
+      </button>
+    </li>
+    <li><a href="#detail" data-spy="detail" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg>Details</a></li>
+    <li><a href="#get" data-spy="get" aria-current="false"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Get it</a></li>
+  </ul>
+</nav>
 
-  fetch('version.json', { cache: 'no-cache' })
-    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-    .then(function (v) {
-      if (v.buildNumber) fill('[data-version-build]', v.buildNumber);
-      if (v.publishedAt) fill('[data-version-date]', '· built ' + on(v.publishedAt));
-    })
-    .catch(function () { /* Keep the static text. */ });
+<div class="arc" id="arc" hidden>
+  <button class="arc-scrim" type="button" tabindex="-1" aria-label="Close the menu"></button>
+  <div class="arc-dome" aria-hidden="true"></div>
+  <nav aria-label="Menu">
+    <a class="arc-item peach" data-ring="in" data-a="150" href="demo.html"><span class="o"><svg class="i" aria-hidden="true"><use href="#i-play"/></svg></span>Try the demo</a>
+    <a class="arc-item lime" data-ring="in" data-a="90" href="#get"><span class="o"><svg class="i" aria-hidden="true"><use href="#i-down"/></svg></span>Download</a>
+    <a class="arc-item violet" data-ring="in" data-a="30" href="#install"><span class="o"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg></span>Install</a>
+    <a class="arc-item" data-ring="out" data-a="136" href="#features"><span class="o"><svg class="i" aria-hidden="true"><use href="#i-list"/></svg></span>Features</a>
+    <a class="arc-item" data-ring="out" data-a="113" href="#security"><span class="o"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg></span>Security</a>
+    <a class="arc-item" data-ring="out" data-a="90" href="#plans"><span class="o"><svg class="i" aria-hidden="true"><use href="#i-target"/></svg></span>Plans</a>
+    <a class="arc-item" data-ring="out" data-a="67" href="#backup"><span class="o"><svg class="i" aria-hidden="true"><use href="#i-backup"/></svg></span>Backups</a>
+    <button class="arc-item all" data-ring="out" data-a="44" data-open="hub" type="button"><span class="o"><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg></span>Everything</button>
+  </nav>
+  <button class="arc-close" type="button" aria-label="Close the menu"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>
+</div>
 
-  var API = 'https://api.github.com/repos/dvahasan/thara-site/releases/tags/apk-latest';
-  fetch(API, { headers: { Accept: 'application/vnd.github+json' } })
-    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-    .then(function (release) {
-      (release.assets || []).forEach(function (asset) {
-        var el = document.querySelector('[data-asset="' + asset.name + '"]');
-        if (!el) return;
-        el.textContent = (asset.size / 1048576).toFixed(0) + ' MB · built ' + on(asset.updated_at);
-      });
-    })
-    .catch(function () { /* Keep the static text. */ });
-})();
-</script>
+<div class="sheet-wrap" id="hub" role="dialog" aria-modal="true" aria-labelledby="hub-title" hidden>
+  <button class="scrim" type="button" tabindex="-1" data-close aria-label="Close"></button>
+  <div class="sheet">
+    <div class="handle" aria-hidden="true"></div>
+    <div class="head-row">
+      <h2 id="hub-title">Find anything</h2>
+      <button class="circle plain" type="button" data-close aria-label="Close"><svg class="i" aria-hidden="true" style="transform:rotate(45deg)"><use href="#i-plus"/></svg></button>
+    </div>
+    <label class="search">
+      <svg class="i" aria-hidden="true"><use href="#i-search"/></svg>
+      <span class="sr">Search the page</span>
+      <input id="find" type="search" placeholder="What Thara does — in English or عربي" autocomplete="off" spellcheck="false">
+    </label>
+    <div id="results" aria-live="polite" hidden></div>
+    <div id="hub-places">
+      <h3 class="group-title">Go to</h3>
+      <div class="places">
+        <a class="place lime" href="#get" data-go="get"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-down"/></svg></span>Download</a>
+        <a class="place peach" href="demo.html"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-play"/></svg></span>Try the demo</a>
+        <a class="place violet" href="#features" data-go="features"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-list"/></svg></span>Features</a>
+        <a class="place" href="#security" data-go="security"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg></span>Security</a>
+        <a class="place" href="#plans" data-go="plans"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-target"/></svg></span>Plans</a>
+        <a class="place" href="#backup" data-go="backup"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-backup"/></svg></span>Backups</a>
+        <a class="place" href="#install" data-go="install"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg></span>Installing</a>
+        <a class="place" href="#feedback" data-go="feedback"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg></span>Feedback</a>
+      </div>
+      <h3 class="group-title">Read</h3>
+      <div class="list">
+        <a class="row" href="privacy.html"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-lock"/></svg></span><span class="t"><b>Privacy policy</b><span>What stays on the phone, what your account keeps, and what goes online.</span></span><svg class="i chev flip" aria-hidden="true"><use href="#i-next"/></svg></a>
+        <a class="row" href="terms.html"><span class="tile"><svg class="i" aria-hidden="true"><use href="#i-doc"/></svg></span><span class="t"><b>Terms of use</b><span>The short rules for using Thara.</span></span><svg class="i chev flip" aria-hidden="true"><use href="#i-next"/></svg></a>
+      </div>
+      <p class="note" style="margin-top:14px">Tip: press <b>/</b> anywhere on the page to search.</p>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
