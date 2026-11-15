@@ -7,7 +7,9 @@
 
    Preferences are the same keys the demo uses, so a choice made on one
    page holds on the other: thara-theme, thara-hide, thara-motion. They are
-   only conveniences; private windows that refuse storage lose nothing. */
+   only conveniences; private windows that refuse storage lose nothing.
+   thara-survey-later is when this browser last said "Not now" to the
+   survey's card (or went to the survey from it). */
 (function () {
   'use strict';
   window.tharaSite = true;
@@ -25,6 +27,164 @@
   function syncMotion() { root.classList.toggle('motion', moving()); }
   function later(fn) { return moving() ? setTimeout(fn, 270) : fn(); }
   function reflow(el) { return el.offsetWidth; }
+
+  /* ---------- Arabic and English ----------
+     Each page is written in English. Its Arabic is in i18n/ar-*.js, keyed
+     by the English it stands for: a whole short block (a paragraph, a
+     heading, a line of a list, with its bold and its links), or a single
+     piece of text beside an icon or a figure. A block that already carries
+     its own Arabic beside the English (Records <span lang="ar">…</span>)
+     shows that Arabic. Anything with no Arabic stays English, so a sentence
+     changed on the page before its Arabic is shows the new English, never
+     an old translation. Elements marked data-l="en" or data-l="ar" show in
+     that language only (style.css). What this file writes itself comes in
+     both languages where it is written (pick).
+
+     The choice is thara-lang, shared with the demo. With none, the
+     browser's own language decides; the head of each page sets lang and
+     dir before the first paint, and hides the page (i18n-wait) until the
+     Arabic is in place. Pages without data-langs (the developer's inbox)
+     stay English. */
+  var AR = window.tharaArabic || {};
+  function has(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
+  function lang() { return root.getAttribute('lang') === 'ar' ? 'ar' : 'en'; }
+  function pick(en, ar) { return lang() === 'ar' ? ar : en; }
+  var langHooks = [];
+  function onLang(fn) { langHooks.push(fn); }
+
+  var I18N = root.hasAttribute('data-langs');
+  var units = [];
+  var attrUnits = [];
+  var titleUnit = null;
+  var DYNAMIC = '[data-money],[data-version-build],[data-version-date],[data-asset],[data-today],[data-month],[data-keep],[data-l],[data-lang-toggle]';
+  var COMPLEX = 'svg,input,textarea,select,button,img,' + DYNAMIC;
+  var XHTML = 'http://www.w3.org/1999/xhtml';
+
+  function squash(s) { return s.replace(/\s+/g, ' ').trim(); }
+  function directText(el) {
+    for (var c = el.firstChild; c; c = c.nextSibling) if (c.nodeType === 3 && /\S/.test(c.nodeValue)) return true;
+    return false;
+  }
+  // "Records <span lang="ar">العمليات</span>": the one child in Arabic.
+  function ownArabic(el) {
+    var found = null, n = 0;
+    for (var c = el.firstChild; c; c = c.nextSibling) {
+      if (c.nodeType !== 1) continue;
+      n++;
+      if (c.getAttribute('lang') === 'ar') found = c;
+    }
+    return n === 1 && found ? squash(found.innerHTML) : null;
+  }
+  function collect(el) {
+    if (el.namespaceURI !== XHTML || /^(SCRIPT|STYLE|TEMPLATE|NOSCRIPT)$/.test(el.tagName)) return;
+    if (el.hasAttribute('lang') || el.matches(DYNAMIC)) return;
+    if (directText(el) && !el.querySelector(COMPLEX)) {
+      units.push({ el: el, en: el.innerHTML, key: squash(el.innerHTML), own: ownArabic(el) });
+      return;
+    }
+    for (var c = el.firstChild; c; c = c.nextSibling) {
+      if (c.nodeType === 3) {
+        if (/\S/.test(c.nodeValue)) units.push({ node: c, en: c.nodeValue, key: squash(c.nodeValue) });
+      } else if (c.nodeType === 1) {
+        collect(c);
+      }
+    }
+  }
+  function arabicFor(u) {
+    if (has(AR, u.key)) return AR[u.key];
+    return u.own || null;
+  }
+  function applyLang() {
+    var ar = lang() === 'ar';
+    units.forEach(function (u) {
+      var v = ar ? arabicFor(u) : null;
+      if (u.el) {
+        var html = v == null ? u.en : v;
+        if (u.el.innerHTML !== html) u.el.innerHTML = html;
+      } else {
+        var lead = u.en.match(/^\s*/)[0];
+        var tail = u.en.match(/\s*$/)[0];
+        u.node.nodeValue = v == null ? u.en : lead + v + tail;
+      }
+    });
+    attrUnits.forEach(function (u) {
+      u.el.setAttribute(u.attr, ar && has(AR, u.key) ? AR[u.key] : u.en);
+    });
+    if (titleUnit) document.title = ar && has(AR, titleUnit) ? AR[titleUnit] : titleUnit;
+    langHooks.forEach(function (fn) { fn(); });
+  }
+  function setLang(next) {
+    put('thara-lang', next);
+    root.setAttribute('lang', next);
+    root.setAttribute('dir', next === 'ar' ? 'rtl' : 'ltr');
+    applyLang();
+  }
+  onLang(function () {
+    var ar = lang() === 'ar';
+    $$('[data-lang-toggle]').forEach(function (b) {
+      b.textContent = ar ? 'En' : 'ع';
+      b.setAttribute('lang', ar ? 'en' : 'ar');
+      b.setAttribute('aria-label', ar ? 'English' : 'العربية');
+      b.setAttribute('title', ar ? 'Read this page in English' : 'اقرأ الصفحة بالعربية');
+    });
+  });
+
+  if (I18N) {
+    collect(document.body);
+    $$('[aria-label],[placeholder],[title],[alt]').forEach(function (el) {
+      // Not the switch itself, nor anything written in Arabic already (its own
+      // lang, not the page's).
+      if (el.closest('[data-lang-toggle]') || el.getAttribute('lang') === 'ar') return;
+      ['aria-label', 'placeholder', 'title', 'alt'].forEach(function (a) {
+        if (el.hasAttribute(a)) attrUnits.push({ el: el, attr: a, en: el.getAttribute(a), key: squash(el.getAttribute(a)) });
+      });
+    });
+    titleUnit = document.title;
+    $$('[data-lang-toggle]').forEach(function (b) {
+      b.hidden = false;
+      b.addEventListener('click', function () { setLang(lang() === 'ar' ? 'en' : 'ar'); });
+    });
+    applyLang();
+
+    // A link to a part of a page (privacy.html#feedback) is followed before
+    // the Arabic changes the page's length: go there again once it is in.
+    if (lang() === 'ar' && location.hash.length > 1) {
+      var spot = document.getElementById(decodeURIComponent(location.hash.slice(1).split('?')[0]));
+      if (spot) {
+        // At once, not with the page's smooth scrolling.
+        var jump = function () {
+          root.style.scrollBehavior = 'auto';
+          spot.scrollIntoView();
+          root.style.scrollBehavior = '';
+        };
+        jump();
+        window.addEventListener('load', jump, { once: true });
+      }
+    }
+
+    // On a computer serving the site itself, ?i18n-dump lists what the page
+    // would translate and what has no Arabic yet (for writing i18n/ar-*.js).
+    if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && /[?&]i18n-dump\b/.test(location.search)) {
+      var seen = {};
+      var report = { units: [], missing: [] };
+      units.concat(attrUnits).forEach(function (u) {
+        if (seen[u.key]) return;
+        seen[u.key] = true;
+        report.units.push(u.key);
+        if (!has(AR, u.key) && !u.own && /[A-Za-z]/.test(u.key)) report.missing.push(u.key);
+      });
+      if (titleUnit && !has(AR, titleUnit)) report.missing.push(titleUnit);
+      report.units.push(titleUnit);
+      var pre = document.createElement('pre');
+      pre.id = 'i18n-dump';
+      pre.textContent = JSON.stringify(report, null, 1);
+      document.body.textContent = '';
+      document.body.appendChild(pre);
+    }
+  }
+  root.classList.remove('i18n-wait');
+  window.tharaI18n = { lang: lang, pick: pick, onLang: onLang };
+
 
   syncMotion();
   if (reduce.addEventListener) reduce.addEventListener('change', syncMotion);
@@ -68,7 +228,7 @@
     if (save) put('thara-hide', on ? '1' : null);
     $$('[data-eye]').forEach(function (b) {
       b.setAttribute('aria-pressed', String(on));
-      b.setAttribute('aria-label', on ? 'Show amounts' : 'Hide amounts');
+      b.setAttribute('aria-label', on ? pick('Show amounts', 'إظهار المبالغ') : pick('Hide amounts', 'إخفاء المبالغ'));
       var use = $('use', b);
       if (use) use.setAttribute('href', on ? '#i-eye-off' : '#i-eye');
     });
@@ -76,6 +236,7 @@
     paintAll();
   }
   $$('[data-eye]').forEach(function (b) { b.addEventListener('click', function () { setHide(!hidden(), true); }); });
+  onLang(function () { setHide(hidden()); });
 
   /* ---------- today's date where the app shows it ---------- */
 
@@ -83,10 +244,19 @@
   var days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
   var mons = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
   var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  $$('[data-today]').forEach(function (el) {
-    el.textContent = days[now.getDay()] + ' ' + now.getDate() + ' ' + mons[now.getMonth()] + ' / THARA';
-  });
-  $$('[data-month]').forEach(function (el) { el.textContent = 'Spent in ' + months[now.getMonth()]; });
+  function paintDates() {
+    var ar = lang() === 'ar';
+    $$('[data-today]').forEach(function (el) {
+      el.textContent = ar
+        ? now.toLocaleDateString('ar-EG-u-nu-latn', { weekday: 'long', day: 'numeric', month: 'long' }) + ' / ثراء'
+        : days[now.getDay()] + ' ' + now.getDate() + ' ' + mons[now.getMonth()] + ' / THARA';
+    });
+    $$('[data-month]').forEach(function (el) {
+      el.textContent = ar ? 'مصروف ' + now.toLocaleDateString('ar-EG-u-nu-latn', { month: 'long' }) : 'Spent in ' + months[now.getMonth()];
+    });
+  }
+  paintDates();
+  onLang(paintDates);
 
   /* ---------- entrance, figures and rings, as each comes into view ---------- */
 
@@ -412,13 +582,30 @@
       .replace(/ة/g, 'ه')
       .replace(/ى/g, 'ي');
   }
-  var index = $$('[data-find]').map(function (el) {
-    var title = el.getAttribute('data-find') || ($('b', el) || el).textContent;
-    var ar = ($('.ar', el) || {}).textContent || el.getAttribute('data-find-ar') || '';
-    var line = el.getAttribute('data-find-line') || ($('.t > span:not(.ar)', el) || $('.v', el) || {}).textContent || '';
-    var icon = $('.tile', el);
-    return { el: el, title: title.trim(), ar: ar.trim(), line: line.trim(), icon: icon ? icon.innerHTML : '', hay: norm(title + ' ' + ar + ' ' + line) };
-  });
+  // Made at each search, in the page's language: the title in it, the
+  // other language's beside it, and either may be searched.
+  function buildIndex() {
+    var ar = lang() === 'ar';
+    return $$('[data-find]').map(function (el) {
+      var en = el.getAttribute('data-find');
+      // A feature's own Arabic name sits beside it in English; in Arabic it
+      // is the name itself.
+      var arTitle = el.getAttribute('data-find-ar') || (has(AR, en) ? AR[en] : '') ||
+        (ar ? ($('b', el) || {}).textContent : ($('.ar', el) || {}).textContent) || '';
+      var lineEn = el.getAttribute('data-find-line') || '';
+      var line = lineEn ? (ar && has(AR, lineEn) ? AR[lineEn] : lineEn) : (($('.t > span:not(.ar)', el) || $('.v', el) || {}).textContent || '');
+      var icon = $('.tile', el);
+      return {
+        el: el,
+        title: (ar && arTitle ? arTitle : en).trim(),
+        other: (ar ? (arTitle ? en : '') : arTitle).trim(),
+        otherLang: ar ? 'en' : 'ar',
+        line: line.trim(),
+        icon: icon ? icon.innerHTML : '',
+        hay: norm(en + ' ' + arTitle + ' ' + line + ' ' + lineEn),
+      };
+    });
+  }
   function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function hilite(s, q) {
     // Marks are placed by position, so only where folding kept every letter.
@@ -431,20 +618,21 @@
     var q = norm(findInput.value.trim());
     if (!q) { results.hidden = true; placesBox.hidden = false; return; }
     var words = q.split(/\s+/);
-    var hits = index.filter(function (x) { return words.every(function (w) { return x.hay.indexOf(w) >= 0; }); })
+    var hits = buildIndex().filter(function (x) { return words.every(function (w) { return x.hay.indexOf(w) >= 0; }); })
       .sort(function (a, b) { return (norm(a.title).indexOf(q) === 0 ? 0 : 1) - (norm(b.title).indexOf(q) === 0 ? 0 : 1); })
       .slice(0, 12);
     placesBox.hidden = true;
     results.hidden = false;
     if (!hits.length) {
-      results.innerHTML = '<p class="empty">Nothing here matches “' + esc(findInput.value.trim()) + '”. Try another word, in English or Arabic.</p>';
+      results.innerHTML = '<p class="empty">' + pick('Nothing here matches “' + esc(findInput.value.trim()) + '”. Try another word, in English or Arabic.',
+        'لا شيء هنا يطابق «' + esc(findInput.value.trim()) + '». جرّب كلمة أخرى، بالعربية أو بالإنجليزية.') + '</p>';
       return;
     }
     results.innerHTML = '<div class="list">' + hits.map(function (h, i) {
       var line = h.line.length > 110 ? h.line.slice(0, 108).replace(/\s+\S*$/, '') + '…' : h.line;
       return '<button class="row" type="button" data-hit="' + i + '">' +
         '<span class="tile">' + (h.icon || '<svg class="i"><use href="#i-dot"/></svg>') + '</span>' +
-        '<span class="t"><b>' + hilite(h.title, q) + (h.ar ? ' <span class="ar" lang="ar">' + hilite(h.ar, q) + '</span>' : '') + '</b>' +
+        '<span class="t"><b>' + hilite(h.title, q) + (h.other ? ' <span class="ar" lang="' + h.otherLang + '">' + hilite(h.other, q) + '</span>' : '') + '</b>' +
         (line ? '<span>' + esc(line) + '</span>' : '') + '</span>' +
         '<svg class="i chev flip" aria-hidden="true"><use href="#i-next"/></svg></button>';
     }).join('') + '</div>';
@@ -452,7 +640,10 @@
       b.addEventListener('click', function () { go(hits[+b.getAttribute('data-hit')].el); });
     });
   }
-  if (findInput) findInput.addEventListener('input', search);
+  if (findInput) {
+    findInput.addEventListener('input', search);
+    onLang(function () { if (findInput.value.trim()) search(); });
+  }
 
   /* ---------- build number, date and download sizes ----------
      version.json is published by the same CI run that produces the
@@ -462,24 +653,45 @@
 
   function fill(selector, value) { $$(selector).forEach(function (el) { el.textContent = value; }); }
   function on(date) {
-    return new Date(date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    return new Date(date).toLocaleDateString(pick('en-GB', 'ar-EG-u-nu-latn'), { day: 'numeric', month: 'short', year: 'numeric' });
   }
+  var NOTES_AR = {
+    'for almost every phone (64-bit)': 'لمعظم الهواتف (64 بت)',
+    'for older 32-bit phones': 'للهواتف الأقدم (32 بت)',
+    'works on every phone, about twice the size': 'يعمل على كل هاتف، وحجمه نحو الضعف',
+  };
+  // Before version.json answers (or with no network), the page's own text
+  // stays, in Arabic when there is Arabic for it.
   function size(name, bytes, date) {
     $$('[data-asset="' + name + '"]').forEach(function (el) {
+      if (el._static == null) el._static = el.textContent;
+      if (!bytes) {
+        el.textContent = lang() === 'ar' && has(AR, squash(el._static)) ? AR[squash(el._static)] : el._static;
+        return;
+      }
       var note = el.getAttribute('data-note');
-      el.textContent = (bytes / 1048576).toFixed(0) + ' MB · ' + (note || ('built ' + on(date)));
+      var said = note ? pick(note, NOTES_AR[note] || note) : pick('built ', 'بُني ') + on(date);
+      el.textContent = (bytes / 1048576).toFixed(0) + pick(' MB · ', ' ميجابايت · ') + said;
     });
   }
+  var version = null;
+  function paintVersion() {
+    var v = version || {};
+    if (v.buildNumber) fill('[data-version-build]', v.buildNumber);
+    if (v.publishedAt) fill('[data-version-date]', pick('built ', 'بُني ') + on(v.publishedAt));
+    var apks = v.androidApks || {};
+    size('thara-release-arm64-v8a.apk', apks['arm64-v8a'] && apks['arm64-v8a'].sizeBytes, v.publishedAt);
+    size('thara-release-armeabi-v7a.apk', apks['armeabi-v7a'] && apks['armeabi-v7a'].sizeBytes, v.publishedAt);
+    size('thara-release.apk', v.sizeBytes, v.publishedAt);
+  }
+  paintVersion();
+  onLang(paintVersion);
   if (window.fetch && location.protocol !== 'file:') {
     fetch('version.json', { cache: 'no-cache' })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
       .then(function (v) {
-        if (v.buildNumber) fill('[data-version-build]', v.buildNumber);
-        if (v.publishedAt) fill('[data-version-date]', 'built ' + on(v.publishedAt));
-        var apks = v.androidApks || {};
-        if (apks['arm64-v8a'] && apks['arm64-v8a'].sizeBytes) size('thara-release-arm64-v8a.apk', apks['arm64-v8a'].sizeBytes, v.publishedAt);
-        if (apks['armeabi-v7a'] && apks['armeabi-v7a'].sizeBytes) size('thara-release-armeabi-v7a.apk', apks['armeabi-v7a'].sizeBytes, v.publishedAt);
-        if (v.sizeBytes) size('thara-release.apk', v.sizeBytes, v.publishedAt);
+        version = v;
+        paintVersion();
       })
       .catch(function () { /* Keep the static text. */ });
 
@@ -617,14 +829,14 @@
       var words = text.value.trim();
       if (words.length < 3) {
         text.setAttribute('aria-invalid', 'true');
-        say('Write a few words about what happened first.', true);
+        say(pick('Write a few words about what happened first.', 'اكتب بضع كلمات عمّا حدث أولًا.'), true);
         text.focus();
         return;
       }
       var contact = form.contact.value.trim();
       if (contact && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact)) {
         form.contact.setAttribute('aria-invalid', 'true');
-        say('That email does not look right. Leave it empty if you prefer.', true);
+        say(pick('That email does not look right. Leave it empty if you prefer.', 'هذا البريد لا يبدو صحيحًا. اتركه فارغًا إن شئت.'), true);
         form.contact.focus();
         return;
       }
@@ -632,7 +844,7 @@
       var build = form.build.value.trim();
       if (build && !/^[0-9]{1,6}$/.test(build)) {
         form.build.setAttribute('aria-invalid', 'true');
-        say('The build is a number, like 252. Leave it empty if you are not sure.', true);
+        say(pick('The build is a number, like 252. Leave it empty if you are not sure.', 'رقم الإصدار رقمٌ مثل 252. اتركه فارغًا إن لم تكن متأكدًا.'), true);
         form.build.focus();
         return;
       }
@@ -650,7 +862,7 @@
       if (form.phone.value.trim()) body.phone = form.phone.value.trim();
 
       send.disabled = true;
-      say('Sending…');
+      say(pick('Sending…', 'جارٍ الإرسال…'));
       gatewayAsk(body).then(function (answer) {
         send.disabled = false;
         if (answer.status === 200) {
@@ -668,13 +880,13 @@
           return;
         }
         var reason = reasonOf(answer);
-        if (reason === 'install_day' || reason === 'global_day') say('That is enough messages from here for today. Thank you — try again tomorrow.', true);
-        else if (reason === 'minute') say('A moment, please: too many at once. Try again in a minute.', true);
-        else if (answer.status === 400) say('That message could not be taken as it is. Shorten it, or take out unusual characters.', true);
-        else say('Feedback cannot be taken just now. Try again in a little while.', true);
+        if (reason === 'install_day' || reason === 'global_day') say(pick('That is enough messages from here for today. Thank you — try again tomorrow.', 'يكفي هذا من هنا لليوم. شكرًا لك، وجرّب غدًا.'), true);
+        else if (reason === 'minute') say(pick('A moment, please: too many at once. Try again in a minute.', 'لحظة من فضلك: رسائل كثيرة في وقت واحد. جرّب بعد دقيقة.'), true);
+        else if (answer.status === 400) say(pick('That message could not be taken as it is. Shorten it, or take out unusual characters.', 'تعذّر قبول الرسالة كما هي. اختصرها، أو احذف الرموز غير المعتادة.'), true);
+        else say(pick('Feedback cannot be taken just now. Try again in a little while.', 'لا يمكن استقبال الملاحظات الآن. جرّب بعد قليل.'), true);
       }, function () {
         send.disabled = false;
-        say('Thara\'s server could not be reached. Check your connection and try again.', true);
+        say(pick('Thara\'s server could not be reached. Check your connection and try again.', 'تعذّر الوصول إلى خادم ثراء. تحقّق من اتصالك وحاول مرة أخرى.'), true);
       });
     });
 
@@ -683,5 +895,23 @@
       form.hidden = false;
       text.focus();
     });
+  }
+  /* ---------- the survey asks for itself ---------- */
+
+  // A few seconds after the home page opens, unless this browser answered
+  // the survey (survey.js keeps thara-survey-done) or said "Not now" to
+  // this card in the last week. It takes no focus; Escape inside it, the
+  // close button or "Not now" put it away.
+  var surveyPop = document.getElementById('survey-pop');
+  var spWeek = 7 * 24 * 60 * 60 * 1000;
+  if (surveyPop && get('thara-survey-done') !== '1' && !(Date.now() - (Number(get('thara-survey-later')) || 0) < spWeek)) {
+    var spLater = function () {
+      put('thara-survey-later', String(Date.now()));
+      surveyPop.hidden = true;
+    };
+    Array.prototype.forEach.call(surveyPop.querySelectorAll('[data-sp-later]'), function (b) { b.addEventListener('click', spLater); });
+    surveyPop.addEventListener('keydown', function (e) { if (e.key === 'Escape') spLater(); });
+    surveyPop.querySelector('[data-sp-go]').addEventListener('click', function () { put('thara-survey-later', String(Date.now())); });
+    setTimeout(function () { surveyPop.hidden = false; }, 2500);
   }
 })();

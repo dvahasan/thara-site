@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-langs>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -10,6 +10,14 @@
 <script>
 (function () {
   var r = document.documentElement, g = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  // Arabic or English: the choice made here or in the demo, else the
+  // browser's own language. The page stays hidden until its Arabic is in.
+  var l = g('thara-lang');
+  if (l !== 'ar' && l !== 'en') l = /^ar([-_]|$)/i.test((navigator.languages && navigator.languages[0]) || navigator.language || '') ? 'ar' : 'en';
+  if (l === 'ar') {
+    r.setAttribute('lang', 'ar'); r.setAttribute('dir', 'rtl'); r.classList.add('i18n-wait');
+    setTimeout(function () { r.classList.remove('i18n-wait'); }, 2500);
+  }
   var t = g('thara-theme'); if (t === 'light' || t === 'dark') r.setAttribute('data-theme', t);
   if (g('thara-motion') === 'off') r.setAttribute('data-motion', 'off');
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -18,6 +26,8 @@
 })();
 </script>
 <link rel="stylesheet" href="style.css">
+<script defer src="i18n/ar-common.js"></script>
+<script defer src="i18n/ar-survey.js"></script>
 <script defer src="site.js"></script>
 <script defer src="survey.js"></script>
 </head>
@@ -44,6 +54,7 @@
     </a>
     <div class="bar-acts">
       <a class="bar-link" href="./#get"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Get Thara</a>
+      <button class="circle lang-btn" type="button" data-lang-toggle lang="ar" aria-label="العربية" hidden>ع</button>
       <button class="circle lime" type="button" data-pop="appearance" aria-expanded="false" aria-controls="appearance" aria-label="Appearance"><svg class="i" aria-hidden="true"><use href="#i-sliders"/></svg></button>
     </div>
   </div>
@@ -67,14 +78,14 @@
     <a class="back" href="./"><svg class="i flip" aria-hidden="true"><use href="#i-back"/></svg>Thara</a>
     <span class="kicker">Survey · <span lang="ar">استبيان</span></span>
     <h1>What do you think of Thara?</h1>
-    <p class="title-ar" lang="ar" dir="rtl">ما رأيك في ثراء؟</p>
+    <p class="title-ar" lang="ar" dir="rtl" data-l="en">ما رأيك في ثراء؟</p>
     <p class="lead">Ten quick questions, about two minutes. No name and no sign-in. One answer per browser: answering again replaces your earlier answer.</p>
-    <p class="lead" lang="ar" dir="rtl">عشرة أسئلة سريعة، حوالي دقيقتين. بلا اسم ولا تسجيل دخول. إجابة واحدة لكل متصفح: إن أجبت مرة أخرى حلّت إجابتك الجديدة محل السابقة.</p>
+    <p class="lead" lang="ar" dir="rtl" data-l="en">عشرة أسئلة سريعة، حوالي دقيقتين. بلا اسم ولا تسجيل دخول. إجابة واحدة لكل متصفح: إن أجبت مرة أخرى حلّت إجابتك الجديدة محل السابقة.</p>
     <p class="sv-before" id="sv-before" hidden>You answered before from this browser. Sending again replaces that answer. <span lang="ar">أجبت من قبل من هذا المتصفح، والإرسال مرة أخرى يستبدل إجابتك.</span></p>
 
     <form class="sv" id="sv-form" novalidate>
       <fieldset class="sv-q" data-q="used" data-required>
-        <legend><b>1. Have you used Thara?</b><span lang="ar">هل استخدمت ثراء؟</span></legend>
+        <legend><b>1. Have you used Thara?</b><span lang="ar" data-l="en">هل استخدمت ثراء؟</span></legend>
         <div class="sv-opts">
           <label><input type="radio" name="used" value="app"><span>The Android app <i lang="ar">تطبيق أندرويد</i></span></label>
           <label><input type="radio" name="used" value="web"><span>The web demo on this site <i lang="ar">النسخة التجريبية على الموقع</i></span></label>
@@ -84,7 +95,7 @@
       </fieldset>
 
       <fieldset class="sv-q" data-q="freq" data-if-used>
-        <legend><b>2. How often do you use it?</b><span lang="ar">كم مرة تستخدمه؟</span></legend>
+        <legend><b>2. How often do you use it?</b><span lang="ar" data-l="en">كم مرة تستخدمه؟</span></legend>
         <div class="sv-opts">
           <label><input type="radio" name="freq" value="daily"><span>Every day <i lang="ar">كل يوم</i></span></label>
           <label><input type="radio" name="freq" value="weekly"><span>A few times a week <i lang="ar">بضع مرات في الأسبوع</i></span></label>
@@ -94,7 +105,7 @@
       </fieldset>
 
       <fieldset class="sv-q" data-q="features" data-if-used>
-        <legend><b>3. What do you use most?</b><span lang="ar">ما الذي تستخدمه أكثر؟</span><small>Choose any <span lang="ar">اختر ما شئت</span></small></legend>
+        <legend><b>3. What do you use most?</b><span lang="ar" data-l="en">ما الذي تستخدمه أكثر؟</span><small>Choose any <span lang="ar">اختر ما شئت</span></small></legend>
         <div class="sv-opts">
           <label><input type="checkbox" name="features" value="records"><span>Recording spending and income <i lang="ar">تسجيل المصروف والدخل</i></span></label>
           <label><input type="checkbox" name="features" value="bank_messages"><span>Bank messages <i lang="ar">رسائل البنك</i></span></label>
@@ -109,7 +120,7 @@
       </fieldset>
 
       <fieldset class="sv-q" data-q="add" data-if-used>
-        <legend><b>4. How do you usually add a record?</b><span lang="ar">كيف تضيف سجلًا عادةً؟</span></legend>
+        <legend><b>4. How do you usually add a record?</b><span lang="ar" data-l="en">كيف تضيف سجلًا عادةً؟</span></legend>
         <div class="sv-opts">
           <label><input type="radio" name="add" value="typing"><span>Typing <i lang="ar">بالكتابة</i></span></label>
           <label><input type="radio" name="add" value="speaking"><span>Speaking <i lang="ar">بالصوت</i></span></label>
@@ -120,7 +131,7 @@
       </fieldset>
 
       <fieldset class="sv-q" data-q="useful" data-required>
-        <legend><b>5. Is Thara useful to you?</b><span lang="ar">هل ثراء مفيد لك؟</span></legend>
+        <legend><b>5. Is Thara useful to you?</b><span lang="ar" data-l="en">هل ثراء مفيد لك؟</span></legend>
         <div class="sv-opts">
           <label><input type="radio" name="useful" value="very"><span>Very useful <i lang="ar">مفيد جدًا</i></span></label>
           <label><input type="radio" name="useful" value="somewhat"><span>Somewhat <i lang="ar">إلى حد ما</i></span></label>
@@ -130,7 +141,7 @@
       </fieldset>
 
       <fieldset class="sv-q" data-q="pay" data-required>
-        <legend><b>6. If Thara asked you to pay for using it, what would you do?</b><span lang="ar">إذا طلب منك ثراء أن تدفع مقابل استخدامه، ماذا ستفعل؟</span></legend>
+        <legend><b>6. If Thara asked you to pay for using it, what would you do?</b><span lang="ar" data-l="en">إذا طلب منك ثراء أن تدفع مقابل استخدامه، ماذا ستفعل؟</span></legend>
         <div class="sv-opts">
           <label><input type="radio" name="pay" value="monthly"><span>Pay a small amount each month <i lang="ar">أدفع مبلغًا صغيرًا كل شهر</i></span></label>
           <label><input type="radio" name="pay" value="once"><span>Pay once for the whole app <i lang="ar">أدفع مرة واحدة للتطبيق كله</i></span></label>
@@ -144,7 +155,7 @@
       </fieldset>
 
       <fieldset class="sv-q" data-q="recommend">
-        <legend><b>7. Would you recommend Thara to a friend?</b><span lang="ar">هل تنصح صديقًا بثراء؟</span></legend>
+        <legend><b>7. Would you recommend Thara to a friend?</b><span lang="ar" data-l="en">هل تنصح صديقًا بثراء؟</span></legend>
         <div class="sv-opts">
           <label><input type="radio" name="recommend" value="yes"><span>Yes <i lang="ar">نعم</i></span></label>
           <label><input type="radio" name="recommend" value="maybe"><span>Maybe <i lang="ar">ربما</i></span></label>
@@ -153,7 +164,7 @@
       </fieldset>
 
       <fieldset class="sv-q" data-q="lang">
-        <legend><b>8. Which language do you use Thara in?</b><span lang="ar">بأي لغة تستخدم ثراء؟</span></legend>
+        <legend><b>8. Which language do you use Thara in?</b><span lang="ar" data-l="en">بأي لغة تستخدم ثراء؟</span></legend>
         <div class="sv-opts">
           <label><input type="radio" name="lang" value="ar"><span>Arabic <i lang="ar">العربية</i></span></label>
           <label><input type="radio" name="lang" value="en"><span>English <i lang="ar">الإنجليزية</i></span></label>
@@ -162,17 +173,17 @@
       </fieldset>
 
       <fieldset class="sv-q">
-        <legend><b>9. What do you think of Thara? What stands out, good or bad?</b><span lang="ar">ما رأيك في ثراء؟ ما الذي يلفت نظرك، جيدًا كان أو سيئًا؟</span><small>Optional <span lang="ar">اختياري</span></small></legend>
+        <legend><b>9. What do you think of Thara? What stands out, good or bad?</b><span lang="ar" data-l="en">ما رأيك في ثراء؟ ما الذي يلفت نظرك، جيدًا كان أو سيئًا؟</span><small>Optional <span lang="ar">اختياري</span></small></legend>
         <textarea name="see" rows="4" maxlength="1000" dir="auto"></textarea>
       </fieldset>
 
       <fieldset class="sv-q">
-        <legend><b>10. Any new ideas, or things you noticed?</b><span lang="ar">هل لديك أفكار جديدة أو ملاحظات؟</span><small>Optional <span lang="ar">اختياري</span></small></legend>
+        <legend><b>10. Any new ideas, or things you noticed?</b><span lang="ar" data-l="en">هل لديك أفكار جديدة أو ملاحظات؟</span><small>Optional <span lang="ar">اختياري</span></small></legend>
         <textarea name="ideas" rows="4" maxlength="1000" dir="auto"></textarea>
       </fieldset>
 
       <div class="sv-send">
-        <button class="btn ink" type="submit"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Send answers · <span lang="ar">أرسل الإجابات</span></button>
+        <button class="btn ink" type="submit"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Send answers<span lang="ar" data-l="en"> · أرسل الإجابات</span></button>
         <p class="sv-status" id="sv-status" role="status" aria-live="polite"></p>
       </div>
       <p class="sv-small">Your answers go to Thara's own database for the developer to read, with nothing about you but a random number this browser made for the site, kept as a scrambled code. Please leave real amounts and account numbers out. <a href="privacy.html#survey">How it is kept</a></p>
@@ -180,8 +191,8 @@
 
     <div class="sv-done" id="sv-done" hidden>
       <h2>Thank you <span lang="ar">شكرًا لك</span></h2>
-      <p id="sv-done-text">Your answers are with the developer now.</p>
-      <p lang="ar" dir="rtl">وصلت إجاباتك إلى المطوّر.</p>
+      <p id="sv-done-text" data-keep>Your answers are with the developer now.</p>
+      <p lang="ar" dir="rtl" data-l="en">وصلت إجاباتك إلى المطوّر.</p>
       <a class="btn ghost" href="./"><svg class="i flip" aria-hidden="true"><use href="#i-back"/></svg>Back to Thara</a>
     </div>
   </div>

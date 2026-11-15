@@ -30,7 +30,7 @@
   var more = $('#in-more');
   var find = $('#in-find');
 
-  var state = { token: kept('thara-inbox-token'), email: kept('thara-inbox-email'), show: 'new', items: [], more: false, counts: { new: 0, done: 0 } };
+  var state = { token: kept('thara-inbox-token'), email: kept('thara-inbox-email'), show: 'new', items: [], more: false, counts: { new: 0, done: 0 }, gen: 0, loading: false };
 
   function say(el, words, bad) {
     el.textContent = words || '';
@@ -67,6 +67,9 @@
     signinBox.hidden = true;
     mainBox.hidden = false;
     stats = null;
+    notes.gen++;
+    notes.loading = false;
+    notes.loaded = false;
     if (typeof showView === 'function') showView('feedback');
     $('#in-who').textContent = state.email ? 'Signed in as ' + state.email : '';
     load(false);
@@ -151,6 +154,41 @@
     return svg;
   }
 
+  /* A paragraph that may be long: its first five lines and a See more.
+     What is long depends on how wide the cards are, so fitClamps measures
+     again whenever a list changes size (never while it is out of sight). */
+  function clamped(text, label) {
+    var block = el('div', 'in-part');
+    if (label) block.appendChild(el('span', 'k', label));
+    var p = el('p', 'clamp', text);
+    p.setAttribute('dir', 'auto');
+    block.appendChild(p);
+    var see = el('button', 'in-see', 'See more');
+    see.type = 'button';
+    see.hidden = true;
+    see.setAttribute('aria-expanded', 'false');
+    see.addEventListener('click', function () {
+      var open = p.classList.toggle('open');
+      see.textContent = open ? 'See less' : 'See more';
+      see.setAttribute('aria-expanded', String(open));
+    });
+    block.appendChild(see);
+    return block;
+  }
+
+  function fitClamps(listEl) {
+    if (!listEl.offsetParent) return;
+    Array.prototype.forEach.call(listEl.querySelectorAll('.in-part'), function (part) {
+      var p = part.querySelector('p');
+      if (p.classList.contains('open')) return;
+      part.querySelector('.in-see').hidden = p.scrollHeight <= p.clientHeight + 1;
+    });
+  }
+  function watchSize(listEl) {
+    if ('ResizeObserver' in window) new ResizeObserver(function () { fitClamps(listEl); }).observe(listEl);
+  }
+  watchSize(list);
+
   function card(item) {
     var li = el('li', 'in-item' + (item.done ? ' done' : ''));
     li.setAttribute('data-id', item.id);
@@ -162,9 +200,7 @@
     if (item.done) top.appendChild(el('span', 'tag plain', 'Handled'));
     li.appendChild(top);
 
-    var text = el('p', 'in-text', item.text);
-    text.setAttribute('dir', 'auto');
-    li.appendChild(text);
+    li.appendChild(clamped(item.text));
 
     var facts = [];
     if (item.build) facts.push('Build ' + item.build);
@@ -208,6 +244,7 @@
     });
     list.textContent = '';
     shown.forEach(function (i) { list.appendChild(card(i)); });
+    fitClamps(list);
     empty.hidden = shown.length > 0;
     empty.textContent = q ? 'Nothing loaded matches that.' : state.show === 'new' ? 'Nothing new. All caught up.' : 'Nothing here.';
     more.hidden = !state.more;
@@ -223,13 +260,37 @@
     return false;
   }
 
+  /* The next 50 come by themselves when the end of a list is scrolled to
+     (the button stays, for a keyboard and for a browser that cannot
+     watch the scroll). */
+  function nearEnd(button) {
+    if (button.hidden || !button.offsetParent) return false;
+    return button.getBoundingClientRect().top < window.innerHeight + 300;
+  }
+  function watchEnd(button, next) {
+    if (!('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (seen) {
+      if (seen.some(function (s) { return s.isIntersecting; })) next();
+    }, { rootMargin: '0px 0px 300px 0px' }).observe(button);
+  }
+
+  function busy(button, loading, words) {
+    button.disabled = loading;
+    button.textContent = loading ? 'Loading…' : words;
+  }
+
   function load(older) {
+    if (older && (state.loading || !state.more)) return;
+    var gen = older ? state.gen : ++state.gen;
     var body = { op: 'list', token: state.token, show: state.show };
     if (older && state.items.length) body.before = state.items[state.items.length - 1].at;
-    say(listStatus, 'Loading…');
-    more.disabled = true;
+    state.loading = true;
+    if (!older) say(listStatus, 'Loading…');
+    busy(more, true, 'Load older');
     return gw.ask(body).then(function (answer) {
-      more.disabled = false;
+      if (gen !== state.gen) return;
+      state.loading = false;
+      busy(more, false, 'Load older');
       if (signedOutIf(answer)) return;
       if (answer.status !== 200) { say(listStatus, 'The list could not be loaded just now.', true); return; }
       state.items = older ? state.items.concat(answer.body.items) : answer.body.items;
@@ -237,11 +298,21 @@
       state.counts = answer.body.counts;
       say(listStatus, '');
       render();
+      moreFeedback();
     }, function () {
-      more.disabled = false;
+      if (gen !== state.gen) return;
+      state.loading = false;
+      busy(more, false, 'Load older');
       say(listStatus, 'Thara\'s server could not be reached.', true);
     });
   }
+
+  // While a search is typed, only what is loaded is searched: nothing more
+  // is fetched by itself.
+  function moreFeedback() {
+    if (state.more && !state.loading && !find.value.trim() && nearEnd(more)) load(true);
+  }
+  watchEnd(more, moreFeedback);
 
   function setDone(item, done, button) {
     button.disabled = true;
@@ -380,26 +451,74 @@
       box.appendChild(card);
     });
 
-    var notes = $('#svs-notes');
-    notes.textContent = '';
-    s.notes.forEach(function (n) {
-      var li = el('li', 'in-note');
-      var top = el('div', 'in-top');
-      top.appendChild(el('span', 'in-when', when(n.at)));
-      if (n.useful) top.appendChild(el('span', 'tag plain', ({ very: 'Very useful', somewhat: 'Somewhat useful', not_really: 'Not really useful', not_sure: 'Not sure' })[n.useful] || n.useful));
-      if (n.pay) top.appendChild(el('span', 'tag plain', PAY_SHORT[n.pay] || n.pay));
-      li.appendChild(top);
-      [['see', 'Thinks'], ['ideas', 'Ideas'], ['payNote', 'Fair price']].forEach(function (part) {
-        if (!n[part[0]]) return;
-        li.appendChild(el('span', 'k', part[1]));
-        var p = el('p', null, n[part[0]]);
-        p.setAttribute('dir', 'auto');
-        li.appendChild(p);
-      });
-      notes.appendChild(li);
-    });
-    $('#svs-notes-empty').hidden = s.notes.length > 0;
+    $('#svs-written').textContent = (s.written ? s.written.toLocaleString('en-US') + ' wrote something. ' : '') +
+      'Newest first: what they think, their ideas, and a fair price in their words.';
   }
+
+  /* ---------- What people wrote: 50 at a time ---------- */
+
+  var notesList = $('#svs-notes');
+  var notesMore = $('#svs-more');
+  var notesStatus = $('#svs-notes-status');
+  var notes = { gen: 0, loading: false, loaded: false, more: false, last: null, shown: 0 };
+  var USEFUL_SHORT = { very: 'Very useful', somewhat: 'Somewhat useful', not_really: 'Not really useful', not_sure: 'Not sure' };
+  var PARTS = [['see', 'Thinks'], ['ideas', 'Ideas'], ['payNote', 'Fair price']];
+
+  function noteCard(n) {
+    var li = el('li', 'in-note');
+    var top = el('div', 'in-top');
+    top.appendChild(el('span', 'in-when', when(n.at)));
+    if (n.useful) top.appendChild(el('span', 'tag plain', USEFUL_SHORT[n.useful] || n.useful));
+    if (n.pay) top.appendChild(el('span', 'tag plain', PAY_SHORT[n.pay] || n.pay));
+    li.appendChild(top);
+    PARTS.forEach(function (part) {
+      if (n[part[0]]) li.appendChild(clamped(n[part[0]], part[1]));
+    });
+    return li;
+  }
+
+  function fitNotes() { fitClamps(notesList); }
+  watchSize(notesList);
+
+  function loadNotes(older) {
+    if (older && (notes.loading || !notes.more)) return;
+    var gen = older ? notes.gen : ++notes.gen;
+    var body = { op: 'notes', token: state.token };
+    if (older && notes.last) body.before = notes.last;
+    notes.loading = true;
+    busy(notesMore, true, 'Load more');
+    say(notesStatus, older ? '' : 'Loading…');
+    return gw.ask(body).then(function (answer) {
+      if (gen !== notes.gen) return;
+      notes.loading = false;
+      busy(notesMore, false, 'Load more');
+      if (signedOutIf(answer)) return;
+      if (answer.status !== 200) { say(notesStatus, 'What people wrote could not be loaded just now.', true); return; }
+      if (!older) { notesList.textContent = ''; notes.shown = 0; }
+      var items = answer.body.items;
+      items.forEach(function (n) { notesList.appendChild(noteCard(n)); });
+      notes.shown += items.length;
+      if (items.length) notes.last = { at: items[items.length - 1].at, id: items[items.length - 1].id };
+      notes.more = answer.body.more;
+      notes.loaded = true;
+      notesMore.hidden = !notes.more;
+      $('#svs-notes-empty').hidden = notes.shown > 0;
+      say(notesStatus, '');
+      fitNotes();
+      moreNotes();
+    }, function () {
+      if (gen !== notes.gen) return;
+      notes.loading = false;
+      busy(notesMore, false, 'Load more');
+      say(notesStatus, 'Thara\'s server could not be reached.', true);
+    });
+  }
+
+  function moreNotes() {
+    if (notes.more && !notes.loading && nearEnd(notesMore)) loadNotes(true);
+  }
+  watchEnd(notesMore, moreNotes);
+  notesMore.addEventListener('click', function () { loadNotes(true); });
 
   function loadStats() {
     var where = view === 'downloads' ? $('#dl-status') : $('#svs-status');
@@ -412,6 +531,8 @@
       say($('#svs-status'), '');
       drawDownloads();
       drawSurvey();
+      if (view === 'survey') loadNotes(false);
+      else notes.loaded = false;
     }, function () {
       say(where, 'Thara\'s server could not be reached.', true);
     });
@@ -422,6 +543,9 @@
     $$('[data-view]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-view') === view)); });
     $$('[data-panel]').forEach(function (p) { p.hidden = p.getAttribute('data-panel') !== view; });
     if (view !== 'feedback' && !stats) loadStats();
+    else if (view === 'survey' && !notes.loaded) loadNotes(false);
+    if (view === 'survey') { fitNotes(); moreNotes(); }
+    if (view === 'feedback') { fitClamps(list); moreFeedback(); }
   }
   $$('[data-view]').forEach(function (b) {
     b.addEventListener('click', function () { showView(b.getAttribute('data-view')); });
@@ -431,7 +555,7 @@
     if (view === 'feedback') load(false);
     else loadStats();
   });
-  find.addEventListener('input', render);
+  find.addEventListener('input', function () { render(); moreFeedback(); });
 
   if (state.token) showMain();
 })();

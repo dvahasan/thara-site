@@ -13,6 +13,9 @@
   var status = document.getElementById('sv-status');
   var done = document.getElementById('sv-done');
   var before = document.getElementById('sv-before');
+  // The page's language (site.js): every message is written in both.
+  var i18n = window.tharaI18n || { pick: function (en) { return en; } };
+  var pick = i18n.pick;
 
   function kept(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function keep(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* fine */ } }
@@ -51,7 +54,7 @@
     Array.prototype.forEach.call(form.querySelectorAll('.sv-q.missing'), function (q) { q.classList.remove('missing'); });
     if (missing.length) {
       missing.forEach(function (q) { q.classList.add('missing'); });
-      say('Please answer questions 1, 5 and 6 — the rest are up to you. الأسئلة 1 و5 و6 مطلوبة.', true);
+      say(pick('Please answer questions 1, 5 and 6 — the rest are up to you.', 'أجب عن الأسئلة 1 و5 و6 من فضلك، والباقي اختياري.'), true);
       missing[0].scrollIntoView({ block: 'center' });
       var first = missing[0].querySelector('input');
       if (first) first.focus({ preventScroll: true });
@@ -74,27 +77,27 @@
 
     var button = form.querySelector('button[type="submit"]');
     button.disabled = true;
-    say('Sending… جارٍ الإرسال');
+    say(pick('Sending…', 'جارٍ الإرسال…'));
     gw.ask(body).then(function (answer) {
       button.disabled = false;
       if (answer.status === 200) {
         keep('thara-survey-done', '1');
         form.hidden = true;
         before.hidden = true;
-        if (answer.body && answer.body.again) {
-          document.getElementById('sv-done-text').textContent = 'Your new answers replaced the ones you sent before.';
-        }
+        document.getElementById('sv-done-text').textContent = answer.body && answer.body.again
+          ? pick('Your new answers replaced the ones you sent before.', 'حلّت إجاباتك الجديدة محل التي أرسلتها من قبل.')
+          : pick('Your answers are with the developer now.', 'وصلت إجاباتك إلى المطوّر.');
         done.hidden = false;
         done.scrollIntoView({ block: 'start' });
         return;
       }
       var reason = gw.reason(answer);
-      if (reason === 'install_day' || reason === 'global_day' || reason === 'minute') say('Too many answers from here just now. Try again later.', true);
-      else if (answer.status === 400) say('Something in the answers could not be taken. Shorten the written answers and try again.', true);
-      else say('The answers cannot be taken just now. Try again in a little while.', true);
+      if (reason === 'install_day' || reason === 'global_day' || reason === 'minute') say(pick('Too many answers from here just now. Try again later.', 'إجابات كثيرة من هنا الآن. جرّب لاحقًا.'), true);
+      else if (answer.status === 400) say(pick('Something in the answers could not be taken. Shorten the written answers and try again.', 'تعذّر قبول شيء في الإجابات. اختصر الإجابات المكتوبة وحاول مرة أخرى.'), true);
+      else say(pick('The answers cannot be taken just now. Try again in a little while.', 'لا يمكن استقبال الإجابات الآن. جرّب بعد قليل.'), true);
     }, function () {
       button.disabled = false;
-      say('Thara\'s server could not be reached. Check your connection and try again.', true);
+      say(pick('Thara\'s server could not be reached. Check your connection and try again.', 'تعذّر الوصول إلى خادم ثراء. تحقّق من اتصالك وحاول مرة أخرى.'), true);
     });
   });
 })();

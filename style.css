@@ -189,6 +189,8 @@ h3 { margin: 0; font-size: 1.12rem; font-weight: 800; line-height: 1.25; letter-
 .brand .glyph { width: 27px; height: 27px; transition: transform var(--slow) var(--out); }
 .brand.spin .glyph { transform: rotate(360deg); }
 .wordmark { font-size: 25px; font-weight: 900; letter-spacing: -0.07em; line-height: 1; }
+/* The Latin wordmark keeps its full stop on the right in an Arabic page. */
+.wordmark { direction: ltr; unicode-bidi: isolate; }
 .wordmark-ar { font-size: 15px; font-weight: 700; color: var(--on-ink-muted); letter-spacing: 0; margin-inline-start: 4px; }
 .bar-acts { display: flex; align-items: center; gap: 8px; }
 .circle {
@@ -620,17 +622,22 @@ details, [data-find] { scroll-margin-top: 76px; scroll-margin-bottom: calc(var(-
 .in-tools .chips { margin: 0; }
 .in-tools .chip b { margin-inline-start: 6px; font-family: var(--mono); font-size: 13px; }
 .in-search { flex: 1 1 240px; margin: 0; }
-.in-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-.in-item { padding: 16px 18px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shade); display: grid; gap: 10px; }
+/* Feedback: small cards side by side, as the survey's written answers. */
+.in-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); align-items: start; }
+.in-item { padding: 12px 14px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shade); display: grid; gap: 8px; align-content: start; font-size: 14px; min-width: 0; }
+.in-item .in-top { gap: 6px; }
+.in-item .in-when { font-size: 12px; }
+.in-item .tag { font-size: 11px; padding: 2px 8px; }
+.in-item .in-meta { font-size: 13px; overflow-wrap: anywhere; }
 .in-item.done { opacity: .78; }
 .in-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .in-when { color: var(--muted); font-size: 14px; font-family: var(--mono); }
-.in-text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.55; }
 .in-meta { margin: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--muted); font-size: 14px; }
 .in-contact { display: inline-flex; align-items: center; gap: 6px; color: var(--purple); overflow-wrap: anywhere; }
 .in-contact .i { width: 16px; height: 16px; }
 .in-item-acts { display: flex; flex-wrap: wrap; gap: 8px; }
-.in-item-acts .btn { min-height: 38px; padding: 0 14px; font-size: 14px; }
+.in-item-acts .btn { min-height: 34px; padding: 0 10px; font-size: 13px; gap: 5px; }
+.in-item-acts .btn .i { width: 16px; height: 16px; }
 .in-del { color: var(--error); }
 .in-empty { margin: 8px 0; color: var(--muted); }
 .in-more { justify-self: start; }
@@ -819,11 +826,27 @@ footer .wordmark { font-size: 20px; }
 }
 .toast.show { transform: translate(-50%, 0); opacity: 1; }
 
+/* ---------- Arabic and English ---------- */
+
+/* data-l: shown in that language only. The Arabic beside the English is
+   data-l="en": in Arabic, the page says it in its own words instead. */
+html:not([lang="ar"]) [data-l="ar"], html[lang="ar"] [data-l="en"] { display: none !important; }
+/* Until site.js has put the Arabic in (a short moment; never more than 2.5 s). */
+html.i18n-wait body { visibility: hidden; }
+/* Arabic letters join: no tracking, and room for their height. */
+html[lang="ar"] *:not(.wordmark):not([lang="en"]) { letter-spacing: 0 !important; }
+html[lang="ar"] h1, html[lang="ar"] h2 { line-height: 1.3; }
+.lang-btn { font-weight: 800; font-size: 14px; letter-spacing: 0; }
+.lang-btn[lang="ar"] { font-size: 19px; line-height: 1; padding-bottom: 4px; }
+.lang-btn[hidden] { display: none; }
+/* Five things in the bar: on a narrow phone the buttons give a little room. */
+@media (max-width: 400px) { .bar-acts { gap: 6px; } .bar .circle { width: 40px; height: 40px; } }
+
 /* ---------- document pages (privacy, terms) ---------- */
 
 .doc { padding: clamp(1.8rem, 5vw, 3.4rem) 0 clamp(2.4rem, 6vw, 4rem); }
 .doc .wrap { max-width: 800px; }
-.doc .back { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 1.4rem; font-weight: 800; color: var(--text); }
+.doc .back, .survey .back { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 1.4rem; font-weight: 800; color: var(--text); }
 .doc h1 { font-size: clamp(2.4rem, 7vw, 3.6rem); }
 .doc .updated { margin: .7rem 0 1.6rem; }
 .doc article { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: clamp(1.2rem, 4vw, 2.4rem); }
@@ -901,6 +924,52 @@ footer .wordmark { font-size: 20px; }
 .ask .survey-cta .btn.ghost { color: var(--on-ink); border-color: rgba(228, 218, 238, .4); }
 .ask .survey-cta span { color: var(--on-ink-muted); font-size: 14px; }
 
+/* The survey near the top of the home page: one line, hard to miss. */
+.survey-strip {
+  display: flex; align-items: center; gap: 12px; margin-top: 1.2rem; max-width: 560px;
+  padding: 12px 16px; border-radius: 18px; text-decoration: none; color: var(--on-pale-lime);
+  background: var(--pale-lime); border: 1.5px solid var(--lime-edge);
+  transition: transform var(--base) var(--out), box-shadow var(--base) var(--out);
+}
+.survey-strip:hover { box-shadow: var(--shade); transform: translateY(-1px); }
+.ss-badge {
+  display: inline-flex; align-items: center; gap: 5px; flex: none;
+  padding: 5px 10px; border-radius: 999px; background: var(--ink); color: var(--lime);
+  font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+}
+.ss-badge .i { width: 15px; height: 15px; stroke-width: 2.2; }
+.ss-t { display: grid; gap: 2px; min-width: 0; color: var(--on-pale-lime); }
+.ss-t b { color: var(--on-pale-lime); font-size: 15px; }
+.ss-t [lang="ar"] { font-size: 14px; }
+.ss-go { margin-inline-start: auto; color: var(--on-pale-lime); }
+/* ...and a card that asks by itself, above the bottom bar. */
+.survey-pop {
+  position: fixed; z-index: 50; inset-inline-end: 16px;
+  bottom: calc(var(--dock-h) + 36px + env(safe-area-inset-bottom));
+  width: min(370px, calc(100% - 32px)); display: grid; gap: 8px;
+  padding: 18px 18px 16px; border-radius: 24px;
+  background: var(--ink); color: var(--on-ink);
+  border: 1px solid rgba(228, 218, 238, .16);
+  box-shadow: 0 30px 60px -24px rgba(20, 16, 34, .75);
+}
+.survey-pop[hidden] { display: none; }
+.survey-pop .kicker { color: var(--lime); margin: 0; }
+.survey-pop h2 { margin: 0; padding-inline-end: 36px; font-size: 21px; line-height: 1.2; color: var(--on-ink); }
+.survey-pop p { margin: 0; color: var(--on-ink-muted); font-size: 14.5px; line-height: 1.5; }
+.survey-pop .sp-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.survey-pop .btn.ghost { border-color: rgba(228, 218, 238, .45); color: var(--on-ink); }
+.survey-pop .btn.ghost:hover { background: rgba(228, 218, 238, .1); }
+.survey-pop :focus-visible { outline-color: var(--lime); }
+.sp-close {
+  position: absolute; top: 12px; inset-inline-end: 12px; width: 36px; height: 36px;
+  display: grid; place-items: center; border-radius: 50%; border: 0; cursor: pointer;
+  background: rgba(228, 218, 238, .1); color: var(--on-ink);
+}
+.sp-close:hover { background: rgba(228, 218, 238, .2); }
+.motion .survey-pop { animation: sp-rise var(--slow) var(--out) both; }
+@keyframes sp-rise { from { opacity: 0; transform: translateY(24px) scale(.98); } to { opacity: 1; transform: none; } }
+@media (max-width: 759px) { .survey-pop { inset-inline: 16px; width: auto; } }
+
 /* The developer page's views: Feedback, Downloads, Survey. */
 .in-views { margin: 0; }
 .in-view[hidden] { display: none; }
@@ -939,7 +1008,17 @@ footer .wordmark { font-size: 20px; }
 .in-table summary { cursor: pointer; color: var(--muted); }
 .in-table table { border-collapse: collapse; margin-top: 8px; }
 .in-table td, .in-table th { padding: 3px 12px 3px 0; text-align: start; font-family: var(--mono); font-size: 13px; }
-.in-notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-.in-note { padding: 12px 14px; border-radius: 16px; background: var(--paper); border: 1px solid var(--line); display: grid; gap: 6px; }
-.in-note p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
-.in-note .k { color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+/* What people wrote: small cards side by side; a long paragraph shows its
+   first five lines and a See more. */
+.in-notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); align-items: start; }
+.in-note { padding: 12px 14px; border-radius: 16px; background: var(--paper); border: 1px solid var(--line); display: grid; gap: 8px; align-content: start; font-size: 14px; min-width: 0; }
+.in-note .in-top { gap: 6px; }
+.in-note .in-when { font-size: 12px; }
+.in-note .tag { font-size: 11px; padding: 2px 8px; }
+.in-part { display: grid; gap: 2px; justify-items: start; min-width: 0; }
+.in-part p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.5; justify-self: stretch; }
+.in-part p.clamp:not(.open) { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; line-clamp: 5; overflow: hidden; }
+.in-note .k { color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.in-see { margin-top: 2px; padding: 4px 0; border: 0; background: none; color: var(--purple); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.in-see:hover { text-decoration: underline; }
+.in-see[hidden] { display: none; }

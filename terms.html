@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-langs>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -10,6 +10,14 @@
 <script>
 (function () {
   var r = document.documentElement, g = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  // Arabic or English: the choice made here or in the demo, else the
+  // browser's own language. The page stays hidden until its Arabic is in.
+  var l = g('thara-lang');
+  if (l !== 'ar' && l !== 'en') l = /^ar([-_]|$)/i.test((navigator.languages && navigator.languages[0]) || navigator.language || '') ? 'ar' : 'en';
+  if (l === 'ar') {
+    r.setAttribute('lang', 'ar'); r.setAttribute('dir', 'rtl'); r.classList.add('i18n-wait');
+    setTimeout(function () { r.classList.remove('i18n-wait'); }, 2500);
+  }
   var t = g('thara-theme'); if (t === 'light' || t === 'dark') r.setAttribute('data-theme', t);
   if (g('thara-motion') === 'off') r.setAttribute('data-motion', 'off');
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -18,6 +26,8 @@
 })();
 </script>
 <link rel="stylesheet" href="style.css">
+<script defer src="i18n/ar-common.js"></script>
+<script defer src="i18n/ar-terms.js"></script>
 <script defer src="site.js"></script>
 </head>
 <body>
@@ -42,6 +52,7 @@
     </a>
     <div class="bar-acts">
       <a class="bar-link" href="./#get"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Get Thara</a>
+      <button class="circle lang-btn" type="button" data-lang-toggle lang="ar" aria-label="العربية" hidden>ع</button>
       <button class="circle lime" type="button" data-pop="appearance" aria-expanded="false" aria-controls="appearance" aria-label="Appearance"><svg class="i" aria-hidden="true"><use href="#i-sliders"/></svg></button>
     </div>
   </div>
